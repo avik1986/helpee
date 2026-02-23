@@ -42,10 +42,10 @@
     .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     .card h4 { margin-bottom: 0.75rem; font-size: 1rem; }
     .phase-bar { display: flex; height: 24px; border-radius: 6px; overflow: hidden; margin: 1rem 0; }
-    .phase-bar .p0 { flex: 0 0 7.7%; background: var(--phase-foundation); }
-    .phase-bar .p1 { flex: 0 0 38.5%; background: var(--phase-p0); }
-    .phase-bar .p2 { flex: 0 0 34.6%; background: var(--phase-p1); }
-    .phase-bar .p3 { flex: 0 0 19.2%; background: var(--phase-scale); }
+    .phase-bar .p0 { flex: 0 0 6.9%; background: var(--phase-foundation); }
+    .phase-bar .p1 { flex: 0 0 44.8%; background: var(--phase-p0); }
+    .phase-bar .p2 { flex: 0 0 31.0%; background: var(--phase-p1); }
+    .phase-bar .p3 { flex: 0 0 17.2%; background: var(--phase-scale); }
     table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 1rem 0; }
     th, td { padding: 0.6rem 0.75rem; text-align: left; border: 1px solid var(--border); }
     th { background: #f8f9fa; font-weight: 600; color: var(--secondary); }
@@ -149,9 +149,9 @@
       <h3>Phase Distribution</h3>
       <div class="phase-bar">
         <span class="p0" title="Phase 0: Foundation (W1-W4)"></span>
-        <span class="p1" title="Phase 1: P0 MVP (W5-W24)"></span>
-        <span class="p2" title="Phase 2: P1 Features (W25-W42)"></span>
-        <span class="p3" title="Phase 3: Scale, Polish & Launch (W43-W52)"></span>
+        <span class="p1" title="Phase 1: P0 MVP (W5-W30)"></span>
+        <span class="p2" title="Phase 2: P1 Features (W31-W48)"></span>
+        <span class="p3" title="Phase 3: Scale, Polish & Launch (W49-W58)"></span>
       </div>
       <p><strong>Phase 0 — Foundation:</strong> Sprints 1–2 (W1–W4)</p>
       <p><strong>Phase 1 — P0 MVP:</strong> Sprints 3–15 (W5–W30) &mdash; 13 sprints for 26 P0 features across all 5 apps (3 extra sprints for Matching Engine, Geo-Attendance &amp; Payments)</p>
@@ -517,9 +517,9 @@
       <h2 id="gantt">11. Phase Distribution & Gantt Chart</h2>
       <div class="phase-bar">
         <span class="p0" title="Phase 0: Foundation (W1-W4)"></span>
-        <span class="p1" title="Phase 1: P0 MVP (W5-W24)"></span>
-        <span class="p2" title="Phase 2: P1 Features (W25-W42)"></span>
-        <span class="p3" title="Phase 3: Scale, Polish & Launch (W43-W52)"></span>
+        <span class="p1" title="Phase 1: P0 MVP (W5-W30)"></span>
+        <span class="p2" title="Phase 2: P1 Features (W31-W48)"></span>
+        <span class="p3" title="Phase 3: Scale, Polish & Launch (W49-W58)"></span>
       </div>
       <div class="gantt-container" style="overflow-x: auto;">
         <div class="gantt-phase-band" style="background: linear-gradient(to right, var(--phase-foundation) 0%, var(--phase-foundation) 7.7%, var(--phase-p0) 7.7%, var(--phase-p0) 46.2%, var(--phase-p1) 46.2%, var(--phase-p1) 80.8%, var(--phase-scale) 80.8%, var(--phase-scale) 100%); height: 14px; min-width: 1500px;"></div>
@@ -532,7 +532,7 @@
         <div class="gantt-header" style="min-width: 1500px;">
           <div class="gantt-task-col"></div>
           <div class="gantt-weeks-wrapper">
-            <div class="gantt-week-col">W1</div><div class="gantt-week-col">W2</div><div class="gantt-week-col">W3</div><div class="gantt-week-col">W4</div><div class="gantt-week-col">W5</div><div class="gantt-week-col">W6</div><div class="gantt-week-col">W7</div><div class="gantt-week-col">W8</div><div class="gantt-week-col">W9</div><div class="gantt-week-col">W10</div><div class="gantt-week-col">W11</div><div class="gantt-week-col">W12</div><div class="gantt-week-col">W13</div><div class="gantt-week-col">W14</div><div class="gantt-week-col">W15</div><div class="gantt-week-col">W16</div><div class="gantt-week-col">W17</div><div class="gantt-week-col">W18</div><div class="gantt-week-col">W19</div><div class="gantt-week-col">W20</div><div class="gantt-week-col">W21</div><div class="gantt-week-col">W22</div><div class="gantt-week-col">W23</div><div class="gantt-week-col">W24</div><div class="gantt-week-col">W25</div><div class="gantt-week-col">W26</div><div class="gantt-week-col">W27</div><div class="gantt-week-col">W28</div><div class="gantt-week-col">W29</div><div class="gantt-week-col">W30</div><div class="gantt-week-col">W31</div><div class="gantt-week-col">W32</div><div class="gantt-week-col">W33</div><div class="gantt-week-col">W34</div><div class="gantt-week-col">W35</div><div class="gantt-week-col">W36</div><div class="gantt-week-col">W37</div><div class="gantt-week-col">W38</div><div class="gantt-week-col">W39</div><div class="gantt-week-col">W40</div><div class="gantt-week-col">W41</div><div class="gantt-week-col">W42</div><div class="gantt-week-col">W43</div><div class="gantt-week-col">W44</div><div class="gantt-week-col">W45</div><div class="gantt-week-col">W46</div><div class="gantt-week-col">W47</div><div class="gantt-week-col">W48</div><div class="gantt-week-col">W49</div><div class="gantt-week-col">W50</div><div class="gantt-week-col">W51</div><div class="gantt-week-col">W52</div>
+            <div class="gantt-week-col">W1</div><div class="gantt-week-col">W2</div><div class="gantt-week-col">W3</div><div class="gantt-week-col">W4</div><div class="gantt-week-col">W5</div><div class="gantt-week-col">W6</div><div class="gantt-week-col">W7</div><div class="gantt-week-col">W8</div><div class="gantt-week-col">W9</div><div class="gantt-week-col">W10</div><div class="gantt-week-col">W11</div><div class="gantt-week-col">W12</div><div class="gantt-week-col">W13</div><div class="gantt-week-col">W14</div><div class="gantt-week-col">W15</div><div class="gantt-week-col">W16</div><div class="gantt-week-col">W17</div><div class="gantt-week-col">W18</div><div class="gantt-week-col">W19</div><div class="gantt-week-col">W20</div><div class="gantt-week-col">W21</div><div class="gantt-week-col">W22</div><div class="gantt-week-col">W23</div><div class="gantt-week-col">W24</div><div class="gantt-week-col">W25</div><div class="gantt-week-col">W26</div><div class="gantt-week-col">W27</div><div class="gantt-week-col">W28</div><div class="gantt-week-col">W29</div><div class="gantt-week-col">W30</div><div class="gantt-week-col">W31</div><div class="gantt-week-col">W32</div><div class="gantt-week-col">W33</div><div class="gantt-week-col">W34</div><div class="gantt-week-col">W35</div><div class="gantt-week-col">W36</div><div class="gantt-week-col">W37</div><div class="gantt-week-col">W38</div><div class="gantt-week-col">W39</div><div class="gantt-week-col">W40</div><div class="gantt-week-col">W41</div><div class="gantt-week-col">W42</div><div class="gantt-week-col">W43</div><div class="gantt-week-col">W44</div><div class="gantt-week-col">W45</div><div class="gantt-week-col">W46</div><div class="gantt-week-col">W47</div><div class="gantt-week-col">W48</div><div class="gantt-week-col">W49</div><div class="gantt-week-col">W50</div><div class="gantt-week-col">W51</div><div class="gantt-week-col">W52</div><div class="gantt-week-col">W53</div><div class="gantt-week-col">W54</div><div class="gantt-week-col">W55</div><div class="gantt-week-col">W56</div><div class="gantt-week-col">W57</div><div class="gantt-week-col">W58</div>
           </div>
         </div>
         <!-- PHASE 0 — FOUNDATION (W1-W4) -->
@@ -588,58 +588,58 @@
         <div class="gantt-row"><div class="gantt-task-name">E2E P0 testing</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 400px; width: 200px;"></div></div></div>
         <!-- PHASE 2 — P1 BACKEND (W25-W42) -->
         <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(6,214,160,0.2);">Phase 2 &mdash; P1 Backend</div><div class="gantt-bars"></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Vitals + alerts pipeline</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 600px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Training + certification</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 675px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">VAS ecosystem APIs</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 750px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Video call integration</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 825px; width: 50px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Offline sync APIs</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 875px; width: 50px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Control panel + elderly APIs</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 900px; width: 75px;"></div></div></div>
-        <!-- PHASE 2 — CAREGIVER APP P1 (W25-W36) -->
+        <div class="gantt-row"><div class="gantt-task-name">Vitals + alerts pipeline</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1050px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Training + certification</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 975px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">VAS ecosystem APIs</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1050px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Video call integration</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 975px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Offline sync APIs</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1025px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Control panel + elderly APIs</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1050px; width: 75px;"></div></div></div>
+        <!-- PHASE 2 — CAREGIVER APP P1 (W31-W42) -->
         <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(6,214,160,0.2);">Caregiver App (P1)</div><div class="gantt-bars"></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Vitals logging + proof of work</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 600px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Training modules</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 675px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">VAS suggestions</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 750px; width: 50px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Performance dashboard</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 800px; width: 50px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Offline support (WatermelonDB)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 850px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Vitals logging + proof of work</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1050px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Training modules</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 975px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">VAS suggestions</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1050px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Performance dashboard</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1100px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Offline support (WatermelonDB)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1000px; width: 50px;"></div></div></div>
         <!-- PHASE 2 — CUSTOMER APP P1 (W27-W38) -->
         <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(6,214,160,0.2);">Customer App (P1)</div><div class="gantt-bars"></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Video interview (Twilio)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 650px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">VAS purchase flow</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 750px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Vitals dashboard</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 825px; width: 50px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Control panel</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 875px; width: 75px;"></div></div></div>
-        <!-- PHASE 2 — COMPANY ADMIN P1 (W25-W38) -->
+        <div class="gantt-row"><div class="gantt-task-name">Video interview (Twilio)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1100px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">VAS purchase flow</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1050px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Vitals dashboard</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 975px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Control panel</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1025px; width: 75px;"></div></div></div>
+        <!-- PHASE 2 — COMPANY ADMIN P1 (W31-W44) -->
         <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(6,214,160,0.2);">Company Admin (P1)</div><div class="gantt-bars"></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Vitals alert dashboard</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 600px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">VAS configuration</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 750px; width: 50px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Reports &amp; analytics</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 800px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Remote monitoring + live map</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 875px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Vitals alert dashboard</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1050px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">VAS configuration</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1050px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Reports &amp; analytics</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1100px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Remote monitoring + live map</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1025px; width: 75px;"></div></div></div>
         <!-- PHASE 2 — FRANCHISE ADMIN P1 (W29-W42) -->
         <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(6,214,160,0.2);">Franchise Admin (P1)</div><div class="gantt-bars"></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Training management</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 700px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Ledger &amp; financials</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 775px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">VAS upsell + escalations</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 850px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Recruitment + performance</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 925px; width: 100px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Training management</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1000px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Ledger &amp; financials</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1075px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">VAS upsell + escalations</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1000px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Recruitment + performance</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1075px; width: 100px;"></div></div></div>
         <!-- PHASE 2 — ELDERLY APP (W33-W42) -->
         <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(6,214,160,0.2);">Elderly App (standalone)</div><div class="gantt-bars"></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Today&rsquo;s CT + SOS + calls (P0)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 800px; width: 100px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Task confirm + feedback (P1)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 900px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Schedule + wellness + gallery</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 950px; width: 75px;"></div></div></div>
-        <!-- PHASE 2 — QA (W25-W42) -->
+        <div class="gantt-row"><div class="gantt-task-name">Today&rsquo;s CT + SOS + calls (P0)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1100px; width: 100px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Task confirm + feedback (P1)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1050px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Schedule + wellness + gallery</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1100px; width: 75px;"></div></div></div>
+        <!-- PHASE 2 — QA (W31-W48) -->
         <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(6,214,160,0.2);">QA (Phase 2)</div><div class="gantt-bars"></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">P1 feature testing</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 600px; width: 325px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Accessibility testing (elderly)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 850px; width: 175px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Cross-app integration testing</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 925px; width: 100px;"></div></div></div>
-        <!-- PHASE 3 — SCALE, POLISH & LAUNCH (W43-W52) -->
+        <div class="gantt-row"><div class="gantt-task-name">P1 feature testing</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1050px; width: 325px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Accessibility testing (elderly)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1000px; width: 175px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Cross-app integration testing</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 1075px; width: 100px;"></div></div></div>
+        <!-- PHASE 3 — SCALE, POLISH & LAUNCH (W49-W58) -->
         <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(255,209,102,0.3);">Phase 3 &mdash; Scale &amp; Launch</div><div class="gantt-bars"></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Analytics + advanced reports</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1050px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Auto-reassignment engine</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1050px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Performance optimization</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1125px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Security audit + pen test</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1150px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">App store submission (3 apps)</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1225px; width: 50px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Production deployment</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1250px; width: 50px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Monitoring + runbooks</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1275px; width: 25px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Analytics + advanced reports</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1200px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Auto-reassignment engine</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1200px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Performance optimization</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1425px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Security audit + pen test</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1300px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">App store submission (3 apps)</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1375px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Production deployment</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1400px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Monitoring + runbooks</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1425px; width: 25px;"></div></div></div>
       </div>
-      <p style="font-size: 0.85rem; color: var(--text-muted);">Gantt chart: each bar spans the indicated week range. Phase 0 = Foundation (W1&ndash;W4), Phase 1 = P0 MVP (W5&ndash;W24), Phase 2 = P1 Features (W25&ndash;W42), Phase 3 = Scale &amp; Launch (W43&ndash;W52). All 5 apps shown as separate tracks.</p>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Gantt chart: each bar spans the indicated week range. Phase 0 = Foundation (W1&ndash;W4), Phase 1 = P0 MVP (W5&ndash;W30), Phase 2 = P1 Features (W31&ndash;W48), Phase 3 = Scale &amp; Launch (W49&ndash;W58). All 5 apps shown as separate tracks.</p>
 
       <!-- 12. Sprint-by-Sprint Breakdown -->
       <h2 id="sprints">12. Sprint-by-Sprint Breakdown</h2>
@@ -704,22 +704,22 @@
       <h2 id="milestones">13. Milestones</h2>
       <div class="milestone-timeline">
         <div class="milestone-track" style="width: 100%; max-width: 1000px;">
-          <span class="milestone-dot" style="left: 3.8%;" title="W2: Foundation Setup"></span>
-          <span class="milestone-dot" style="left: 7.7%;" title="W4: Auth + RBAC Complete"></span>
-          <span class="milestone-dot" style="left: 11.5%;" title="W6: Caregiver Onboarding"></span>
-          <span class="milestone-dot" style="left: 15.4%;" title="W8: Matching Engine"></span>
-          <span class="milestone-dot" style="left: 23.1%;" title="W12: Shift Lifecycle"></span>
-          <span class="milestone-dot bold" style="left: 26.9%;" title="W14: P0 MVP Beta"></span>
-          <span class="milestone-dot" style="left: 34.6%;" title="W22: Disputes + Dashboard"></span>
-          <span class="milestone-dot" style="left: 42.3%;" title="W26: Franchise Admin P0"></span>
-          <span class="milestone-dot bold" style="left: 46.2%;" title="W24: P0 COMPLETE"></span>
-          <span class="milestone-dot" style="left: 53.8%;" title="W34: Training System"></span>
-          <span class="milestone-dot" style="left: 61.5%;" title="W38: VAS Ecosystem"></span>
-          <span class="milestone-dot" style="left: 65.4%;" title="W40: Elderly App Beta"></span>
-          <span class="milestone-dot bold" style="left: 80.8%;" title="W42: P1 COMPLETE"></span>
-          <span class="milestone-dot" style="left: 88.5%;" title="W52: Performance OK"></span>
-          <span class="milestone-dot" style="left: 92.3%;" title="W48: Security Cleared"></span>
-          <span class="milestone-dot bold" style="left: 100%;" title="W52: Production Launch"></span>
+          <span class="milestone-dot" style="left: 3.4%;" title="W2: Foundation Setup"></span>
+          <span class="milestone-dot" style="left: 6.9%;" title="W4: Auth + RBAC Complete"></span>
+          <span class="milestone-dot" style="left: 10.3%;" title="W6: Caregiver Onboarding"></span>
+          <span class="milestone-dot" style="left: 13.8%;" title="W8: Matching Engine"></span>
+          <span class="milestone-dot" style="left: 20.7%;" title="W12: Shift Lifecycle"></span>
+          <span class="milestone-dot bold" style="left: 27.6%;" title="W16: P0 MVP Beta"></span>
+          <span class="milestone-dot" style="left: 37.9%;" title="W22: Disputes + Dashboard"></span>
+          <span class="milestone-dot" style="left: 44.8%;" title="W26: Franchise Admin P0"></span>
+          <span class="milestone-dot bold" style="left: 51.7%;" title="W30: P0 COMPLETE"></span>
+          <span class="milestone-dot" style="left: 58.6%;" title="W34: Training System"></span>
+          <span class="milestone-dot" style="left: 65.5%;" title="W38: VAS Ecosystem"></span>
+          <span class="milestone-dot" style="left: 69.0%;" title="W40: Elderly App Beta"></span>
+          <span class="milestone-dot bold" style="left: 82.8%;" title="W48: P1 COMPLETE"></span>
+          <span class="milestone-dot" style="left: 89.7%;" title="W52: Performance OK"></span>
+          <span class="milestone-dot" style="left: 93.1%;" title="W54: Security (Helpee UAT)"></span>
+          <span class="milestone-dot bold" style="left: 100%;" title="W58: Production Launch"></span>
         </div>
       </div>
       <table>
@@ -817,7 +817,7 @@
 
       <!-- 18. Cost Estimation -->
       <h2 id="cost">18. Cost Estimation</h2>
-      <p>Optimized for <strong>18-person team</strong> over <strong>52 weeks (12 months)</strong> with competitive resource rates.</p>
+      <p>Optimized for <strong>18-person team</strong> over <strong>58 weeks (14 months)</strong> with competitive resource rates.</p>
       <table>
         <thead><tr><th>Category</th><th>Monthly Cost</th><th>12-Month Total</th><th>Notes</th></tr></thead>
         <tbody>
@@ -942,7 +942,7 @@
           <thead><tr><th style="width: 5%;">#</th><th>Exclusion</th><th>Rationale</th></tr></thead>
           <tbody>
             <tr><td>1</td><td>Content Creation</td><td>Training videos, marketing copy, legal agreement text, T&amp;C documents &mdash; to be provided by Helpee</td></tr>
-            <tr><td>2</td><td>Third-Party Subscriptions (Post-Delivery)</td><td>MSG91, Twilio, Razorpay, AWS bills after Week 52 are Helpee&rsquo;s responsibility (or covered under SaaS license)</td></tr>
+            <tr><td>2</td><td>Third-Party Subscriptions (Post-Delivery)</td><td>MSG91, Twilio, Razorpay, AWS bills after Week 58 are Helpee&rsquo;s responsibility (or covered under SaaS license)</td></tr>
             <tr><td>3</td><td>Hardware Procurement</td><td>Servers, office devices, kiosks &mdash; only test devices (4 Android + 2 iOS) are included</td></tr>
             <tr><td>4</td><td>Call Center Setup &amp; Staffing</td><td>Physical/virtual call center infrastructure, agent hiring, training, dialer software licensing</td></tr>
             <tr><td>5</td><td>Franchise Partner Onboarding</td><td>Business-side franchise recruitment, contract negotiation, partner training sessions</td></tr>
