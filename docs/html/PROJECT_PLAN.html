@@ -114,7 +114,6 @@
         <a href="#tech-stack">4. Tech Stack</a>
         <a href="#er-diagram">5. Database ER Diagram</a>
         <a href="#infrastructure">6. Infrastructure & Deployment</a>
-        <a href="#security">7. Security Architecture</a>
         <a href="#realtime">8. Real-Time Architecture</a>
         <a href="#scalability">9. Scalability Strategy</a>
         <a href="#team">10. Team Structure</a>
@@ -418,34 +417,7 @@
       </div>
       <p style="font-size: 0.85rem; color: var(--muted);"><strong>Exit criteria (end of W2):</strong> All AWS services provisioned, CI/CD pipeline deploying to staging on every merge to <code>main</code>, staging environment accessible and healthy, all team members have appropriate access.</p>
 
-      <!-- 7. Security Architecture -->
-      <h2 id="security">7. Security Architecture</h2>
-      <h3>Layers</h3>
-      <ul>
-        <li><strong>TLS 1.3</strong> everywhere (client ↔ ALB ↔ services)</li>
-        <li><strong>JWT auth flow:</strong> Login → Access Token (15min) + Refresh Token (7d) → Refresh rotation</li>
-        <li><strong>RBAC:</strong> 5 roles with permission matrix below</li>
-        <li><strong>Data encryption:</strong> AES-256 at rest (RDS, S3), TLS in transit</li>
-        <li><strong>Health data segregation:</strong> vitals_log in separate schema/access controls</li>
-        <li><strong>API rate limiting</strong> per role</li>
-        <li><strong>Audit logging</strong> on all admin actions</li>
-      </ul>
-      <h3>Permission Matrix</h3>
-      <table style="font-size: 0.8rem;">
-        <thead><tr><th>Resource</th><th>company_admin</th><th>franchise_admin</th><th>caregiver</th><th>family</th><th>elderly</th></tr></thead>
-        <tbody>
-          <tr><td>Dashboard</td><td>Full</td><td>Own city</td><td>-</td><td>-</td><td>-</td></tr>
-          <tr><td>Caregivers</td><td>All</td><td>Own franchise</td><td>Own profile</td><td>-</td><td>-</td></tr>
-          <tr><td>Shifts</td><td>All</td><td>Own franchise</td><td>Own shifts</td><td>Own patient</td><td>-</td></tr>
-          <tr><td>Roster</td><td>All</td><td>Own franchise</td><td>View own</td><td>-</td><td>-</td></tr>
-          <tr><td>Vitals</td><td>All alerts</td><td>Own franchise</td><td>Log only</td><td>Own patient</td><td>-</td></tr>
-          <tr><td>Ledger</td><td>Full</td><td>Own commission</td><td>Own earnings</td><td>Own invoices</td><td>-</td></tr>
-          <tr><td>Governance</td><td>Full</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-          <tr><td>VAS Config</td><td>Full</td><td>-</td><td>Suggest</td><td>Purchase</td><td>-</td></tr>
-          <tr><td>Approval</td><td>Full</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-          <tr><td>Dispute</td><td>All</td><td>Escalate</td><td>Create</td><td>Create</td><td>-</td></tr>
-        </tbody>
-      </table>
+
 
       <!-- 8. Real-Time Architecture -->
       <h2 id="realtime">8. Real-Time Architecture</h2>
@@ -633,8 +605,7 @@
         <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(255,209,102,0.3);">Phase 3 &mdash; Scale &amp; Launch</div><div class="gantt-bars"></div></div>
         <div class="gantt-row"><div class="gantt-task-name">Analytics + advanced reports</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1200px; width: 75px;"></div></div></div>
         <div class="gantt-row"><div class="gantt-task-name">Auto-reassignment engine</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1200px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Performance optimization</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1425px; width: 75px;"></div></div></div>
-        <div class="gantt-row"><div class="gantt-task-name">Security audit + pen test</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1300px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Performance optimization</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1425px; width: 75px;"></div></div></div></div>
         <div class="gantt-row"><div class="gantt-task-name">App store submission (3 apps)</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1375px; width: 50px;"></div></div></div>
         <div class="gantt-row"><div class="gantt-task-name">Production deployment</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1400px; width: 50px;"></div></div></div>
         <div class="gantt-row"><div class="gantt-task-name">Monitoring + runbooks</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1425px; width: 25px;"></div></div></div>
@@ -692,9 +663,7 @@
       <!-- PHASE 3 — SCALE, POLISH & LAUNCH -->
       <div class="sprint-card"><h4>Sprint 22 (Weeks 43&ndash;44): Offline Support + Analytics</h4><div class="sprint-meta">Phase 3 &mdash; Scale, Polish &amp; Launch</div><p><strong>Goals:</strong> Offline-first caregiver app, advanced reporting</p><ul><li><strong>Backend:</strong> Report generation endpoints (city-wise, franchise-wise, caregiver utilization), GST report generation, materialized views for dashboard aggregations, offline sync conflict resolution APIs.</li><li><strong>Mobile (Caregiver):</strong> WatermelonDB integration, offline task logging, offline vitals, offline check-in/out with sync queue, conflict resolution on reconnect.</li><li><strong>Company Admin:</strong> Advanced reports page with filters and export (CSV/Excel/PDF), analytics dashboard.</li></ul><p><strong>Deliverables:</strong> Caregiver app works offline, advanced reports operational.</p></div>
 
-      <div class="sprint-card"><h4>Sprint 23 (Weeks 45&ndash;46): Auto-Reassignment + Performance Optimization</h4><div class="sprint-meta">Phase 3 &mdash; Scale, Polish &amp; Launch</div><p><strong>Goals:</strong> Smart reassignment engine, system optimization</p><ul><li><strong>Backend:</strong> Auto-reassignment engine (no-show detected &rarr; find next available CT by proximity + skills + rating &rarr; auto-assign &rarr; notify all parties). Database optimization (index audit, query analysis, PgBouncer). Redis caching strategy for hot paths.</li><li><strong>Company Admin:</strong> GPS route replay for completed shifts, audit log viewer.</li><li><strong>DevOps:</strong> CDN configuration, response compression, connection pooling tuning.</li><li><strong>QA:</strong> Performance testing (target: 1,000 concurrent users, 10K caregivers, 50K patients). Load testing, stress testing.</li></ul><p><strong>Deliverables:</strong> Auto-reassignment working, system handles target load within SLA (&lt;300ms API latency).</p></div>
-
-      <div class="sprint-card"><h4>Sprint 24 (Weeks 47&ndash;48): Security Audit + Hardening</h4><div class="sprint-meta">Phase 3 &mdash; Scale, Polish &amp; Launch | <strong>MILESTONE: SECURITY CLEARED</strong></div><p><strong>Goals:</strong> External security audit, compliance verification</p><ul><li><strong>Security:</strong> External penetration testing, OWASP compliance check, fix critical/high findings, PDPA India compliance verification, health data segregation audit.</li><li><strong>Backend:</strong> Security fixes from pen test, rate limiting hardening, audit log completeness check.</li><li><strong>DevOps:</strong> Production AWS deployment prep (multi-AZ RDS, ElastiCache cluster, ECS auto-scaling config), WAF rules, secrets management audit.</li><li><strong>QA:</strong> Security regression testing post-fixes.</li></ul><p><strong>Deliverables:</strong> Pen test passed, all critical/high findings resolved.</p></div>
+      <div class="sprint-card"><h4>Sprint 23 (Weeks 45&ndash;46): Auto-Reassignment + Performance Optimization</h4><div class="sprint-meta">Phase 3 &mdash; Scale, Polish &amp; Launch</div><p><strong>Goals:</strong> Smart reassignment engine, system optimization</p><ul><li><strong>Backend:</strong> Auto-reassignment engine (no-show detected &rarr; find next available CT by proximity + skills + rating &rarr; auto-assign &rarr; notify all parties). Database optimization (index audit, query analysis, PgBouncer). Redis caching strategy for hot paths.</li><li><strong>Company Admin:</strong> GPS route replay for completed shifts, audit log viewer.</li><li><strong>DevOps:</strong> CDN configuration, response compression, connection pooling tuning.</li><li><strong>QA:</strong> Performance testing (target: 1,000 concurrent users, 10K caregivers, 50K patients). Load testing, stress testing.</li></ul><p><strong>Deliverables:</strong> Auto-reassignment working, system handles target load within SLA (&lt;300ms API latency).</p></div><p><strong>Goals:</strong> External security audit, compliance verification</p><ul><li><strong>Security:</strong> External penetration testing, OWASP compliance check, fix critical/high findings, PDPA India compliance verification, health data segregation audit.</li><li><strong>Backend:</strong> Security fixes from pen test, rate limiting hardening, audit log completeness check.</li><li><strong>DevOps:</strong> Production AWS deployment prep (multi-AZ RDS, ElastiCache cluster, ECS auto-scaling config), WAF rules, secrets management audit.</li><li><strong>QA:</strong> Security regression testing post-fixes.</li></ul><p><strong>Deliverables:</strong> Pen test passed, all critical/high findings resolved.</p></div>
 
       <div class="sprint-card"><h4>Sprint 25 (Weeks 49&ndash;50): App Store Submission + Staging Freeze</h4><div class="sprint-meta">Phase 3 &mdash; Scale, Polish &amp; Launch</div><p><strong>Goals:</strong> Submit all 3 mobile apps, staging freeze</p><ul><li><strong>Mobile:</strong> App Store submission (Caregiver, Customer, Elderly &mdash; iOS + Google Play = 6 submissions). Follow Apple HIG and Material Design guidelines. Screenshot generation, app descriptions, privacy policy links.</li><li><strong>Admin:</strong> Final UI polish for both web portals, responsive design verification.</li><li><strong>DevOps:</strong> Production AWS deployment (multi-AZ RDS, ElastiCache cluster, ECS auto-scaling). Staging environment frozen for release candidate testing.</li><li><strong>QA:</strong> Release candidate testing, smoke test suite across all 5 apps.</li></ul><p><strong>Deliverables:</strong> All apps submitted for review, production infra deployed.</p></div>
 
@@ -718,7 +687,6 @@
           <span class="milestone-dot" style="left: 69.0%;" title="W40: Elderly App Beta"></span>
           <span class="milestone-dot bold" style="left: 82.8%;" title="W48: P1 COMPLETE"></span>
           <span class="milestone-dot" style="left: 89.7%;" title="W52: Performance OK"></span>
-          <span class="milestone-dot" style="left: 93.1%;" title="W54: Security (Helpee UAT)"></span>
           <span class="milestone-dot bold" style="left: 100%;" title="W58: Production Launch"></span>
         </div>
       </div>
@@ -739,7 +707,6 @@
           <tr style="background: #d4f4dd;"><td><strong>Elderly App Beta</strong></td><td><strong>Sprint 17</strong></td><td><strong>W34</strong></td><td><strong>Standalone elderly app with SOS, calls, CT view</strong></td></tr>
           <tr style="background: #d4f4dd;"><td><strong>P1 Feature Complete</strong></td><td><strong>Sprint 24</strong></td><td><strong>W48</strong></td><td><strong>All 26 P1 features done + cross-app integration verified</strong></td></tr>
           <tr><td>Performance OK</td><td>Sprint 26</td><td>W52</td><td>Load testing passed, auto-reassignment working</td></tr>
-          <tr><td>Security Cleared (Helpee UAT)</td><td>Sprint 27</td><td>W54</td><td>Pen test done by Rupantar; sign-off &amp; InfoSec approval by Helpee as part of UAT</td></tr>
           <tr style="background: #fff3cd;"><td><strong>Production Launch</strong></td><td><strong>Sprint 29</strong></td><td><strong>W58</strong></td><td><strong>All 5 apps live in production</strong></td></tr>
         </tbody>
       </table>
@@ -834,7 +801,6 @@
           <tr><td>Third-party SaaS</td><td>₹33K</td><td>₹4L</td><td>MSG91, Twilio, Razorpay fees</td></tr>
           <tr><td>Tools &amp; Licenses</td><td>₹20K</td><td>₹2.4L</td><td>GitHub, Sentry, Figma, Mapbox</td></tr>
           <tr><td>Test devices</td><td>&mdash;</td><td>₹1.5L</td><td>One-time: 4 Android + 2 iOS</td></tr>
-          <tr><td>Security audit</td><td>&mdash;</td><td>₹2L</td><td>One-time: external pen test</td></tr>
           <tr><td>App store fees</td><td>&mdash;</td><td>₹10K</td><td>Apple $99 + Google $25</td></tr>
           <tr><td>Buffer (5%)</td><td>&mdash;</td><td>₹9.4L</td><td>Contingency for unforeseen costs</td></tr>
           <tr style="background: #fff3cd;"><td><strong>Grand Total</strong></td><td></td><td><strong>~₹1.98 Cr</strong></td><td></td></tr>
@@ -870,7 +836,7 @@
             <tr><td><strong>Development Cost</strong></td><td><strong>₹1.66 Cr</strong></td><td>18-person team (4 Backend, 4 Mobile, 3 Frontend, 1 Eng Lead, 1 PM, 1 Designer, 1 DevOps, 3 QA) &times; 12 months</td></tr>
             <tr><td><strong>Infrastructure Cost</strong></td><td><strong>₹12L</strong></td><td>AWS (RDS, ElastiCache, ECS Fargate, S3, CloudFront, Route 53) &mdash; dev + staging + production &times; 12 months</td></tr>
             <tr><td><strong>Third-Party Services</strong></td><td><strong>₹6.4L</strong></td><td>MSG91 (SMS/OTP), Twilio (Video), Razorpay (payments), GitHub, Sentry, Figma, Mapbox &times; 12 months</td></tr>
-            <tr><td><strong>One-Time Costs</strong></td><td><strong>₹3.5L</strong></td><td>Test devices (₹1.5L), security audit/pen test (₹2L)</td></tr>
+            <tr><td><strong>One-Time Costs</strong></td><td><strong>₹1.5L</strong></td><td>Test devices (₹1.5L)</td></tr>
             <tr><td><strong>App Store Fees</strong></td><td><strong>₹10K</strong></td><td>Apple Developer ($99/year) + Google Play ($25 one-time)</td></tr>
             <tr><td><strong>Buffer (5%)</strong></td><td><strong>₹9.4L</strong></td><td>Contingency for scope adjustments, unforeseen dependencies</td></tr>
             <tr style="background: #fff3cd;"><td><strong>Total Project Cost</strong></td><td><strong>~₹1.98 Cr</strong></td><td></td></tr>
@@ -956,8 +922,7 @@
 
       <h3>20.6 UAT (User Acceptance Testing) &mdash; Helpee Responsibilities</h3>
       <p>Helpee is responsible for User Acceptance Testing at each payment milestone. The development team provides the staging environment and deployment; Helpee validates business correctness.
-
-<p style="background:#fef3c7;border-left:4px solid #f59e0b;padding:12px 16px;border-radius:4px;margin:12px 0;"><strong>Security Testing Policy:</strong> Security penetration testing is conducted by Rupantar at W54. Any critical or high findings are fixed by Rupantar at no additional cost. However, <strong>InfoSec sign-off and formal security approval is Helpee's responsibility</strong> — Helpee must provide written sign-off after reviewing the pen test report and fix verification. Security sign-off is treated as a UAT milestone and does <strong>not</strong> gate any payment.</p></p>
+</p>
       <div class="card" style="border-left: 4px solid var(--accent);">
         <table style="margin-bottom: 0;">
           <thead><tr><th>Parameter</th><th>Terms</th></tr></thead>
@@ -984,7 +949,6 @@
           <tr><td>P0 MVP Beta</td><td>W16 Day 1</td><td>W16 Day 5</td><td>Core Caregiver + Customer + Company Admin flows</td></tr>
           <tr><td>P0 Complete</td><td>W30 Day 1</td><td>W30 Day 5</td><td>All 26 P0 features across all 5 apps</td></tr>
           <tr><td>P1 Feature Complete</td><td>W48 Day 1</td><td>W48 Day 5</td><td>All 52 features, cross-app integration, Elderly App</td></tr>
-          <tr><td>Security Sign-off (InfoSec UAT)</td><td>W54 Day 1</td><td>W54 Day 10</td><td>Helpee's InfoSec team reviews pen test report; Rupantar fixes any critical/high findings; Helpee provides written InfoSec sign-off. This is Helpee's UAT responsibility and does not gate payment.</td></tr>
           <tr><td>Production Launch</td><td>W58 Day 1</td><td>W58 Day 3</td><td>Production smoke test, go-live readiness</td></tr>
         </tbody>
       </table>
