@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Helpee — Technical Plan & Architecture v2.0</title>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --success: #06d6a0;
+      --warning: #ffd166;
+      --danger: #ef476f;
+      --sidebar: #1a1a2e;
+      --phase-foundation: #4895ef;
+      --phase-p0: #4361ee;
+      --phase-p1: #06d6a0;
+      --phase-scale: #ffd166;
+      --text-muted: #6c757d;
+      --text: #1a202c;
+      --muted: #718096;
+      --border: #e9ecef;
+      --data-color: #06d6a0;
+      --external-color: #718096;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f9fa; color: #212529; }
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: var(--sidebar); color: white; padding: 1.5rem 0; z-index: 100; overflow-y: auto; }
+    .logo { padding: 0 1.5rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .logo h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.05em; }
+    .logo span { font-size: 0.7rem; color: rgba(255,255,255,0.5); display: block; margin-top: 0.25rem; }
+    .nav { padding: 1rem 0; }
+    .nav a { display: block; padding: 0.5rem 1.5rem; color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; }
+    .nav a:hover { background: rgba(255,255,255,0.08); color: white; }
+    .content { margin-left: 240px; flex: 1; padding: 2rem; max-width: 1000px; margin-right: auto; background: white; min-height: 100vh; box-shadow: 0 0 40px rgba(0,0,0,0.05); }
+    h2 { color: var(--primary); font-size: 1.5rem; margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--accent); }
+    h3 { font-size: 1.15rem; margin: 1.25rem 0 0.75rem; color: var(--secondary); }
+    p { margin-bottom: 1rem; line-height: 1.6; }
+    .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .card h4 { margin-bottom: 0.75rem; font-size: 1rem; }
+    .phase-bar { display: flex; height: 24px; border-radius: 6px; overflow: hidden; margin: 1rem 0; }
+    .phase-bar .p0 { flex: 0 0 7.7%; background: var(--phase-foundation); }
+    .phase-bar .p1 { flex: 0 0 38.5%; background: var(--phase-p0); }
+    .phase-bar .p2 { flex: 0 0 34.6%; background: var(--phase-p1); }
+    .phase-bar .p3 { flex: 0 0 19.2%; background: var(--phase-scale); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin: 1rem 0; }
+    th, td { padding: 0.6rem 0.75rem; text-align: left; border: 1px solid var(--border); }
+    th { background: #f8f9fa; font-weight: 600; color: var(--secondary); }
+    tr:nth-child(even) { background: #fafbfc; }
+    .badge { display: inline-block; padding: 0.2rem 0.5rem; font-size: 0.75rem; font-weight: 600; border-radius: 4px; }
+    .badge-H { background: #f8d7da; color: #721c24; }
+    .badge-M { background: #fff3cd; color: #856404; }
+    .badge-L { background: #d4edda; color: #155724; }
+    .org-chart { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; }
+    .org-box { border: 2px solid var(--border); border-radius: 8px; padding: 1rem; min-width: 200px; background: white; }
+    .org-box h4 { font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--primary); }
+    .org-box ul { font-size: 0.85rem; color: var(--text-muted); list-style: none; }
+    .org-box ul li:before { content: "• "; color: var(--accent); }
+    .gantt-container { overflow-x: auto; margin: 1.5rem 0; border: 1px solid var(--border); border-radius: 8px; }
+    .gantt-phase-band { display: flex; height: 20px; }
+    .gantt-phase-band span { flex-shrink: 0; }
+    .gantt-header { display: flex; background: #f1f3f5; font-size: 0.7rem; font-weight: 600; }
+    .gantt-weeks-wrapper { display: flex; flex-wrap: nowrap; min-width: 750px; }
+    .gantt-sprint-cell { flex-shrink: 0; text-align: center; padding: 0.3rem 0; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .gantt-task-col { width: 200px; min-width: 200px; padding: 0.4rem 0.5rem; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .gantt-week-col { width: 25px; min-width: 25px; text-align: center; padding: 0.3rem 0; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .gantt-row { display: flex; min-height: 28px; }
+    .gantt-row:nth-child(even) { background: #fafbfc; }
+    .gantt-task-name { width: 200px; min-width: 200px; padding: 0.4rem 0.5rem; font-size: 0.8rem; border-right: 1px solid var(--border); }
+    .gantt-bars { display: flex; flex: 1; min-width: 750px; position: relative; }
+    .gantt-bar-slot { width: 25px; min-width: 25px; border-right: 1px solid #eee; position: relative; }
+    .gantt-bar { position: absolute; height: 18px; border-radius: 3px; top: 4px; color: white; font-size: 0.65rem; overflow: hidden; white-space: nowrap; padding: 0 4px; line-height: 18px; }
+    .gantt-bar.foundation { background: var(--phase-foundation); }
+    .gantt-bar.p0 { background: var(--phase-p0); }
+    .gantt-bar.p1 { background: var(--phase-p1); }
+    .gantt-bar.scale { background: var(--phase-scale); }
+    .sprint-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.25rem; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .sprint-card h4 { color: var(--primary); margin-bottom: 0.5rem; }
+    .sprint-card .sprint-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
+    .sprint-card ul { margin-left: 1.25rem; margin-bottom: 0.75rem; }
+    .sprint-card li { margin-bottom: 0.35rem; font-size: 0.9rem; }
+    .milestone-timeline { position: relative; padding: 1.5rem 0; overflow-x: auto; }
+    .milestone-track { height: 8px; background: #e9ecef; border-radius: 4px; position: relative; margin-bottom: 2rem; min-width: 900px; }
+    .milestone-dot { position: absolute; width: 20px; height: 20px; background: var(--accent); border: 3px solid white; border-radius: 50%; top: -6px; transform: translateX(-50%); box-shadow: 0 2px 6px rgba(0,0,0,0.2); cursor: pointer; }
+    .milestone-dot.bold { width: 26px; height: 26px; top: -9px; background: var(--primary); z-index: 2; }
+    .milestone-labels { display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.75rem; }
+    .dod-list { list-style: none; }
+    .dod-list li { padding: 0.5rem 0 0.5rem 2rem; position: relative; }
+    .dod-list li:before { content: "☐"; position: absolute; left: 0; font-size: 1.1rem; }
+    /* Architecture diagram styles from ARCHITECTURE.html */
+    .diagram-row { display: flex; justify-content: center; gap: 1rem; margin: 0.75rem 0; flex-wrap: wrap; }
+    .diagram-box { border-radius: 8px; border: 2px solid; padding: 1rem 1.25rem; font-weight: 600; font-size: 0.85rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .diagram-box.sub { font-size: 0.75rem; font-weight: 500; opacity: 0.9; }
+    .flow-step { display: inline-flex; align-items: center; flex-wrap: wrap; }
+    .flow-diagram { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem; }
+    .flow-arrow { margin: 0 0.5rem; color: var(--primary); font-weight: bold; font-size: 1.1rem; }
+    .flow-box { display: inline-block; padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--border); background: #fff; font-size: 0.85rem; }
+    .row-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.5rem; font-weight: 700; }
+    .arrow-down { display: block; text-align: center; color: var(--primary); font-size: 1.2rem; margin: 0.25rem 0; }
+    @media print { .sidebar { position: static; width: 100%; } .content { margin-left: 0; max-width: none; box-shadow: none; } .layout { flex-direction: column; } body { background: #fff; } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="logo"><h1>HELPEE</h1><span>Technical Plan v2.0</span></div>
+      <nav class="nav">
+        <a href="#overview">1. Project Overview</a>
+        <a href="#architecture">2. System Architecture</a>
+        <a href="#backend">3. Backend Module Architecture</a>
+        <a href="#tech-stack">4. Tech Stack</a>
+        <a href="#er-diagram">5. Database ER Diagram</a>
+        <a href="#infrastructure">6. Infrastructure & Deployment</a>
+        <a href="#security">7. Security Architecture</a>
+        <a href="#realtime">8. Real-Time Architecture</a>
+        <a href="#scalability">9. Scalability Strategy</a>
+        <a href="#team">10. Team Structure</a>
+        <a href="#gantt">11. Phase & Gantt Chart</a>
+        <a href="#sprints">12. Sprint-by-Sprint</a>
+        <a href="#milestones">13. Milestones</a>
+        <a href="#risks">14. Risk Register</a>
+        <a href="#dependencies">15. Dependencies</a>
+        <a href="#velocity">16. Sprint Velocity</a>
+        <a href="#dod">17. Definition of Done</a>
+        <a href="#cost">18. Cost Estimation</a>
+        <a href="#comms">19. Communication Plan</a>
+        <a href="#commercial">20. Commercial Terms</a>
+      </nav>
+    </aside>
+    <main class="content">
+      <h1 style="font-size: 2rem; color: var(--secondary); margin-bottom: 0.5rem;">Helpee Elder Care Platform</h1>
+      <p style="color: var(--text-muted); margin-bottom: 2rem;">Technical Plan & Architecture — 52 Weeks, 26 Sprints</p>
+
+      <!-- 1. Project Overview -->
+      <h2 id="overview">1. Project Overview</h2>
+      <div class="card">
+        <h4>Summary</h4>
+        <p><strong>Project:</strong> Helpee Elder Care Platform</p>
+        <p><strong>Total Duration:</strong> 52 weeks (~12 months)</p>
+        <p><strong>Sprint Cadence:</strong> 2 weeks per sprint, 26 sprints total</p>
+        <p><strong>Methodology:</strong> Agile Scrum</p>
+        <p><strong>Ceremonies:</strong> Sprint Planning (Day 1), Daily Standups, Sprint Review + Retro (Day 10)</p>
+        <p><strong>Team Size:</strong> 18 people</p>
+        <p><strong>Total Features:</strong> 52 (26 P0 + 26 P1) across 5 distinct applications</p>
+      </div>
+      <h3>Phase Distribution</h3>
+      <div class="phase-bar">
+        <span class="p0" title="Phase 0: Foundation (W1-W4)"></span>
+        <span class="p1" title="Phase 1: P0 MVP (W5-W24)"></span>
+        <span class="p2" title="Phase 2: P1 Features (W25-W42)"></span>
+        <span class="p3" title="Phase 3: Scale, Polish & Launch (W43-W52)"></span>
+      </div>
+      <p><strong>Phase 0 — Foundation:</strong> Sprints 1–2 (W1–W4)</p>
+      <p><strong>Phase 1 — P0 MVP:</strong> Sprints 3–12 (W5–W24) &mdash; 10 sprints for 26 P0 features across all 5 apps</p>
+      <p><strong>Phase 2 — P1 Features:</strong> Sprints 13–21 (W25–W42) &mdash; 9 sprints for 26 P1 features + Elderly App</p>
+      <p><strong>Phase 3 — Scale, Polish &amp; Launch:</strong> Sprints 22–26 (W43–W52) &mdash; 5 sprints for optimization, security, and production launch</p>
+
+      <!-- 2. System Architecture -->
+      <h2 id="architecture">2. System Architecture</h2>
+      <p>Helpee is a <strong>modular monolith</strong> (NestJS) serving five client applications through a versioned REST API with WebSocket support for real-time features. <strong>PostgreSQL</strong> with <strong>PostGIS</strong> handles all persistent data including geospatial queries. <strong>Redis</strong> provides caching and pub/sub for live location streaming. <strong>BullMQ</strong> handles async jobs. <strong>AWS</strong> provides the cloud infrastructure.</p>
+      <div class="row-label">CLIENT APPLICATIONS (5 APPS)</div>
+      <div class="diagram-row">
+        <div class="diagram-box" style="background: #4361ee; border-color: #2d4fcc; color: #fff;">Company Admin<br><span class="sub">Next.js 14 · Web</span></div>
+        <div class="diagram-box" style="background: #4361ee; border-color: #2d4fcc; color: #fff;">Franchise Admin<br><span class="sub">Next.js 14 · Web</span></div>
+        <div class="diagram-box" style="background: #4361ee; border-color: #2d4fcc; color: #fff;">Caregiver App<br><span class="sub">React Native · iOS/Android</span></div>
+        <div class="diagram-box" style="background: #4361ee; border-color: #2d4fcc; color: #fff;">Family App<br><span class="sub">React Native · iOS/Android</span></div>
+        <div class="diagram-box" style="background: #4361ee; border-color: #2d4fcc; color: #fff;">Elderly App<br><span class="sub">React Native · iOS/Android</span></div>
+      </div>
+      <div class="arrow-down">↓</div>
+      <div class="row-label">LOAD BALANCER</div>
+      <div class="diagram-row">
+        <div class="diagram-box" style="background: #3f37c9; border-color: #2e28a0; color: #fff;">AWS ALB<br><span class="sub">HTTPS termination</span></div>
+      </div>
+      <div class="arrow-down">↓</div>
+      <div class="row-label">API GATEWAY</div>
+      <div class="diagram-row">
+        <div class="diagram-box" style="background: #3f37c9; border-color: #2e28a0; color: #fff;">NestJS API (ECS Fargate)<br><span class="sub">/api/v1/*</span></div>
+      </div>
+      <div class="arrow-down">↓</div>
+      <div class="row-label">SERVICES</div>
+      <div class="diagram-row">
+        <div class="diagram-box" style="background: #3f37c9; border-color: #2e28a0; color: #fff;">Auth / RBAC</div>
+        <div class="diagram-box" style="background: #3f37c9; border-color: #2e28a0; color: #fff;">Matching Engine</div>
+        <div class="diagram-box" style="background: #3f37c9; border-color: #2e28a0; color: #fff;">Shift & Attendance</div>
+        <div class="diagram-box" style="background: #3f37c9; border-color: #2e28a0; color: #fff;">Ledger Payroll</div>
+        <div class="diagram-box" style="background: #3f37c9; border-color: #2e28a0; color: #fff;">Notification</div>
+      </div>
+      <div class="arrow-down">↓</div>
+      <div class="row-label">DATA LAYER</div>
+      <div class="diagram-row">
+        <div class="diagram-box" style="background: #06d6a0; border-color: #04b386; color: #0d1f1a;">PostgreSQL 16 + PostGIS<br><span class="sub">RDS</span></div>
+        <div class="diagram-box" style="background: #06d6a0; border-color: #04b386; color: #0d1f1a;">Redis Cache<br><span class="sub">ElastiCache</span></div>
+        <div class="diagram-box" style="background: #06d6a0; border-color: #04b386; color: #0d1f1a;">AWS S3 Storage</div>
+        <div class="diagram-box" style="background: #06d6a0; border-color: #04b386; color: #0d1f1a;">BullMQ Queue</div>
+      </div>
+      <div class="arrow-down">↓</div>
+      <div class="row-label">EXTERNAL SERVICES</div>
+      <div class="diagram-row">
+        <div class="diagram-box" style="background: #718096; border-color: #4a5568; color: #fff;">MSG91 OTP</div>
+        <div class="diagram-box" style="background: #718096; border-color: #4a5568; color: #fff;">Razorpay</div>
+        <div class="diagram-box" style="background: #718096; border-color: #4a5568; color: #fff;">Twilio Video</div>
+        <div class="diagram-box" style="background: #718096; border-color: #4a5568; color: #fff;">Google Maps</div>
+        <div class="diagram-box" style="background: #718096; border-color: #4a5568; color: #fff;">FCM / APNs Push</div>
+      </div>
+      <h3>Data Flow Diagrams</h3>
+      <h4 style="font-size: 1rem; margin-top: 1rem;">Care Request to Shift Activation Flow</h4>
+      <div class="flow-diagram" style="padding: 1rem; background: #f8fafc; border-radius: 8px;">
+        <span class="flow-box">Family creates request</span><span class="flow-arrow">→</span><span class="flow-box">System assesses</span><span class="flow-arrow">→</span><span class="flow-box">Matching Engine runs</span><span class="flow-arrow">→</span><span class="flow-box">Top 3 shared</span><span class="flow-arrow">→</span><span class="flow-box">Family selects</span><span class="flow-arrow">→</span><span class="flow-box">Agreement signed</span><span class="flow-arrow">→</span><span class="flow-box">Roster created</span><span class="flow-arrow">→</span><span class="flow-box">Shift scheduled</span><span class="flow-arrow">→</span><span class="flow-box">Caregiver notified</span>
+      </div>
+      <h4 style="font-size: 1rem; margin-top: 1rem;">Shift Execution Flow</h4>
+      <div style="padding: 1rem; background: #f8fafc; border-radius: 8px; overflow-x: auto; font-size: 0.85rem;">
+        <span class="flow-box">Shift scheduled</span> → <span class="flow-box">Caregiver notified</span> → <span class="flow-box">Navigates</span> → <span class="flow-box">Check-in (geofence)</span> → <span class="flow-box">Shift active</span> → <span class="flow-box">GPS 60s logging</span> → <span class="flow-box">Tasks + Vitals logged</span> → <span class="flow-box">Check-out (geofence)</span> → <span class="flow-box">Shift completed</span> → <span class="flow-box">Earnings calc</span> → <span class="flow-box">Summary to family</span>
+      </div>
+      <h4 style="font-size: 1rem; margin-top: 1rem;">Payment Flow</h4>
+      <div style="padding: 1rem; background: #f8fafc; border-radius: 8px; overflow-x: auto; font-size: 0.85rem;">
+        <span class="flow-box">Shifts in month</span> → <span class="flow-box">Invoice generated</span> → <span class="flow-box">Family notified</span> → <span class="flow-box">Razorpay payment</span> → <span class="flow-box">Webhook received</span> → <span class="flow-box">Invoice paid</span> → <span class="flow-box">Earnings updated</span> → <span class="flow-box">Payroll batch</span> → <span class="flow-box">Admin approval</span> → <span class="flow-box">Payouts (T+7)</span>
+      </div>
+      <h4 style="font-size: 1rem; margin-top: 1rem;">Abnormal Vitals Alert Flow</h4>
+      <div style="padding: 1rem; background: #f8fafc; border-radius: 8px; overflow-x: auto; font-size: 0.85rem;">
+        <span class="flow-box">Caregiver logs vital</span> → <span class="flow-box">Threshold check</span> → <span class="flow-box">Abnormal detected</span> → <span class="flow-box">Push to family (≤60s)</span> + <span class="flow-box">Push to admin</span> → <span class="flow-box">Alert logged</span> → <span class="flow-box">Admin acknowledges</span> → <span class="flow-box">Escalation if needed</span>
+      </div>
+
+      <!-- 3. Backend Module Architecture -->
+      <h2 id="backend">3. Backend Module Architecture</h2>
+      <p>All NestJS modules in a modular monolith. Each box shows name and key responsibilities.</p>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1rem;">
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Auth & RBAC</strong><br>OTP, admin login, JWT, refresh tokens, role guards</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Caregiver</strong><br>Profile CRUD, onboarding, status management</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Care Request</strong><br>Request lifecycle, status transitions</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Matching Engine</strong><br>Geo + skill + availability filter, top-3 ranking</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Shift</strong><br>Shift lifecycle, accept/reject, status transitions</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Roster</strong><br>Schedule creation, conflict detection, bulk ops</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Attendance</strong><br>Geofence validation, check-in/out, no-show cron</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Location</strong><br>GPS batch logging, live streaming, route history</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Task</strong><br>Checklist CRUD, completion tracking, summaries</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Vitals</strong><br>Vitals logging, threshold detection, alerts</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Training</strong><br>Module CRUD, assessments, certification</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Ledger & Payroll</strong><br>Earnings calc, invoicing, payout cycles</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Approval</strong><br>Multi-level approval engine</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>VAS</strong><br>Catalog, ordering, commission splits</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Governance</strong><br>Blacklist, suspend, audit logging</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Notification</strong><br>Push, SMS, in-app, email dispatch</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Document</strong><br>S3 upload, verification workflow</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Dispute</strong><br>Issue lifecycle, resolution</div>
+        <div class="diagram-box" style="background: #e8ecff; border-color: var(--primary); font-size: 0.8rem; text-align: left;"><strong>Video Call</strong><br>Twilio room creation, scheduling</div>
+      </div>
+
+      <!-- 4. Tech Stack -->
+      <h2 id="tech-stack">4. Tech Stack</h2>
+      <table>
+        <thead><tr><th>Layer</th><th>Technology</th><th>Version</th><th>Purpose</th><th>Why Chosen</th></tr></thead>
+        <tbody>
+          <tr><td>Backend Framework</td><td>NestJS</td><td>10.x</td><td>API server</td><td>TypeScript, modular, WebSocket built-in, microservices-ready</td></tr>
+          <tr><td>Language</td><td>TypeScript</td><td>5.x</td><td>All code</td><td>Type safety, shared types across stack</td></tr>
+          <tr><td>Database</td><td>PostgreSQL</td><td>16</td><td>Primary datastore</td><td>ACID, PostGIS for geospatial, mature</td></tr>
+          <tr><td>Geo Extension</td><td>PostGIS</td><td>3.x</td><td>Geospatial queries</td><td>Geofencing, distance calc, location indexing</td></tr>
+          <tr><td>ORM</td><td>Prisma</td><td>6.x</td><td>DB access</td><td>Type-safe queries, migrations, schema-first</td></tr>
+          <tr><td>Cache</td><td>Redis</td><td>7.x</td><td>Caching, pub/sub</td><td>Live location streaming, session cache, OTP store</td></tr>
+          <tr><td>Job Queue</td><td>BullMQ</td><td>5.x</td><td>Async processing</td><td>Payroll, matching, notifications, report gen</td></tr>
+          <tr><td>File Storage</td><td>AWS S3</td><td>-</td><td>Documents, photos</td><td>Scalable, presigned URLs, lifecycle policies</td></tr>
+          <tr><td>Mobile Framework</td><td>React Native</td><td>0.73+</td><td>iOS + Android</td><td>Single codebase, large ecosystem, Expo</td></tr>
+          <tr><td>Mobile Tooling</td><td>Expo</td><td>50+</td><td>Build, deploy</td><td>OTA updates, managed workflow, fast iteration</td></tr>
+          <tr><td>Admin Frontend</td><td>Next.js</td><td>14</td><td>Web portal</td><td>SSR dashboards, App Router, React ecosystem</td></tr>
+          <tr><td>Maps (Mobile)</td><td>Google Maps SDK</td><td>-</td><td>Navigation, tracking</td><td>Best coverage in India, directions API</td></tr>
+          <tr><td>Maps (Admin)</td><td>Mapbox GL JS</td><td>-</td><td>Live map dashboard</td><td>Custom styling, clustering, real-time updates</td></tr>
+          <tr><td>Video Calls</td><td>Twilio Video</td><td>-</td><td>Interviews</td><td>Reliable, India-supported, recording</td></tr>
+          <tr><td>SMS/OTP</td><td>MSG91</td><td>-</td><td>OTP delivery</td><td>India-focused, DLT registered, high deliverability</td></tr>
+          <tr><td>Payments</td><td>Razorpay</td><td>-</td><td>Invoicing, payouts</td><td>India-first, UPI, auto-debit, payout APIs</td></tr>
+          <tr><td>Push Notifications</td><td>FCM + APNs</td><td>-</td><td>Real-time alerts</td><td>Universal coverage, reliable delivery</td></tr>
+          <tr><td>Containerization</td><td>Docker</td><td>-</td><td>Packaging</td><td>Consistent environments</td></tr>
+          <tr><td>Orchestration</td><td>AWS ECS Fargate</td><td>-</td><td>Container runtime</td><td>Serverless containers, auto-scaling</td></tr>
+          <tr><td>Database Hosting</td><td>AWS RDS</td><td>-</td><td>Managed PostgreSQL</td><td>Automated backups, replicas, monitoring</td></tr>
+          <tr><td>Cache Hosting</td><td>AWS ElastiCache</td><td>-</td><td>Managed Redis</td><td>Cluster mode, failover</td></tr>
+          <tr><td>CDN</td><td>AWS CloudFront</td><td>-</td><td>Static assets, API cache</td><td>Low latency, global edge</td></tr>
+          <tr><td>CI/CD</td><td>GitHub Actions</td><td>-</td><td>Build pipeline</td><td>Lint, test, build, deploy automation</td></tr>
+          <tr><td>Error Tracking</td><td>Sentry</td><td>-</td><td>Error monitoring</td><td>Stack traces, breadcrumbs, alerts</td></tr>
+          <tr><td>Metrics</td><td>CloudWatch + Grafana</td><td>-</td><td>Observability</td><td>Custom dashboards, alerting</td></tr>
+        </tbody>
+      </table>
+
+      <!-- 5. Database ER Diagram -->
+      <h2 id="er-diagram">5. Database ER Diagram</h2>
+      <p>Tables grouped by domain with relationship lines. Key tables and columns.</p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; margin: 1rem 0;">
+        <div class="diagram-box" style="border-color: #4361ee; background: #eef2ff; text-align: left;"><strong>caregiver</strong><br>id, franchise_id, status, skills</div>
+        <div class="diagram-box" style="border-color: #4361ee; background: #eef2ff; text-align: left;"><strong>franchise</strong><br>id, name, city_id</div>
+        <div class="diagram-box" style="border-color: #4361ee; background: #eef2ff; text-align: left;"><strong>family_user</strong><br>id, phone, patient_ids</div>
+        <div class="diagram-box" style="border-color: #4361ee; background: #eef2ff; text-align: left;"><strong>patient</strong><br>id, family_user_id, address</div>
+        <div class="diagram-box" style="border-color: #4361ee; background: #eef2ff; text-align: left;"><strong>admin_user</strong><br>id, role, franchise_id</div>
+        <div class="diagram-box" style="border-color: #06d6a0; background: #d1fae5; text-align: left;"><strong>care_request</strong><br>id, family_user_id, patient_id</div>
+        <div class="diagram-box" style="border-color: #06d6a0; background: #d1fae5; text-align: left;"><strong>match_result</strong><br>id, care_request_id</div>
+        <div class="diagram-box" style="border-color: #06d6a0; background: #d1fae5; text-align: left;"><strong>service_agreement</strong><br>id, care_request_id</div>
+        <div class="diagram-box" style="border-color: #06d6a0; background: #d1fae5; text-align: left;"><strong>shift</strong><br>id, caregiver_id, roster_id, patient_id</div>
+        <div class="diagram-box" style="border-color: #06d6a0; background: #d1fae5; text-align: left;"><strong>roster</strong><br>id, patient_id, dates</div>
+        <div class="diagram-box" style="border-color: #7c3aed; background: #ede9fe; text-align: left;"><strong>task_log</strong><br>id, shift_id, task_id</div>
+        <div class="diagram-box" style="border-color: #7c3aed; background: #ede9fe; text-align: left;"><strong>vitals_log</strong><br>id, shift_id, vital_type, value</div>
+        <div class="diagram-box" style="border-color: #7c3aed; background: #ede9fe; text-align: left;"><strong>caregiver_location_log</strong><br>id, shift_id, lat, lng</div>
+        <div class="diagram-box" style="border-color: #7c3aed; background: #ede9fe; text-align: left;"><strong>geofence</strong><br>id, patient_id, radius_m</div>
+        <div class="diagram-box" style="border-color: #ea580c; background: #ffedd5; text-align: left;"><strong>earning</strong><br>id, caregiver_id, shift_id</div>
+        <div class="diagram-box" style="border-color: #ea580c; background: #ffedd5; text-align: left;"><strong>commission</strong><br>id, franchise_id, shift_id</div>
+        <div class="diagram-box" style="border-color: #ea580c; background: #ffedd5; text-align: left;"><strong>invoice</strong><br>id, family_user_id, amount</div>
+        <div class="diagram-box" style="border-color: #ea580c; background: #ffedd5; text-align: left;"><strong>family_payment</strong><br>id, invoice_id</div>
+        <div class="diagram-box" style="border-color: #718096; background: #f1f5f9; text-align: left;"><strong>approval</strong><br>id, entity_type</div>
+        <div class="diagram-box" style="border-color: #718096; background: #f1f5f9; text-align: left;"><strong>dispute</strong><br>id, shift_id</div>
+        <div class="diagram-box" style="border-color: #718096; background: #f1f5f9; text-align: left;"><strong>notification</strong><br>id, user_id, channel</div>
+        <div class="diagram-box" style="border-color: #718096; background: #f1f5f9; text-align: left;"><strong>audit_log</strong><br>id, actor_id, action</div>
+        <div class="diagram-box" style="border-color: #718096; background: #f1f5f9; text-align: left;"><strong>document</strong><br>id, s3_key</div>
+        <div class="diagram-box" style="border-color: #718096; background: #f1f5f9; text-align: left;"><strong>training_module</strong><br>id, title</div>
+        <div class="diagram-box" style="border-color: #718096; background: #f1f5f9; text-align: left;"><strong>certification</strong><br>id, caregiver_id</div>
+        <div class="diagram-box" style="border-color: #718096; background: #f1f5f9; text-align: left;"><strong>caregiver_skill</strong><br>id, caregiver_id, skill</div>
+        <div class="diagram-box" style="border-color: #718096; background: #f1f5f9; text-align: left;"><strong>vas_catalog</strong><br>id, name</div>
+        <div class="diagram-box" style="border-color: #718096; background: #f1f5f9; text-align: left;"><strong>vas_order</strong><br>id, commission_id</div>
+        <div class="diagram-box" style="border-color: #718096; background: #f1f5f9; text-align: left;"><strong>video_call</strong><br>id, twilio_room</div>
+        <div class="diagram-box" style="border-color: #718096; background: #f1f5f9; text-align: left;"><strong>elderly_feedback</strong><br>id, shift_id</div>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--muted);"><strong>Key relationships:</strong> caregiver → franchise (belongs_to, optional) · care_request → family_user, patient · shift → caregiver, patient, roster, care_request · task_log, vitals_log → shift · earning → caregiver, shift · commission → franchise, shift, vas_order</p>
+
+      <!-- 6. Infrastructure & Deployment -->
+      <h2 id="infrastructure">6. Infrastructure & Deployment</h2>
+      <h3>6.1 AWS Infrastructure</h3>
+      <div style="padding: 1.5rem; background: #f8fafc; border-radius: 8px; border: 1px solid var(--border);">
+        <div class="row-label">TRAFFIC FLOW</div>
+        <div class="flow-step"><span class="flow-box">Internet</span> → <span class="flow-box">Route 53 (DNS)</span> → <span class="flow-box">CloudFront (CDN)</span> → <span class="flow-box">ALB (Load Balancer)</span></div>
+        <div class="arrow-down">↓</div>
+        <div class="row-label">ECS FARGATE CLUSTER</div>
+        <div class="diagram-row">
+          <div class="diagram-box" style="background: #3f37c9; color: #fff;">API Service (x3)<br><span class="sub">Auto-scaling</span></div>
+          <div class="diagram-box" style="background: #3f37c9; color: #fff;">Worker Service<br><span class="sub">BullMQ consumers</span></div>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="row-label">DATA & OBSERVABILITY</div>
+        <div class="diagram-row">
+          <div class="diagram-box" style="background: #06d6a0; color: #0d1f1a;">RDS PostgreSQL (Multi-AZ)<br><span class="sub">Primary + Read replica</span></div>
+          <div class="diagram-box" style="background: #06d6a0; color: #0d1f1a;">ElastiCache Redis<br><span class="sub">Cache + Pub/Sub</span></div>
+          <div class="diagram-box" style="background: #06d6a0; color: #0d1f1a;">S3 Buckets<br><span class="sub">uploads, training, exports</span></div>
+          <div class="diagram-box" style="background: #718096; color: #fff;">CloudWatch<br><span class="sub">Logs/Metrics → Grafana, Sentry</span></div>
+        </div>
+        <p style="font-size: 0.85rem; margin-top: 1rem;"><strong>Network:</strong> VPC with public subnets (ALB) and private subnets (services, DB). Multi-AZ for high availability.</p>
+      </div>
+      <h3>6.2 Deployment Pipeline</h3>
+      <div style="padding: 1.5rem; background: #f8fafc; border-radius: 8px; overflow-x: auto;">
+        <div class="flow-step" style="flex-wrap: wrap; gap: 0.5rem;">
+          <span class="flow-box" style="background: #06d6a0; color: #0d1f1a; border: none;">Developer pushes</span><span class="flow-arrow">→</span>
+          <span class="flow-box" style="background: #06d6a0; color: #0d1f1a; border: none;">GitHub Actions</span><span class="flow-arrow">→</span>
+          <span class="flow-box" style="background: #06d6a0; color: #0d1f1a; border: none;">Lint + TypeCheck</span><span class="flow-arrow">→</span>
+          <span class="flow-box" style="background: #06d6a0; color: #0d1f1a; border: none;">Unit Tests</span><span class="flow-arrow">→</span>
+          <span class="flow-box" style="background: #06d6a0; color: #0d1f1a; border: none;">Build Docker</span><span class="flow-arrow">→</span>
+          <span class="flow-box" style="background: #06d6a0; color: #0d1f1a; border: none;">Push ECR</span><span class="flow-arrow">→</span>
+          <span class="flow-box" style="background: #06d6a0; color: #0d1f1a; border: none;">Deploy Staging</span><span class="flow-arrow">→</span>
+          <span class="flow-box" style="background: #06d6a0; color: #0d1f1a; border: none;">E2E Tests</span><span class="flow-arrow">→</span>
+          <span class="flow-box" style="background: #4361ee; color: #fff; border: none;">Manual Approval</span><span class="flow-arrow">→</span>
+          <span class="flow-box" style="background: #06d6a0; color: #0d1f1a; border: none;">Deploy Prod</span><span class="flow-arrow">→</span>
+          <span class="flow-box" style="background: #06d6a0; color: #0d1f1a; border: none;">Health Check</span><span class="flow-arrow">→</span>
+          <span class="flow-box" style="background: #ef476f; color: #fff; border: none;">Rollback if unhealthy</span>
+        </div>
+        <p style="font-size: 0.85rem; margin-top: 1rem; color: var(--text-muted);"><strong>Environments:</strong> Development (local) → Staging (AWS, mirrors prod) → Production (AWS, multi-AZ). Green = automated, Blue = manual.</p>
+      </div>
+
+      <h3>6.3 Infrastructure Build Timeline (W1&ndash;W2)</h3>
+      <p>All cloud infrastructure is provisioned and operational within the first two weeks (Phase 0). This runs in parallel with monorepo scaffolding and app setup.</p>
+
+      <div class="card" style="border-left: 4px solid var(--phase-foundation); margin-bottom: 1rem;">
+        <h4 style="margin-top: 0; color: var(--primary);">Week 1 &mdash; Core Infrastructure Provisioning</h4>
+        <div style="padding: 1rem; background: #f8fafc; border-radius: 6px; margin-bottom: 0.75rem;">
+          <div class="flow-step" style="flex-wrap: wrap; gap: 0.5rem;">
+            <span class="flow-box" style="background: var(--phase-foundation); color: #fff; border: none;">AWS Account + Org</span><span class="flow-arrow">&rarr;</span>
+            <span class="flow-box" style="background: var(--phase-foundation); color: #fff; border: none;">VPC + Subnets</span><span class="flow-arrow">&rarr;</span>
+            <span class="flow-box" style="background: var(--phase-foundation); color: #fff; border: none;">Route 53 (DNS)</span><span class="flow-arrow">&rarr;</span>
+            <span class="flow-box" style="background: var(--phase-foundation); color: #fff; border: none;">RDS PostgreSQL 16</span><span class="flow-arrow">&rarr;</span>
+            <span class="flow-box" style="background: var(--phase-foundation); color: #fff; border: none;">ElastiCache Redis</span><span class="flow-arrow">&rarr;</span>
+            <span class="flow-box" style="background: var(--phase-foundation); color: #fff; border: none;">S3 Buckets</span>
+          </div>
+        </div>
+        <table style="margin-bottom: 0;">
+          <thead><tr><th style="width: 35%;">Task</th><th>Details</th><th style="width: 15%;">Owner</th></tr></thead>
+          <tbody>
+            <tr><td>AWS Account &amp; Organization</td><td>Create AWS organization, billing alerts, root account MFA, sub-accounts for dev/staging/prod</td><td>DevOps</td></tr>
+            <tr><td>VPC + Network</td><td>VPC with public subnets (ALB) and private subnets (services, DB). NAT Gateway. Security groups. Multi-AZ config.</td><td>DevOps</td></tr>
+            <tr><td>Route 53 Domain</td><td>Purchase/configure helpee.in domain. DNS zones for api.helpee.in, admin.helpee.in, franchise.helpee.in</td><td>DevOps</td></tr>
+            <tr><td>RDS PostgreSQL 16 + PostGIS</td><td>Multi-AZ deployment, automated backups (7-day retention), parameter group tuning, PostGIS extension enabled</td><td>DevOps + Backend Lead</td></tr>
+            <tr><td>ElastiCache Redis</td><td>Redis 7.x cluster, 2-node (primary + replica), used for OTP store, session cache, pub/sub</td><td>DevOps</td></tr>
+            <tr><td>S3 Buckets</td><td>3 buckets: <code>helpee-uploads</code> (documents, photos), <code>helpee-training</code> (video/PDF), <code>helpee-exports</code> (reports). Lifecycle policies, CORS, presigned URL config.</td><td>DevOps</td></tr>
+            <tr><td>ECR Repository</td><td>Container registry for Docker images. Image scanning enabled.</td><td>DevOps</td></tr>
+            <tr><td>IAM Roles + Policies</td><td>Service roles for ECS, S3 access, RDS access. Least-privilege policies. Developer IAM users with MFA.</td><td>DevOps</td></tr>
+            <tr><td>Docker Base Images</td><td>Node.js 20 Alpine base image. Multi-stage Dockerfile for API + worker.</td><td>DevOps + Eng Lead</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="border-left: 4px solid var(--phase-foundation); margin-bottom: 1rem;">
+        <h4 style="margin-top: 0; color: var(--primary);">Week 2 &mdash; Services, CI/CD &amp; Staging Go-Live</h4>
+        <div style="padding: 1rem; background: #f8fafc; border-radius: 6px; margin-bottom: 0.75rem;">
+          <div class="flow-step" style="flex-wrap: wrap; gap: 0.5rem;">
+            <span class="flow-box" style="background: var(--phase-foundation); color: #fff; border: none;">ECS Fargate Cluster</span><span class="flow-arrow">&rarr;</span>
+            <span class="flow-box" style="background: var(--phase-foundation); color: #fff; border: none;">ALB + HTTPS</span><span class="flow-arrow">&rarr;</span>
+            <span class="flow-box" style="background: var(--phase-foundation); color: #fff; border: none;">GitHub Actions CI/CD</span><span class="flow-arrow">&rarr;</span>
+            <span class="flow-box" style="background: var(--phase-foundation); color: #fff; border: none;">CloudWatch + Sentry</span><span class="flow-arrow">&rarr;</span>
+            <span class="flow-box" style="background: var(--phase-foundation); color: #fff; border: none;">CloudFront CDN</span><span class="flow-arrow">&rarr;</span>
+            <span class="flow-box" style="background: var(--success); color: #0d1f1a; border: none;">Staging Live</span>
+          </div>
+        </div>
+        <table style="margin-bottom: 0;">
+          <thead><tr><th style="width: 35%;">Task</th><th>Details</th><th style="width: 15%;">Owner</th></tr></thead>
+          <tbody>
+            <tr><td>ECS Fargate Cluster</td><td>Cluster creation, task definitions for API service (x2) + worker service (x1), service auto-scaling policies (CPU 70% target)</td><td>DevOps</td></tr>
+            <tr><td>ALB + HTTPS</td><td>Application Load Balancer with HTTPS listener, ACM certificate for *.helpee.in, health check endpoints</td><td>DevOps</td></tr>
+            <tr><td>GitHub Actions CI/CD</td><td>Pipeline: lint &rarr; type-check &rarr; unit tests &rarr; Docker build &rarr; push ECR &rarr; deploy staging &rarr; E2E tests. Branch protection rules.</td><td>DevOps + Eng Lead</td></tr>
+            <tr><td>CloudWatch + Alarms</td><td>Log groups for API + worker. Basic alarms: CPU &gt;80%, memory &gt;80%, 5xx error rate &gt;1%, RDS connections &gt;80%</td><td>DevOps</td></tr>
+            <tr><td>Sentry Project</td><td>Error tracking project for backend + 3 mobile apps + 2 web portals. Source maps configured.</td><td>DevOps</td></tr>
+            <tr><td>BullMQ Queue</td><td>Queue infrastructure on Redis. Named queues: notifications, matching, payroll, reports. Dead-letter queue config.</td><td>Backend Lead</td></tr>
+            <tr><td>CloudFront CDN</td><td>Distribution for static assets (admin portals), S3 origin for uploads with signed URLs</td><td>DevOps</td></tr>
+            <tr><td>Staging Environment</td><td>Full staging environment mirroring production topology. All services running. Accessible at staging.helpee.in</td><td>DevOps</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--muted);"><strong>Exit criteria (end of W2):</strong> All AWS services provisioned, CI/CD pipeline deploying to staging on every merge to <code>main</code>, staging environment accessible and healthy, all team members have appropriate access.</p>
+
+      <!-- 7. Security Architecture -->
+      <h2 id="security">7. Security Architecture</h2>
+      <h3>Layers</h3>
+      <ul>
+        <li><strong>TLS 1.3</strong> everywhere (client ↔ ALB ↔ services)</li>
+        <li><strong>JWT auth flow:</strong> Login → Access Token (15min) + Refresh Token (7d) → Refresh rotation</li>
+        <li><strong>RBAC:</strong> 5 roles with permission matrix below</li>
+        <li><strong>Data encryption:</strong> AES-256 at rest (RDS, S3), TLS in transit</li>
+        <li><strong>Health data segregation:</strong> vitals_log in separate schema/access controls</li>
+        <li><strong>API rate limiting</strong> per role</li>
+        <li><strong>Audit logging</strong> on all admin actions</li>
+      </ul>
+      <h3>Permission Matrix</h3>
+      <table style="font-size: 0.8rem;">
+        <thead><tr><th>Resource</th><th>company_admin</th><th>franchise_admin</th><th>caregiver</th><th>family</th><th>elderly</th></tr></thead>
+        <tbody>
+          <tr><td>Dashboard</td><td>Full</td><td>Own city</td><td>-</td><td>-</td><td>-</td></tr>
+          <tr><td>Caregivers</td><td>All</td><td>Own franchise</td><td>Own profile</td><td>-</td><td>-</td></tr>
+          <tr><td>Shifts</td><td>All</td><td>Own franchise</td><td>Own shifts</td><td>Own patient</td><td>-</td></tr>
+          <tr><td>Roster</td><td>All</td><td>Own franchise</td><td>View own</td><td>-</td><td>-</td></tr>
+          <tr><td>Vitals</td><td>All alerts</td><td>Own franchise</td><td>Log only</td><td>Own patient</td><td>-</td></tr>
+          <tr><td>Ledger</td><td>Full</td><td>Own commission</td><td>Own earnings</td><td>Own invoices</td><td>-</td></tr>
+          <tr><td>Governance</td><td>Full</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+          <tr><td>VAS Config</td><td>Full</td><td>-</td><td>Suggest</td><td>Purchase</td><td>-</td></tr>
+          <tr><td>Approval</td><td>Full</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+          <tr><td>Dispute</td><td>All</td><td>Escalate</td><td>Create</td><td>Create</td><td>-</td></tr>
+        </tbody>
+      </table>
+
+      <!-- 8. Real-Time Architecture -->
+      <h2 id="realtime">8. Real-Time Architecture</h2>
+      <h3>Location Streaming</h3>
+      <p>Caregiver app sends GPS every 60s → API → Redis pub/sub → Admin/Family clients poll or use WebSocket</p>
+      <h3>Shift Status Updates</h3>
+      <p>Status change → Redis publish → WebSocket broadcast to subscribed clients</p>
+      <h3>Abnormal Vitals Alerts</h3>
+      <p>Vitals logged → Threshold check → If abnormal → BullMQ job → Push (FCM) + In-app + WebSocket event</p>
+      <h3>No-Show Detection</h3>
+      <p>Cron every 5 min → Checks shifts where scheduled_start + 15min &lt; now AND status = 'scheduled' → Marks no_show → Triggers alert</p>
+      <div style="padding: 1rem; background: #f8fafc; border-radius: 8px; margin-top: 1rem;">
+        <div class="flow-step"><span class="flow-box">GPS 60s</span> → <span class="flow-box">API</span> → <span class="flow-box">Redis Pub/Sub</span> → <span class="flow-box">WebSocket / Poll</span><br>
+        <span class="flow-box">Vitals</span> → <span class="flow-box">Threshold</span> → <span class="flow-box">BullMQ</span> → <span class="flow-box">Push + WebSocket</span><br>
+        <span class="flow-box">Cron 5min</span> → <span class="flow-box">No-show check</span> → <span class="flow-box">Mark no_show</span> → <span class="flow-box">Alert</span></div>
+      </div>
+
+      <!-- 9. Scalability Strategy -->
+      <h2 id="scalability">9. Scalability Strategy</h2>
+      <ul>
+        <li><strong>Current:</strong> Modular monolith (single NestJS app) — fast development, simple deployment</li>
+        <li><strong>Phase 1 extraction candidates:</strong> Location Tracking Service (high write volume), Notification Service (async, independent)</li>
+        <li><strong>Horizontal scaling:</strong> ECS auto-scaling based on CPU/memory (target 70%)</li>
+        <li><strong>Database:</strong> Read replicas for dashboard queries, connection pooling (PgBouncer)</li>
+        <li><strong>Caching:</strong> Redis for hot data (active shifts, caregiver locations, dashboard metrics)</li>
+        <li><strong>CDN:</strong> Static assets via CloudFront, API response caching for catalog endpoints</li>
+        <li><strong>Target:</strong> 10K concurrent caregivers, 50K patients, ~500 RPS at peak</li>
+      </ul>
+
+      <!-- 10. Team Structure -->
+      <h2 id="team">10. Team Structure</h2>
+      <div class="org-chart">
+        <div class="org-box"><h4>Product & Design (2)</h4><ul><li>Product Manager (1): Requirements, backlog grooming, stakeholder communication, prioritization</li><li>UI/UX Designer (1): Design system, screen designs, user testing, accessibility (especially Elderly App)</li></ul></div>
+        <div class="org-box"><h4>Engineering Lead (1)</h4><ul><li>Architecture decisions, code review, tech debt, sprint planning, cross-team coordination</li></ul></div>
+        <div class="org-box"><h4>Backend Engineers (4)</h4><ul><li>Senior: APIs, matching engine, architecture, code review</li><li>Dev 1: Shift/attendance, geo-services, location tracking</li><li>Dev 2: Ledger, payroll, payments, invoicing</li><li>Dev 3: Training, VAS, notifications, document service</li></ul></div>
+        <div class="org-box"><h4>Mobile Engineers (4)</h4><ul><li>Senior RN: Caregiver app lead, offline-first, geo features</li><li>RN Dev 1: Customer/Family app lead, booking flow, tracking, payments</li><li>RN Dev 2: Elderly app lead, accessibility-first design, simplified UX</li><li>RN Dev 3: Shared components, push notifications, deep linking</li></ul></div>
+        <div class="org-box"><h4>Frontend Engineers (3)</h4><ul><li>Senior Next.js: Company Admin portal lead, dashboard, real-time map</li><li>Frontend Dev 1: Franchise Admin portal lead, city-level operations</li><li>Frontend Dev 2: Dashboards, reports, roster calendar, maps</li></ul></div>
+        <div class="org-box"><h4>DevOps (1)</h4><ul><li>AWS infrastructure, CI/CD, Docker, monitoring, security config</li></ul></div>
+        <div class="org-box"><h4>QA (3)</h4><ul><li>QA Lead: Test strategy, automation framework, E2E tests</li><li>QA Engineer 1: Mobile testing &mdash; 3 apps, device matrix, accessibility</li><li>QA Engineer 2: Web testing &mdash; 2 portals, API testing, performance</li></ul></div>
+      </div>
+      <h3>Team Expansion Rationale</h3>
+      <table>
+        <thead><tr><th>Role</th><th>Previous</th><th>Current</th><th>Delta</th><th>Justification</th></tr></thead>
+        <tbody>
+          <tr><td>Backend Engineers</td><td>3</td><td>4</td><td>+1</td><td>Matching engine + ledger/payroll complexity, call center/CRM integrations</td></tr>
+          <tr><td>Mobile Engineers</td><td>3</td><td>4</td><td>+1</td><td>Elderly App is a standalone app (not lite mode), needs dedicated developer</td></tr>
+          <tr><td>Frontend Engineers</td><td>2</td><td>3</td><td>+1</td><td>Company Admin and Franchise Admin are 2 separate portals with distinct feature sets</td></tr>
+          <tr><td>QA</td><td>2</td><td>3</td><td>+1</td><td>5 apps = much larger test surface; dedicated mobile QA needed</td></tr>
+          <tr><td colspan="2"><strong>Net increase</strong></td><td colspan="3"><strong>+4 people (14 &rarr; 18)</strong></td></tr>
+        </tbody>
+      </table>
+      <h3>Full Team Roster</h3>
+      <table>
+        <thead><tr><th>Role</th><th>Count</th><th>Key Skills</th><th>Rate/Person/Month</th></tr></thead>
+        <tbody>
+          <tr><td>Engineering Lead</td><td>1</td><td>Architecture, code review, cross-team coord, hands-on backend</td><td>₹1.5L</td></tr>
+          <tr><td>Backend Engineers</td><td>4</td><td>NestJS, PostgreSQL, PostGIS, BullMQ</td><td>₹80K</td></tr>
+          <tr><td>Mobile Engineers</td><td>4</td><td>React Native, Expo, WatermelonDB</td><td>₹80K</td></tr>
+          <tr><td>Frontend Engineers</td><td>3</td><td>Next.js 14, React, Mapbox</td><td>₹75K</td></tr>
+          <tr><td>DevOps</td><td>1</td><td>AWS, CI/CD, Docker, monitoring</td><td>₹80K</td></tr>
+          <tr><td>QA</td><td>3</td><td>E2E, automation, performance, accessibility</td><td>₹50K</td></tr>
+          <tr><td>Product Manager</td><td>1</td><td>Requirements, prioritization, stakeholders</td><td>₹75K</td></tr>
+          <tr><td>UI/UX Designer</td><td>1</td><td>Design system, accessibility, elderly UX</td><td>₹60K</td></tr>
+          <tr><td colspan="2"><strong>Total</strong></td><td><strong>18</strong></td><td><strong>₹13.8L/month</strong></td></tr>
+        </tbody>
+      </table>
+
+      <!-- 11. Phase Distribution & Gantt Chart -->
+      <h2 id="gantt">11. Phase Distribution & Gantt Chart</h2>
+      <div class="phase-bar">
+        <span class="p0" title="Phase 0: Foundation (W1-W4)"></span>
+        <span class="p1" title="Phase 1: P0 MVP (W5-W24)"></span>
+        <span class="p2" title="Phase 2: P1 Features (W25-W42)"></span>
+        <span class="p3" title="Phase 3: Scale, Polish & Launch (W43-W52)"></span>
+      </div>
+      <div class="gantt-container" style="overflow-x: auto;">
+        <div class="gantt-phase-band" style="background: linear-gradient(to right, var(--phase-foundation) 0%, var(--phase-foundation) 7.7%, var(--phase-p0) 7.7%, var(--phase-p0) 46.2%, var(--phase-p1) 46.2%, var(--phase-p1) 80.8%, var(--phase-scale) 80.8%, var(--phase-scale) 100%); height: 14px; min-width: 1500px;"></div>
+        <div class="gantt-header gantt-sprint-row" style="min-width: 1500px;">
+          <div class="gantt-task-col" style="line-height: 1.8;">Task</div>
+          <div class="gantt-weeks-wrapper">
+            <div class="gantt-sprint-cell" style="width: 50px; min-width: 50px;">S1</div><div class="gantt-sprint-cell" style="width: 50px;">S2</div><div class="gantt-sprint-cell" style="width: 50px;">S3</div><div class="gantt-sprint-cell" style="width: 50px;">S4</div><div class="gantt-sprint-cell" style="width: 50px;">S5</div><div class="gantt-sprint-cell" style="width: 50px;">S6</div><div class="gantt-sprint-cell" style="width: 50px;">S7</div><div class="gantt-sprint-cell" style="width: 50px;">S8</div><div class="gantt-sprint-cell" style="width: 50px;">S9</div><div class="gantt-sprint-cell" style="width: 50px;">S10</div><div class="gantt-sprint-cell" style="width: 50px;">S11</div><div class="gantt-sprint-cell" style="width: 50px;">S12</div><div class="gantt-sprint-cell" style="width: 50px;">S13</div><div class="gantt-sprint-cell" style="width: 50px;">S14</div><div class="gantt-sprint-cell" style="width: 50px;">S15</div><div class="gantt-sprint-cell" style="width: 50px;">S16</div><div class="gantt-sprint-cell" style="width: 50px;">S17</div><div class="gantt-sprint-cell" style="width: 50px;">S18</div><div class="gantt-sprint-cell" style="width: 50px;">S19</div><div class="gantt-sprint-cell" style="width: 50px;">S20</div><div class="gantt-sprint-cell" style="width: 50px;">S21</div><div class="gantt-sprint-cell" style="width: 50px;">S22</div><div class="gantt-sprint-cell" style="width: 50px;">S23</div><div class="gantt-sprint-cell" style="width: 50px;">S24</div><div class="gantt-sprint-cell" style="width: 50px;">S25</div><div class="gantt-sprint-cell" style="width: 50px;">S26</div>
+          </div>
+        </div>
+        <div class="gantt-header" style="min-width: 1500px;">
+          <div class="gantt-task-col"></div>
+          <div class="gantt-weeks-wrapper">
+            <div class="gantt-week-col">W1</div><div class="gantt-week-col">W2</div><div class="gantt-week-col">W3</div><div class="gantt-week-col">W4</div><div class="gantt-week-col">W5</div><div class="gantt-week-col">W6</div><div class="gantt-week-col">W7</div><div class="gantt-week-col">W8</div><div class="gantt-week-col">W9</div><div class="gantt-week-col">W10</div><div class="gantt-week-col">W11</div><div class="gantt-week-col">W12</div><div class="gantt-week-col">W13</div><div class="gantt-week-col">W14</div><div class="gantt-week-col">W15</div><div class="gantt-week-col">W16</div><div class="gantt-week-col">W17</div><div class="gantt-week-col">W18</div><div class="gantt-week-col">W19</div><div class="gantt-week-col">W20</div><div class="gantt-week-col">W21</div><div class="gantt-week-col">W22</div><div class="gantt-week-col">W23</div><div class="gantt-week-col">W24</div><div class="gantt-week-col">W25</div><div class="gantt-week-col">W26</div><div class="gantt-week-col">W27</div><div class="gantt-week-col">W28</div><div class="gantt-week-col">W29</div><div class="gantt-week-col">W30</div><div class="gantt-week-col">W31</div><div class="gantt-week-col">W32</div><div class="gantt-week-col">W33</div><div class="gantt-week-col">W34</div><div class="gantt-week-col">W35</div><div class="gantt-week-col">W36</div><div class="gantt-week-col">W37</div><div class="gantt-week-col">W38</div><div class="gantt-week-col">W39</div><div class="gantt-week-col">W40</div><div class="gantt-week-col">W41</div><div class="gantt-week-col">W42</div><div class="gantt-week-col">W43</div><div class="gantt-week-col">W44</div><div class="gantt-week-col">W45</div><div class="gantt-week-col">W46</div><div class="gantt-week-col">W47</div><div class="gantt-week-col">W48</div><div class="gantt-week-col">W49</div><div class="gantt-week-col">W50</div><div class="gantt-week-col">W51</div><div class="gantt-week-col">W52</div>
+          </div>
+        </div>
+        <!-- PHASE 0 — FOUNDATION (W1-W4) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(72,149,239,0.2);">Phase 0 &mdash; Foundation</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Monorepo + CI/CD</div><div class="gantt-bars"><div class="gantt-bar foundation" style="left: 0; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">PostgreSQL + Prisma schema</div><div class="gantt-bars"><div class="gantt-bar foundation" style="left: 0; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Auth &amp; RBAC module</div><div class="gantt-bars"><div class="gantt-bar foundation" style="left: 25px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">App scaffolds (all 5 apps)</div><div class="gantt-bars"><div class="gantt-bar foundation" style="left: 0; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">S3, Redis, BullMQ setup</div><div class="gantt-bars"><div class="gantt-bar foundation" style="left: 25px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Base API middleware</div><div class="gantt-bars"><div class="gantt-bar foundation" style="left: 50px; width: 50px;"></div></div></div>
+        <!-- PHASE 1 — P0 MVP BACKEND (W5-W24) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(67,97,238,0.15);">Phase 1 &mdash; P0 Backend</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Caregiver onboarding APIs</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 100px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Care request &amp; matching</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 175px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Rostering &amp; shift lifecycle</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 225px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Geo-attendance &amp; task logging</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 275px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Ledger, payments, invoicing</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 350px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Notifications + SOS</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 400px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Dispute management APIs</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 425px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Direct CT onboarding APIs</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 450px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Franchise scoping APIs</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 475px; width: 75px;"></div></div></div>
+        <!-- PHASE 1 — CAREGIVER APP P0 (W5-W20) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(67,97,238,0.15);">Caregiver App (P0)</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">OTP + profile + documents</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 100px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Job offers + shift view</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 175px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Check-in/out + task screen</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 275px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Active shift + SOS</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 350px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Earnings + polish</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 400px; width: 75px;"></div></div></div>
+        <!-- PHASE 1 — CUSTOMER APP P0 (W7-W22) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(67,97,238,0.15);">Customer (Family) App (P0)</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Registration + booking flow</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 150px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Caregiver selection</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 225px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Agreement + payment</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 300px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Live tracking + daily summary</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 375px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Dispute + invoices</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 425px; width: 75px;"></div></div></div>
+        <!-- PHASE 1 — COMPANY ADMIN P0 (W7-W22) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(67,97,238,0.15);">Company Admin Portal (P0)</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Dashboard + caregiver list</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 150px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Roster calendar + shifts</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 250px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Approvals + governance</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 350px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Financial ledger</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 400px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Direct CT onboarding UI</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 450px; width: 50px;"></div></div></div>
+        <!-- PHASE 1 — FRANCHISE ADMIN P0 (W13-W24) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(67,97,238,0.15);">Franchise Admin Portal (P0)</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">City dashboard</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 300px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Caregiver pool management</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 375px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Local rostering</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 450px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Attendance monitoring</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 525px; width: 75px;"></div></div></div>
+        <!-- PHASE 1 — QA (W5-W24) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(67,97,238,0.15);">QA (Phase 1)</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Test framework setup</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 100px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Module testing (ongoing)</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 150px; width: 300px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">E2E P0 testing</div><div class="gantt-bars"><div class="gantt-bar p0" style="left: 400px; width: 200px;"></div></div></div>
+        <!-- PHASE 2 — P1 BACKEND (W25-W42) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(6,214,160,0.2);">Phase 2 &mdash; P1 Backend</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Vitals + alerts pipeline</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 600px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Training + certification</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 675px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">VAS ecosystem APIs</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 750px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Video call integration</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 825px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Offline sync APIs</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 875px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Control panel + elderly APIs</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 900px; width: 75px;"></div></div></div>
+        <!-- PHASE 2 — CAREGIVER APP P1 (W25-W36) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(6,214,160,0.2);">Caregiver App (P1)</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Vitals logging + proof of work</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 600px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Training modules</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 675px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">VAS suggestions</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 750px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Performance dashboard</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 800px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Offline support (WatermelonDB)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 850px; width: 50px;"></div></div></div>
+        <!-- PHASE 2 — CUSTOMER APP P1 (W27-W38) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(6,214,160,0.2);">Customer App (P1)</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Video interview (Twilio)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 650px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">VAS purchase flow</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 750px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Vitals dashboard</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 825px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Control panel</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 875px; width: 75px;"></div></div></div>
+        <!-- PHASE 2 — COMPANY ADMIN P1 (W25-W38) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(6,214,160,0.2);">Company Admin (P1)</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Vitals alert dashboard</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 600px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">VAS configuration</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 750px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Reports &amp; analytics</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 800px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Remote monitoring + live map</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 875px; width: 75px;"></div></div></div>
+        <!-- PHASE 2 — FRANCHISE ADMIN P1 (W29-W42) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(6,214,160,0.2);">Franchise Admin (P1)</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Training management</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 700px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Ledger &amp; financials</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 775px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">VAS upsell + escalations</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 850px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Recruitment + performance</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 925px; width: 100px;"></div></div></div>
+        <!-- PHASE 2 — ELDERLY APP (W33-W42) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(6,214,160,0.2);">Elderly App (standalone)</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Today&rsquo;s CT + SOS + calls (P0)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 800px; width: 100px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Task confirm + feedback (P1)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 900px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Schedule + wellness + gallery</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 950px; width: 75px;"></div></div></div>
+        <!-- PHASE 2 — QA (W25-W42) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(6,214,160,0.2);">QA (Phase 2)</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">P1 feature testing</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 600px; width: 325px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Accessibility testing (elderly)</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 850px; width: 175px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Cross-app integration testing</div><div class="gantt-bars"><div class="gantt-bar p1" style="left: 925px; width: 100px;"></div></div></div>
+        <!-- PHASE 3 — SCALE, POLISH & LAUNCH (W43-W52) -->
+        <div class="gantt-row"><div class="gantt-task-name" style="font-weight: 600; background: rgba(255,209,102,0.3);">Phase 3 &mdash; Scale &amp; Launch</div><div class="gantt-bars"></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Analytics + advanced reports</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1050px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Auto-reassignment engine</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1050px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Performance optimization</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1125px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Security audit + pen test</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1150px; width: 75px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">App store submission (3 apps)</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1225px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Production deployment</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1250px; width: 50px;"></div></div></div>
+        <div class="gantt-row"><div class="gantt-task-name">Monitoring + runbooks</div><div class="gantt-bars"><div class="gantt-bar scale" style="left: 1275px; width: 25px;"></div></div></div>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Gantt chart: each bar spans the indicated week range. Phase 0 = Foundation (W1&ndash;W4), Phase 1 = P0 MVP (W5&ndash;W24), Phase 2 = P1 Features (W25&ndash;W42), Phase 3 = Scale &amp; Launch (W43&ndash;W52). All 5 apps shown as separate tracks.</p>
+
+      <!-- 12. Sprint-by-Sprint Breakdown -->
+      <h2 id="sprints">12. Sprint-by-Sprint Breakdown</h2>
+
+      <!-- PHASE 0 — FOUNDATION -->
+      <div class="sprint-card"><h4>Sprint 1 (Weeks 1&ndash;2): Foundation Setup</h4><div class="sprint-meta">Phase 0 &mdash; Foundation</div><p><strong>Goals:</strong> Monorepo scaffold, DB schema, all 5 app skeletons, CI/CD</p><ul><li><strong>Backend:</strong> Turborepo setup (apps/api, apps/company-admin, apps/franchise-admin, apps/caregiver, apps/customer, apps/elderly). PostgreSQL + PostGIS + Prisma schema (35+ tables). Base NestJS structure with modules, guards, interceptors, pagination.</li><li><strong>Mobile:</strong> React Native Expo project scaffold for 3 mobile apps (caregiver, customer, elderly). Navigation structure, design system tokens, shared component library.</li><li><strong>Admin:</strong> Next.js 14 project scaffold for both Company Admin and Franchise Admin portals. Shared layout system with sidebar, routing structure.</li><li><strong>DevOps:</strong> Docker configs, GitHub Actions pipeline (lint, test, build), AWS staging environment.</li></ul><p><strong>Deliverables:</strong> Working monorepo, all 5 apps running locally, CI green, DB schema deployed to staging.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 2 (Weeks 3&ndash;4): Auth + RBAC + Infrastructure</h4><div class="sprint-meta">Phase 0 &mdash; Foundation</div><p><strong>Goals:</strong> Auth flow complete for all 5 roles, infra services operational</p><ul><li><strong>Backend:</strong> Auth module (OTP send/verify via MSG91, admin email+password login, JWT access+refresh, RBAC middleware for 5 roles: company_admin, franchise_admin, caregiver, family_user, elderly). Base middleware, rate limiting, error handling.</li><li><strong>Mobile:</strong> OTP login screens for all 3 mobile apps. Design system implementation.</li><li><strong>Admin:</strong> Login page for both admin portals with role-based redirect.</li><li><strong>DevOps:</strong> S3 bucket creation, Redis setup (OTP store, cache), BullMQ queue infrastructure.</li></ul><p><strong>Deliverables:</strong> Full auth flow working for all 5 roles, infra services operational.</p></div>
+
+      <!-- PHASE 1 — P0 MVP -->
+      <div class="sprint-card"><h4>Sprint 3 (Weeks 5&ndash;6): Caregiver Onboarding</h4><div class="sprint-meta">Phase 1 &mdash; P0 MVP</div><p><strong>Goals:</strong> Caregiver registration, document upload, admin verification</p><ul><li><strong>Backend:</strong> Caregiver CRUD APIs, document upload to S3, verification workflow endpoints, contract type (direct/franchise) handling, status management (lead &rarr; eligible &rarr; bg_check &rarr; assessed).</li><li><strong>Mobile (Caregiver):</strong> Profile setup wizard (name, phone, address, experience, skills), document upload screen (Aadhaar, PAN, certificates, photo), verification status tracking.</li><li><strong>Company Admin:</strong> Caregiver list page with filters, caregiver detail view, document verification actions, direct CT onboarding flow.</li></ul><p><strong>Deliverables:</strong> Caregiver can register + upload docs, admin can verify and onboard.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 4 (Weeks 7&ndash;8): Care Request + Matching Engine</h4><div class="sprint-meta">Phase 1 &mdash; P0 MVP</div><p><strong>Goals:</strong> Family booking flow, algorithmic matching</p><ul><li><strong>Backend:</strong> Care request CRUD, matching engine (PostGIS proximity + skill_level + availability, weighted scoring: ratings, cancellation rate, acceptance speed, SOP adherence, complaint history), match result APIs (top 3), caregiver selection endpoint.</li><li><strong>Mobile (Customer):</strong> Registration + elderly patient profile creation, care request form (service type, shift type, schedule, preferences), matched profiles screen (top 3 cards with photo, rating, experience).</li><li><strong>Company Admin:</strong> Care request list with status filters, matching status view, manual override capabilities.</li></ul><p><strong>Deliverables:</strong> Full booking flow from request to top 3 profile matching.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 5 (Weeks 9&ndash;10): Selection + Agreement + Rostering</h4><div class="sprint-meta">Phase 1 &mdash; P0 MVP</div><p><strong>Goals:</strong> Caregiver selection, agreement signing, roster creation</p><ul><li><strong>Backend:</strong> Caregiver selection + lock endpoint, service agreement generation (PDF via S3), e-sign with OTP, roster CRUD with conflict detection, shift creation from roster, geofence configuration per patient.</li><li><strong>Mobile (Customer):</strong> Caregiver selection flow, shortlist/compare, agreement view + e-sign, registration fee payment (Razorpay).</li><li><strong>Mobile (Caregiver):</strong> Job offer notification, offer detail screen, accept/reject with reason.</li><li><strong>Company Admin:</strong> Calendar view (week/month), roster creation form, drag-drop assignment.</li></ul><p><strong>Deliverables:</strong> Selection &rarr; agreement &rarr; roster flow working E2E.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 6 (Weeks 11&ndash;12): Shift Lifecycle + Geo-Attendance</h4><div class="sprint-meta">Phase 1 &mdash; P0 MVP</div><p><strong>Goals:</strong> Shift status transitions, geofence check-in/out, GPS tracking</p><ul><li><strong>Backend:</strong> Shift status transitions (scheduled &rarr; en_route &rarr; arrived &rarr; active &rarr; completed), geofence check-in (Haversine validation), GPS batch logging endpoint (60s intervals), no-show detection cron (every 5 min), deviation alerts.</li><li><strong>Mobile (Caregiver):</strong> Home screen with upcoming shifts, navigation deeplink (Google Maps), check-in button with location permission, shift timeline view.</li><li><strong>Mobile (Customer):</strong> Live shift tracking with status timeline, caregiver ETA, real-time map.</li><li><strong>Company Admin:</strong> Attendance monitoring table, no-show alerts feed.</li></ul><p><strong>Deliverables:</strong> Full geo-attendance flow, live shift tracking working.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 7 (Weeks 13&ndash;14): Task Logging + Notifications + SOS</h4><div class="sprint-meta">Phase 1 &mdash; P0 MVP | <strong>MILESTONE: P0 MVP BETA</strong></div><p><strong>Goals:</strong> Task checklist, daily summaries, push notifications, SOS</p><ul><li><strong>Backend:</strong> Task log CRUD, daily summary auto-generation, FCM push notification integration (shift updates, no-show, payment), SOS endpoint (triggers call + push to admin + family).</li><li><strong>Mobile (Caregiver):</strong> Active shift screen with task checklist, mark tasks complete with timestamp + notes, SOS button (always visible).</li><li><strong>Mobile (Customer):</strong> Daily summary view (tasks, notes), push notification handling.</li><li><strong>Company Admin:</strong> Governance actions (blacklist, suspend), notification management.</li><li><strong>QA:</strong> E2E test suite for core P0 flows (onboarding &rarr; booking &rarr; shift &rarr; summary).</li></ul><p><strong>Deliverables:</strong> P0 MVP Beta &mdash; core Caregiver + Customer + Company Admin flows working.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 8 (Weeks 15&ndash;16): Ledger + Payments + Invoicing</h4><div class="sprint-meta">Phase 1 &mdash; P0 MVP</div><p><strong>Goals:</strong> Earnings, invoicing, Razorpay integration</p><ul><li><strong>Backend:</strong> Earning calculation per completed shift, invoice generation (monthly), Razorpay integration (payment order creation, webhook handler), company ledger aggregation, approval workflow engine (multi-level chains).</li><li><strong>Mobile (Customer):</strong> Invoice list, payment flow (Razorpay SDK), payment confirmation, receipt download.</li><li><strong>Mobile (Caregiver):</strong> Earnings screen (shift-wise, weekly, monthly), payout status, earnings history.</li><li><strong>Company Admin:</strong> Financial ledger (revenue by city, margin analysis), payout exports (CSV/Excel), approval queue, invoice generation status.</li></ul><p><strong>Deliverables:</strong> Payments working E2E, ledger + approvals live.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 9 (Weeks 17&ndash;18): Dispute Management + Company Admin Dashboard</h4><div class="sprint-meta">Phase 1 &mdash; P0 MVP</div><p><strong>Goals:</strong> Dispute system, national dashboard, admin polish</p><ul><li><strong>Backend:</strong> Dispute CRUD with resolution workflow, categorization (late arrival, quality, behavior, billing), evidence attachment to S3.</li><li><strong>Mobile (Customer):</strong> Dispute creation form with category selection, evidence upload, resolution tracking.</li><li><strong>Company Admin:</strong> National dashboard (active shifts with city breakdown, no-show alerts, supply gap indicators, quick actions, abnormal vitals feed), dispute queue with resolution workflow.</li><li><strong>QA:</strong> Payment flow testing, dispute workflow testing, dashboard data validation.</li></ul><p><strong>Deliverables:</strong> Dispute system working, national dashboard live with real-time data.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 10 (Weeks 19&ndash;20): Franchise Admin &mdash; Core Setup</h4><div class="sprint-meta">Phase 1 &mdash; P0 MVP</div><p><strong>Goals:</strong> Franchise admin RBAC, city dashboard, caregiver pool</p><ul><li><strong>Backend:</strong> Franchise admin scoping (all queries filtered by franchise_id), franchise caregiver pool endpoints, franchise-specific attendance endpoints.</li><li><strong>Franchise Admin:</strong> City dashboard (active shifts, roster overview, supply gap, pending actions, key metrics), caregiver pool management (view CTs with status/availability/certification/ratings, filter, initiate onboarding, availability calendar).</li><li><strong>QA:</strong> RBAC testing &mdash; verify franchise admins can only see their own city data, data isolation checks.</li></ul><p><strong>Deliverables:</strong> Franchise admin portal operational with dashboard + CT pool management.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 11 (Weeks 21&ndash;22): Franchise Admin &mdash; Rostering + Attendance</h4><div class="sprint-meta">Phase 1 &mdash; P0 MVP</div><p><strong>Goals:</strong> Local rostering, attendance monitoring for franchise</p><ul><li><strong>Backend:</strong> Franchise-specific roster endpoints, local conflict detection, franchise attendance log endpoints.</li><li><strong>Franchise Admin:</strong> Local rostering (assign CTs to care requests, drag-drop calendar, bulk schedule, quick-swap replacement, conflict detection, auto-suggest best-fit CT), attendance monitoring (real-time check-in/out log with geofence validation, no-show alerts, geo-violation alerts, late arrival tracking).</li><li><strong>Company Admin:</strong> Rostering oversight enhancements (global view across franchises), emergency reassignment.</li></ul><p><strong>Deliverables:</strong> Franchise can independently manage local rostering and monitor attendance.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 12 (Weeks 23&ndash;24): P0 Hardening + Integration Testing</h4><div class="sprint-meta">Phase 1 &mdash; P0 MVP | <strong>MILESTONE: P0 COMPLETE</strong></div><p><strong>Goals:</strong> All P0 features across all 5 apps complete, full E2E testing</p><ul><li><strong>All teams:</strong> Bug fixes from QA, UI polish, edge case handling, cross-app integration fixes.</li><li><strong>Backend:</strong> API hardening, error handling improvements, rate limiting tuning.</li><li><strong>QA:</strong> Full E2E regression for all P0 flows across Caregiver App (6 P0), Customer App (7 P0), Company Admin (6 P0), Franchise Admin (4 P0). Performance testing (k6: 500 concurrent users). Security review (OWASP top 10).</li><li><strong>DevOps:</strong> Staging deployment validation, monitoring setup (CloudWatch alarms, Sentry).</li></ul><p><strong>Deliverables:</strong> All 26 P0 features complete and tested across all apps.</p></div>
+
+      <!-- PHASE 2 — P1 FEATURES -->
+      <div class="sprint-card"><h4>Sprint 13 (Weeks 25&ndash;26): Vitals + Proof of Work + Alerts</h4><div class="sprint-meta">Phase 2 &mdash; P1 Features</div><p><strong>Goals:</strong> Vitals logging, abnormal alerts pipeline, photo proof</p><ul><li><strong>Backend:</strong> Vitals log endpoint with threshold validation (BP sys &gt;140/&lt;90, dia &gt;90/&lt;60, pulse &gt;100/&lt;60, sugar &gt;200/&lt;70, temp &gt;100.4/&lt;96.8), abnormal alert pipeline (detect &rarr; BullMQ job &rarr; push notification &le;60s), proof of work photo upload to S3.</li><li><strong>Mobile (Caregiver):</strong> Vitals input form (per vital type), abnormal indicator, photo capture per task, upload progress.</li><li><strong>Company Admin:</strong> Abnormal vitals alert dashboard with severity levels, escalation actions, acknowledgment tracking.</li></ul><p><strong>Deliverables:</strong> Vitals flow complete, abnormal alerts working within 60s SLA.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 14 (Weeks 27&ndash;28): Training + Certification System</h4><div class="sprint-meta">Phase 2 &mdash; P1 Features</div><p><strong>Goals:</strong> Training module system, assessments, certification lifecycle</p><ul><li><strong>Backend:</strong> Training module CRUD (admin creates with video/PDF URLs), caregiver training assignment, progress tracking, assessment engine (MCQ), certification issuance with expiry, franchise batch training upload.</li><li><strong>Mobile (Caregiver):</strong> Training modules list, module viewer (video/PDF), quiz/assessment screen, certification badges on profile, renewal notifications.</li><li><strong>Franchise Admin:</strong> Training batch management (date, location, module, assigned CTs), upload attendance/assessment scores, certification status dashboard, assign refresher courses.</li></ul><p><strong>Deliverables:</strong> Full training lifecycle from module creation to certification.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 15 (Weeks 29&ndash;30): Video Interview + Customer Vitals</h4><div class="sprint-meta">Phase 2 &mdash; P1 Features</div><p><strong>Goals:</strong> Twilio Video integration, customer-facing vitals dashboard</p><ul><li><strong>Backend:</strong> Twilio Video room creation + scheduling, video call metadata logging, vitals history API with trend data.</li><li><strong>Mobile (Customer):</strong> Video interview scheduling with shortlisted CTs, in-app Twilio video call, recording option, Helpee moderator join. Vitals dashboard (BP, pulse, sugar, temp history), trend charts with date range filter, abnormal alerts with push, download vitals PDF.</li><li><strong>Mobile (Caregiver):</strong> Video call receive + join flow.</li></ul><p><strong>Deliverables:</strong> Video interviews working, family can monitor patient vitals.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 16 (Weeks 31&ndash;32): VAS Ecosystem</h4><div class="sprint-meta">Phase 2 &mdash; P1 Features</div><p><strong>Goals:</strong> Value-added services catalog, upselling, commission tracking</p><ul><li><strong>Backend:</strong> VAS catalog CRUD (admin), pricing per city, commission split config, VAS suggestion endpoint (caregiver), VAS purchase endpoint (family) with Razorpay, VAS order tracking, commission calculation for franchise + caregiver.</li><li><strong>Mobile (Caregiver):</strong> VAS suggestion flow during active shift, commission tracking in earnings.</li><li><strong>Mobile (Customer):</strong> VAS catalog browse by category, purchase flow (Razorpay), delivery/scheduling tracking.</li><li><strong>Company Admin:</strong> VAS configuration (catalog management, pricing per city, commission splits, enable/disable).</li><li><strong>Franchise Admin:</strong> VAS upsell tracking (orders, commission earned, top categories, CT leaderboard).</li></ul><p><strong>Deliverables:</strong> Full VAS lifecycle from configuration to purchase to commission.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 17 (Weeks 33&ndash;34): Elderly App &mdash; Core (P0 features)</h4><div class="sprint-meta">Phase 2 &mdash; P1 Features | <strong>MILESTONE: ELDERLY APP BETA</strong></div><p><strong>Goals:</strong> Standalone Elderly App with P0 features</p><ul><li><strong>Backend:</strong> Elderly-specific endpoints (today&rsquo;s caregiver with status/ETA, SOS trigger with multi-party notification, speed-dial contacts).</li><li><strong>Mobile (Elderly):</strong> Today&rsquo;s Caregiver screen (full-screen card, large photo 200px+, name 28px, status with colour, ETA countdown, split shift + weekly off support). SOS &amp; Emergency (prominent red 80&times;80dp button, triggers push to CT + family + admin, auto-dial, GPS shared, vibration feedback). Call Buttons (one-tap: Call Family, Call Helpee, Call Caregiver, with name + photo).</li><li><strong>QA:</strong> Accessibility testing (min 24px font, max 3 actions/screen, WCAG AAA contrast).</li></ul><p><strong>Deliverables:</strong> Elderly App with core safety features operational.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 18 (Weeks 35&ndash;36): Elderly App P1 + Customer Control Panel</h4><div class="sprint-meta">Phase 2 &mdash; P1 Features</div><p><strong>Goals:</strong> Elderly App P1 features, family control panel</p><ul><li><strong>Backend:</strong> Task confirmation endpoints, daily feedback endpoints, wellness check-in endpoints, control panel APIs (pause/resume/extend/reduce service, request replacement).</li><li><strong>Mobile (Elderly):</strong> Task confirmation (timed prompts, large Yes/No buttons), daily feedback (thumbs up/down, mood emoji), daily schedule view (timeline with icons), wellness check-in (morning prompt, 3 emoji options), photo gallery (CT recognition photos).</li><li><strong>Mobile (Customer):</strong> Control panel (pause, resume, extend, reduce, request replacement, contact care manager).</li><li><strong>QA:</strong> Elderly App full regression, control panel flow testing.</li></ul><p><strong>Deliverables:</strong> Elderly App feature-complete, customer control panel working.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 19 (Weeks 37&ndash;38): Franchise Admin P1 &mdash; Financials + Escalations</h4><div class="sprint-meta">Phase 2 &mdash; P1 Features</div><p><strong>Goals:</strong> Franchise financials, escalation management, VAS tracking</p><ul><li><strong>Backend:</strong> Franchise ledger APIs (commission per shift/VAS, CT earnings summary, payout status, monthly P&amp;L), escalation CRUD with SLA tracking.</li><li><strong>Franchise Admin:</strong> Franchise ledger &amp; financials (commission per shift, per VAS, CT earnings, payout status, P&amp;L, export CSV/Excel). Escalation management (raise to Company Admin, track status/resolution, audit trail, SLA tracking).</li><li><strong>Company Admin:</strong> Reports &amp; analytics (city-wise, franchise-wise, GST reports, CT utilization, export CSV/PDF).</li></ul><p><strong>Deliverables:</strong> Franchise financials + escalation system operational.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 20 (Weeks 39&ndash;40): Franchise Recruitment + Performance + Caregiver P1</h4><div class="sprint-meta">Phase 2 &mdash; P1 Features</div><p><strong>Goals:</strong> Recruitment pipeline, performance tracking, caregiver extras</p><ul><li><strong>Franchise Admin:</strong> Local recruitment pipeline (track leads from aggregators/field recruiters/referrals, onboarding funnel, source-wise conversion rates, finder fee tracking). Performance &amp; quality (CT performance cards, incident log, family feedback trends, benchmarking vs national average).</li><li><strong>Mobile (Caregiver):</strong> Performance dashboard (star rating, on-time %, task completion rate, monthly trend). VAS suggestion improvements.</li><li><strong>Company Admin:</strong> Remote monitoring (real-time shift event feed, live CT location on Mapbox map, vitals dashboard, task completion rate). Live shift map (status pins, city filter).</li></ul><p><strong>Deliverables:</strong> Franchise recruitment pipeline + performance management live.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 21 (Weeks 41&ndash;42): P1 Hardening + Cross-App Integration</h4><div class="sprint-meta">Phase 2 &mdash; P1 Features | <strong>MILESTONE: P1 FEATURE COMPLETE</strong></div><p><strong>Goals:</strong> All P1 features complete, cross-app integration verified</p><ul><li><strong>All teams:</strong> Bug fixes, UI polish, edge case resolution, data consistency verification across all 5 apps.</li><li><strong>Backend:</strong> API performance profiling, query optimization for P1 endpoints.</li><li><strong>QA:</strong> Full P1 regression across all 5 apps (26 P1 features). Cross-app integration testing (e.g., elderly feedback &rarr; family app, CT VAS suggestion &rarr; customer purchase &rarr; franchise commission). Accessibility regression for Elderly App. Performance testing at scale.</li></ul><p><strong>Deliverables:</strong> All 52 features (26 P0 + 26 P1) complete and tested.</p></div>
+
+      <!-- PHASE 3 — SCALE, POLISH & LAUNCH -->
+      <div class="sprint-card"><h4>Sprint 22 (Weeks 43&ndash;44): Offline Support + Analytics</h4><div class="sprint-meta">Phase 3 &mdash; Scale, Polish &amp; Launch</div><p><strong>Goals:</strong> Offline-first caregiver app, advanced reporting</p><ul><li><strong>Backend:</strong> Report generation endpoints (city-wise, franchise-wise, caregiver utilization), GST report generation, materialized views for dashboard aggregations, offline sync conflict resolution APIs.</li><li><strong>Mobile (Caregiver):</strong> WatermelonDB integration, offline task logging, offline vitals, offline check-in/out with sync queue, conflict resolution on reconnect.</li><li><strong>Company Admin:</strong> Advanced reports page with filters and export (CSV/Excel/PDF), analytics dashboard.</li></ul><p><strong>Deliverables:</strong> Caregiver app works offline, advanced reports operational.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 23 (Weeks 45&ndash;46): Auto-Reassignment + Performance Optimization</h4><div class="sprint-meta">Phase 3 &mdash; Scale, Polish &amp; Launch</div><p><strong>Goals:</strong> Smart reassignment engine, system optimization</p><ul><li><strong>Backend:</strong> Auto-reassignment engine (no-show detected &rarr; find next available CT by proximity + skills + rating &rarr; auto-assign &rarr; notify all parties). Database optimization (index audit, query analysis, PgBouncer). Redis caching strategy for hot paths.</li><li><strong>Company Admin:</strong> GPS route replay for completed shifts, audit log viewer.</li><li><strong>DevOps:</strong> CDN configuration, response compression, connection pooling tuning.</li><li><strong>QA:</strong> Performance testing (target: 1,000 concurrent users, 10K caregivers, 50K patients). Load testing, stress testing.</li></ul><p><strong>Deliverables:</strong> Auto-reassignment working, system handles target load within SLA (&lt;300ms API latency).</p></div>
+
+      <div class="sprint-card"><h4>Sprint 24 (Weeks 47&ndash;48): Security Audit + Hardening</h4><div class="sprint-meta">Phase 3 &mdash; Scale, Polish &amp; Launch | <strong>MILESTONE: SECURITY CLEARED</strong></div><p><strong>Goals:</strong> External security audit, compliance verification</p><ul><li><strong>Security:</strong> External penetration testing, OWASP compliance check, fix critical/high findings, PDPA India compliance verification, health data segregation audit.</li><li><strong>Backend:</strong> Security fixes from pen test, rate limiting hardening, audit log completeness check.</li><li><strong>DevOps:</strong> Production AWS deployment prep (multi-AZ RDS, ElastiCache cluster, ECS auto-scaling config), WAF rules, secrets management audit.</li><li><strong>QA:</strong> Security regression testing post-fixes.</li></ul><p><strong>Deliverables:</strong> Pen test passed, all critical/high findings resolved.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 25 (Weeks 49&ndash;50): App Store Submission + Staging Freeze</h4><div class="sprint-meta">Phase 3 &mdash; Scale, Polish &amp; Launch</div><p><strong>Goals:</strong> Submit all 3 mobile apps, staging freeze</p><ul><li><strong>Mobile:</strong> App Store submission (Caregiver, Customer, Elderly &mdash; iOS + Google Play = 6 submissions). Follow Apple HIG and Material Design guidelines. Screenshot generation, app descriptions, privacy policy links.</li><li><strong>Admin:</strong> Final UI polish for both web portals, responsive design verification.</li><li><strong>DevOps:</strong> Production AWS deployment (multi-AZ RDS, ElastiCache cluster, ECS auto-scaling). Staging environment frozen for release candidate testing.</li><li><strong>QA:</strong> Release candidate testing, smoke test suite across all 5 apps.</li></ul><p><strong>Deliverables:</strong> All apps submitted for review, production infra deployed.</p></div>
+
+      <div class="sprint-card"><h4>Sprint 26 (Weeks 51&ndash;52): Production Launch</h4><div class="sprint-meta">Phase 3 &mdash; Scale, Polish &amp; Launch | <strong>MILESTONE: PRODUCTION LAUNCH</strong></div><p><strong>Goals:</strong> Go live, monitoring, runbooks</p><ul><li><strong>Week 51:</strong> App store review follow-up + fixes if needed. CloudWatch alarms + Grafana dashboards. Runbook documentation (incident response, rollback procedures, escalation matrix). DNS cutover. Production smoke testing.</li><li><strong>Week 52:</strong> Go-live checklist execution. Monitoring war room (first 48h). On-call rotation setup. Post-launch hotfix buffer. Stakeholder sign-off.</li></ul><p><strong>Deliverables:</strong> Production launch complete &mdash; all 5 apps live.</p></div>
+
+      <!-- 13. Milestones -->
+      <h2 id="milestones">13. Milestones</h2>
+      <div class="milestone-timeline">
+        <div class="milestone-track" style="width: 100%; max-width: 1000px;">
+          <span class="milestone-dot" style="left: 3.8%;" title="W2: Foundation Setup"></span>
+          <span class="milestone-dot" style="left: 7.7%;" title="W4: Auth + RBAC Complete"></span>
+          <span class="milestone-dot" style="left: 11.5%;" title="W6: Caregiver Onboarding"></span>
+          <span class="milestone-dot" style="left: 15.4%;" title="W8: Matching Engine"></span>
+          <span class="milestone-dot" style="left: 23.1%;" title="W12: Shift Lifecycle"></span>
+          <span class="milestone-dot bold" style="left: 26.9%;" title="W14: P0 MVP Beta"></span>
+          <span class="milestone-dot" style="left: 34.6%;" title="W18: Disputes + Dashboard"></span>
+          <span class="milestone-dot" style="left: 42.3%;" title="W22: Franchise Admin P0"></span>
+          <span class="milestone-dot bold" style="left: 46.2%;" title="W24: P0 COMPLETE"></span>
+          <span class="milestone-dot" style="left: 53.8%;" title="W28: Training System"></span>
+          <span class="milestone-dot" style="left: 61.5%;" title="W32: VAS Ecosystem"></span>
+          <span class="milestone-dot" style="left: 65.4%;" title="W34: Elderly App Beta"></span>
+          <span class="milestone-dot bold" style="left: 80.8%;" title="W42: P1 COMPLETE"></span>
+          <span class="milestone-dot" style="left: 88.5%;" title="W46: Performance OK"></span>
+          <span class="milestone-dot" style="left: 92.3%;" title="W48: Security Cleared"></span>
+          <span class="milestone-dot bold" style="left: 100%;" title="W52: Production Launch"></span>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Milestone</th><th>Sprint</th><th>Week</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Foundation Setup</td><td>Sprint 1</td><td>W2</td><td>Monorepo, DB, CI/CD, all 5 app scaffolds</td></tr>
+          <tr><td>Auth + RBAC Complete</td><td>Sprint 2</td><td>W4</td><td>Login for all 5 roles, infrastructure services operational</td></tr>
+          <tr><td>Caregiver Onboarding</td><td>Sprint 3</td><td>W6</td><td>CT registration, document upload, admin verification</td></tr>
+          <tr><td>Matching Engine</td><td>Sprint 4</td><td>W8</td><td>Care request &rarr; algorithmic match &rarr; top 3 profiles</td></tr>
+          <tr><td>Shift Lifecycle</td><td>Sprint 6</td><td>W12</td><td>Geo check-in &rarr; tasks &rarr; GPS tracking &rarr; check-out</td></tr>
+          <tr style="background: #e7f0ff;"><td><strong>P0 MVP Beta</strong></td><td><strong>Sprint 7</strong></td><td><strong>W14</strong></td><td><strong>Core Caregiver + Customer + Company Admin flows working</strong></td></tr>
+          <tr><td>Disputes + Dashboard</td><td>Sprint 9</td><td>W18</td><td>Dispute management, national dashboard live</td></tr>
+          <tr><td>Franchise Admin P0</td><td>Sprint 11</td><td>W22</td><td>Franchise portal: dashboard, CT pool, rostering, attendance</td></tr>
+          <tr style="background: #e7f0ff;"><td><strong>P0 Complete</strong></td><td><strong>Sprint 12</strong></td><td><strong>W24</strong></td><td><strong>All 26 P0 features complete across all apps</strong></td></tr>
+          <tr><td>Training System</td><td>Sprint 14</td><td>W28</td><td>Training modules, assessments, certification</td></tr>
+          <tr><td>VAS Ecosystem</td><td>Sprint 16</td><td>W32</td><td>Catalog, upselling, commission tracking</td></tr>
+          <tr style="background: #d4f4dd;"><td><strong>Elderly App Beta</strong></td><td><strong>Sprint 17</strong></td><td><strong>W34</strong></td><td><strong>Standalone elderly app with SOS, calls, CT view</strong></td></tr>
+          <tr style="background: #d4f4dd;"><td><strong>P1 Feature Complete</strong></td><td><strong>Sprint 21</strong></td><td><strong>W42</strong></td><td><strong>All 26 P1 features done + cross-app integration verified</strong></td></tr>
+          <tr><td>Performance OK</td><td>Sprint 23</td><td>W46</td><td>Load testing passed, auto-reassignment working</td></tr>
+          <tr><td>Security Cleared</td><td>Sprint 24</td><td>W48</td><td>Pen test passed, PDPA compliance verified</td></tr>
+          <tr style="background: #fff3cd;"><td><strong>Production Launch</strong></td><td><strong>Sprint 26</strong></td><td><strong>W52</strong></td><td><strong>All 5 apps live in production</strong></td></tr>
+        </tbody>
+      </table>
+
+      <!-- 14. Risk Register -->
+      <h2 id="risks">14. Risk Register</h2>
+      <table>
+        <thead><tr><th>Risk</th><th>Probability</th><th>Impact</th><th>Mitigation</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td>Geo-fencing accuracy in dense areas</td><td><span class="badge badge-M">M</span></td><td><span class="badge badge-H">H</span></td><td>GPS + WiFi + cell triangulation; admin override for edge cases</td><td>Backend Lead</td></tr>
+          <tr><td>Low-end Android performance</td><td><span class="badge badge-H">H</span></td><td><span class="badge badge-H">H</span></td><td>Hermes engine, bundle optimization, test on budget devices</td><td>Mobile Lead</td></tr>
+          <tr><td>Razorpay integration delays</td><td><span class="badge badge-M">M</span></td><td><span class="badge badge-M">M</span></td><td>Start early in Sprint 6; Stripe as backup</td><td>Backend</td></tr>
+          <tr><td>Franchise adoption resistance</td><td><span class="badge badge-M">M</span></td><td><span class="badge badge-M">M</span></td><td>Involve partners in UAT (Sprint 8); training materials</td><td>PM</td></tr>
+          <tr><td>Health data compliance changes</td><td><span class="badge badge-L">L</span></td><td><span class="badge badge-H">H</span></td><td>Data segregation from day 1; quarterly legal review</td><td>Eng Lead</td></tr>
+          <tr><td>Battery drain from GPS tracking</td><td><span class="badge badge-H">H</span></td><td><span class="badge badge-M">M</span></td><td>Adaptive polling (60s active / 5min idle); OS-level services</td><td>Mobile Lead</td></tr>
+          <tr><td>PostGIS learning curve</td><td><span class="badge badge-M">M</span></td><td><span class="badge badge-M">M</span></td><td>Learning sprint in Week 1; document patterns</td><td>Backend</td></tr>
+          <tr><td>Third-party rate limits (MSG91, Twilio)</td><td><span class="badge badge-L">L</span></td><td><span class="badge badge-M">M</span></td><td>Exponential backoff retry; queue requests via BullMQ</td><td>Backend</td></tr>
+          <tr><td>App store rejection</td><td><span class="badge badge-M">M</span></td><td><span class="badge badge-H">H</span></td><td>Follow HIG/Material strictly; submit early for review</td><td>Mobile Lead</td></tr>
+          <tr><td>Scope creep from franchises</td><td><span class="badge badge-H">H</span></td><td><span class="badge badge-M">M</span></td><td>Strict P0/P1 boundary; change requests via PM</td><td>PM</td></tr>
+          <tr><td>Elderly app accessibility compliance</td><td><span class="badge badge-M">M</span></td><td><span class="badge badge-H">H</span></td><td>Dedicated RN dev for elderly app; WCAG AAA testing from Sprint 17; user testing with actual seniors</td><td>Mobile Lead</td></tr>
+          <tr><td>Team coordination overhead (18 people)</td><td><span class="badge badge-M">M</span></td><td><span class="badge badge-M">M</span></td><td>Clear domain ownership per dev; daily standups; Eng Lead as single point for cross-team decisions</td><td>Eng Lead</td></tr>
+          <tr><td>52-week timeline &mdash; stakeholder fatigue</td><td><span class="badge badge-M">M</span></td><td><span class="badge badge-H">H</span></td><td>Bi-weekly demos with visible progress; P0 MVP Beta at W14 as early confidence point; monthly stakeholder reports</td><td>PM</td></tr>
+          <tr><td>5-app test coverage gaps</td><td><span class="badge badge-H">H</span></td><td><span class="badge badge-H">H</span></td><td>3 dedicated QA engineers (mobile + web + API); automation framework from Sprint 3; cross-app integration test suite</td><td>QA Lead</td></tr>
+        </tbody>
+      </table>
+
+      <!-- 15. Dependencies -->
+      <h2 id="dependencies">15. Dependencies</h2>
+      <table>
+        <thead><tr><th>Dependency</th><th>Required By</th><th>Lead Time</th><th>Status</th><th>Action Required</th></tr></thead>
+        <tbody>
+          <tr><td>AWS Account + billing</td><td>Sprint 1 (W1)</td><td>1–2 days</td><td>Pending</td><td>Create AWS organization</td></tr>
+          <tr><td>MSG91 API key + sender ID</td><td>Sprint 2 (W3)</td><td>5–7 days</td><td>Pending</td><td>Apply, get DLT registered</td></tr>
+          <tr><td>Razorpay merchant account</td><td>Sprint 6 (W11)</td><td>2–3 weeks</td><td>Pending</td><td>Apply early (Sprint 4)</td></tr>
+          <tr><td>Apple Developer Account</td><td>Sprint 15 (W29)</td><td>Immediate</td><td>Pending</td><td>Enroll ($99/year)</td></tr>
+          <tr><td>Google Play Developer Account</td><td>Sprint 15 (W29)</td><td>Immediate</td><td>Pending</td><td>Enroll ($25 one-time)</td></tr>
+          <tr><td>Twilio account (Video API)</td><td>Sprint 12 (W23)</td><td>2–3 days</td><td>Pending</td><td>Create + verify</td></tr>
+          <tr><td>Domain (helpee.in/.com)</td><td>Sprint 1 (W1)</td><td>1–2 days</td><td>Pending</td><td>Purchase + Route53</td></tr>
+          <tr><td>Design System / Figma</td><td>Sprint 1 (W1)</td><td>Ongoing</td><td>Pending</td><td>Designer starts Day 1</td></tr>
+          <tr><td>Pilot franchise partner</td><td>Sprint 7 (W13)</td><td>Ongoing</td><td>Pending</td><td>PM to identify by Sprint 4</td></tr>
+          <tr><td>Test devices (5 Android + 3 iOS)</td><td>Sprint 2 (W3)</td><td>1 week</td><td>Pending</td><td>Procure budget + flagship</td></tr>
+        </tbody>
+      </table>
+
+      <!-- 16. Sprint Velocity & Estimation -->
+      <h2 id="velocity">16. Sprint Velocity & Estimation</h2>
+      <table>
+        <thead><tr><th>Phase</th><th>Sprints</th><th>Weeks</th><th>Est. Story Points</th><th>Key Outputs</th></tr></thead>
+        <tbody>
+          <tr><td>Phase 0 &mdash; Foundation</td><td>2</td><td>4</td><td>140</td><td>Infra, auth (5 roles), DB (35+ tables), CI/CD, all 5 app scaffolds</td></tr>
+          <tr><td>Phase 1 &mdash; P0 MVP</td><td>10</td><td>20</td><td>720</td><td>26 P0 features across all 5 apps, full E2E testing</td></tr>
+          <tr><td>Phase 2 &mdash; P1 Features</td><td>9</td><td>18</td><td>650</td><td>26 P1 features, standalone Elderly App, cross-app integration</td></tr>
+          <tr><td>Phase 3 &mdash; Scale &amp; Launch</td><td>5</td><td>10</td><td>360</td><td>Offline support, auto-reassignment, security audit, production launch</td></tr>
+          <tr><td><strong>Total</strong></td><td><strong>26</strong></td><td><strong>52</strong></td><td><strong>1,870</strong></td><td><strong>52 features across 5 apps</strong></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Team velocity assumption:</strong> ~72 story points per sprint (18 people, 2-week sprint). Velocity assumes ramp-up in Sprints 1&ndash;2 (~60 SP) and steady state from Sprint 3 onwards (~75 SP). Buffer of ~10% built into Phase 3 for unforeseen work.</p>
+
+      <!-- 17. Definition of Done -->
+      <h2 id="dod">17. Definition of Done</h2>
+      <ul class="dod-list">
+        <li>Code peer-reviewed (≥1 reviewer)</li>
+        <li>Unit tests (≥80% coverage for new code)</li>
+        <li>Integration tests for API endpoints</li>
+        <li>No linter errors or warnings</li>
+        <li>Swagger documentation updated</li>
+        <li>Tested in staging environment</li>
+        <li>QA sign-off</li>
+        <li>No open P0/P1 bugs</li>
+        <li>Performance within SLA targets</li>
+        <li>Responsive design verified (admin)</li>
+        <li>Accessibility requirements met (elderly mode)</li>
+        <li>Database migration tested</li>
+      </ul>
+
+      <!-- 18. Cost Estimation -->
+      <h2 id="cost">18. Cost Estimation</h2>
+      <p>Optimized for <strong>18-person team</strong> over <strong>52 weeks (12 months)</strong> with competitive resource rates.</p>
+      <table>
+        <thead><tr><th>Category</th><th>Monthly Cost</th><th>12-Month Total</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Engineering Lead (1)</td><td>₹1.5L</td><td>₹18L</td><td>Senior architect, hands-on coding</td></tr>
+          <tr><td>Backend Engineers (4)</td><td>₹3.2L</td><td>₹38.4L</td><td>₹80K/person/month</td></tr>
+          <tr><td>Mobile Engineers (4)</td><td>₹3.2L</td><td>₹38.4L</td><td>₹80K/person/month</td></tr>
+          <tr><td>Frontend Engineers (3)</td><td>₹2.25L</td><td>₹27L</td><td>₹75K/person/month</td></tr>
+          <tr><td>DevOps (1)</td><td>₹0.8L</td><td>₹9.6L</td><td>₹80K/month</td></tr>
+          <tr><td>QA team (3)</td><td>₹1.5L</td><td>₹18L</td><td>₹50K/person/month</td></tr>
+          <tr><td>Product Manager (1)</td><td>₹0.75L</td><td>₹9L</td><td>₹75K/month</td></tr>
+          <tr><td>UI/UX Designer (1)</td><td>₹0.6L</td><td>₹7.2L</td><td>₹60K/month</td></tr>
+          <tr><td colspan="2" style="text-align: right;"><strong>Team subtotal (18)</strong></td><td><strong>₹1.66 Cr</strong></td><td>₹13.8L/month</td></tr>
+          <tr><td>AWS Infrastructure</td><td>₹1L</td><td>₹12L</td><td>Dev + Staging + Prod (optimized)</td></tr>
+          <tr><td>Third-party SaaS</td><td>₹33K</td><td>₹4L</td><td>MSG91, Twilio, Razorpay fees</td></tr>
+          <tr><td>Tools &amp; Licenses</td><td>₹20K</td><td>₹2.4L</td><td>GitHub, Sentry, Figma, Mapbox</td></tr>
+          <tr><td>Test devices</td><td>&mdash;</td><td>₹1.5L</td><td>One-time: 4 Android + 2 iOS</td></tr>
+          <tr><td>Security audit</td><td>&mdash;</td><td>₹2L</td><td>One-time: external pen test</td></tr>
+          <tr><td>App store fees</td><td>&mdash;</td><td>₹10K</td><td>Apple $99 + Google $25</td></tr>
+          <tr><td>Buffer (5%)</td><td>&mdash;</td><td>₹9.4L</td><td>Contingency for unforeseen costs</td></tr>
+          <tr style="background: #fff3cd;"><td><strong>Grand Total</strong></td><td></td><td><strong>~₹1.98 Cr</strong></td><td></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Monthly burn rate:</strong> ~₹16.1L/month (team ₹13.8L + infra/SaaS/tools ₹1.5L + buffer ₹0.8L)</p>
+
+      <!-- 19. Communication Plan -->
+      <h2 id="comms">19. Communication Plan</h2>
+      <table>
+        <thead><tr><th>Event</th><th>Duration</th><th>When</th><th>Attendees</th></tr></thead>
+        <tbody>
+          <tr><td>Daily Standup</td><td>15 min</td><td>10:00 AM</td><td>All engineering</td></tr>
+          <tr><td>Sprint Planning</td><td>2 hours</td><td>Day 1 of each sprint</td><td>Full team</td></tr>
+          <tr><td>Sprint Review</td><td>1 hour</td><td>Last day of sprint</td><td>Stakeholders invited</td></tr>
+          <tr><td>Sprint Retro</td><td>45 min</td><td>After review</td><td>Engineering only</td></tr>
+          <tr><td>Backlog Grooming</td><td>1 hour</td><td>Mid-sprint</td><td>PM + Engineering Lead + QA Lead</td></tr>
+          <tr><td>Weekly Stakeholder Update</td><td>—</td><td>Friday</td><td>PM sends summary email</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Tools:</strong> Jira (backlog), Slack (communication), Confluence (docs), Figma (design)</p>
+
+      <!-- 20. Commercial Terms & Delivery Conditions -->
+      <section id="commercial">
+      <h2>20. Commercial Terms &amp; Delivery Conditions</h2>
+      <p>This section outlines the commercial structure for the Helpee Elder Care Platform project, including delivery costs, payment terms, scope boundaries, and post-delivery arrangements.</p>
+
+      <h3>20.1 Delivery Cost Summary</h3>
+      <div class="card" style="border-left: 4px solid var(--primary);">
+        <table style="margin-bottom: 0;">
+          <thead><tr><th>Cost Category</th><th>12-Month Total</th><th>Details</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Development Cost</strong></td><td><strong>₹1.66 Cr</strong></td><td>18-person team (4 Backend, 4 Mobile, 3 Frontend, 1 Eng Lead, 1 PM, 1 Designer, 1 DevOps, 3 QA) &times; 12 months</td></tr>
+            <tr><td><strong>Infrastructure Cost</strong></td><td><strong>₹12L</strong></td><td>AWS (RDS, ElastiCache, ECS Fargate, S3, CloudFront, Route 53) &mdash; dev + staging + production &times; 12 months</td></tr>
+            <tr><td><strong>Third-Party Services</strong></td><td><strong>₹6.4L</strong></td><td>MSG91 (SMS/OTP), Twilio (Video), Razorpay (payments), GitHub, Sentry, Figma, Mapbox &times; 12 months</td></tr>
+            <tr><td><strong>One-Time Costs</strong></td><td><strong>₹3.5L</strong></td><td>Test devices (₹1.5L), security audit/pen test (₹2L)</td></tr>
+            <tr><td><strong>App Store Fees</strong></td><td><strong>₹10K</strong></td><td>Apple Developer ($99/year) + Google Play ($25 one-time)</td></tr>
+            <tr><td><strong>Buffer (5%)</strong></td><td><strong>₹9.4L</strong></td><td>Contingency for scope adjustments, unforeseen dependencies</td></tr>
+            <tr style="background: #fff3cd;"><td><strong>Total Project Cost</strong></td><td><strong>~₹1.98 Cr</strong></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>20.2 Milestone-Based Payment Schedule</h3>
+      <p>Payments are tied to verified delivery milestones. Each milestone requires a formal demo and sign-off before payment is released.</p>
+      <table>
+        <thead><tr><th>Milestone</th><th>Week</th><th>%</th><th>Amount</th><th>Payment Trigger</th></tr></thead>
+        <tbody>
+          <tr style="background: rgba(72,149,239,0.1);"><td><strong>1. Project Kickoff</strong></td><td>W1</td><td>15%</td><td>~₹30L</td><td>Contract signed, team mobilised, AWS account provisioned</td></tr>
+          <tr><td><strong>2. P0 MVP Beta</strong></td><td>W14</td><td>20%</td><td>~₹40L</td><td>Core Caregiver + Customer + Company Admin flows demonstrated on staging</td></tr>
+          <tr><td><strong>3. P0 Complete</strong></td><td>W24</td><td>20%</td><td>~₹40L</td><td>All 26 P0 features across 5 apps tested and QA-signed off</td></tr>
+          <tr><td><strong>4. P1 Feature Complete</strong></td><td>W42</td><td>20%</td><td>~₹40L</td><td>All 52 features (26 P0 + 26 P1) complete, cross-app integration verified</td></tr>
+          <tr><td><strong>5. Security Cleared</strong></td><td>W48</td><td>15%</td><td>~₹30L</td><td>Penetration test passed, all critical/high findings resolved, PDPA compliance verified</td></tr>
+          <tr style="background: rgba(6,214,160,0.1);"><td><strong>6. Production Launch</strong></td><td>W52</td><td>10%</td><td>~₹20L</td><td>All 5 apps live in production, app stores approved, monitoring operational</td></tr>
+          <tr style="background: #fff3cd;"><td><strong>Total</strong></td><td></td><td><strong>100%</strong></td><td><strong>~₹1.98 Cr</strong></td><td></td></tr>
+        </tbody>
+      </table>
+      <p style="font-size: 0.85rem; color: var(--muted);">Payment is due within 15 business days of milestone sign-off. Late payments beyond 30 days may result in team ramp-down and schedule impact.</p>
+
+      <h3>20.3 Post-Delivery SaaS License (Recurring)</h3>
+      <p>After production launch (Week 52), Helpee moves to a monthly SaaS license model for continued platform operations.</p>
+      <div class="card" style="border-left: 4px solid var(--success);">
+        <h4 style="margin-top: 0;">Monthly License Includes</h4>
+        <table style="margin-bottom: 0;">
+          <thead><tr><th>Service</th><th>Coverage</th></tr></thead>
+          <tbody>
+            <tr><td>AWS Hosting &amp; Infrastructure Management</td><td>Production + staging environments, auto-scaling, backups, monitoring</td></tr>
+            <tr><td>Platform Uptime SLA</td><td>99.9% uptime guarantee (measured monthly)</td></tr>
+            <tr><td>Bug Fixes &amp; Security Patches</td><td>Critical: 4h response / 24h fix. Non-critical: 24h response / 5-day fix.</td></tr>
+            <tr><td>Third-Party Service Management</td><td>MSG91, Twilio, Razorpay, FCM/APNs &mdash; configuration, renewal, troubleshooting</td></tr>
+            <tr><td>Helpdesk Support</td><td>Business hours (Mon&ndash;Fri, 10AM&ndash;7PM IST) via email + Slack</td></tr>
+            <tr><td>Minor Updates</td><td>OS/library security patches, dependency updates, minor UI fixes</td></tr>
+            <tr><td>Database Maintenance</td><td>Backup verification, index optimization, query performance monitoring</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top: 0.75rem; margin-bottom: 0; font-size: 0.9rem;"><strong>Estimated SaaS License:</strong> ₹1.5&ndash;2.5L/month depending on user scale and transaction volume. Pricing reviewed quarterly.</p>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--muted);"><strong>Not included in SaaS license:</strong> New feature development, major version upgrades, third-party service subscription fees (billed directly by provider to Helpee), additional infrastructure scaling costs beyond agreed baseline.</p>
+
+      <h3>20.4 What Is Included</h3>
+      <div class="card" style="border-left: 4px solid var(--success);">
+        <table style="margin-bottom: 0;">
+          <thead><tr><th style="width: 5%;">#</th><th>Deliverable</th><th>Details</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Full Source Code</td><td>All 5 applications &mdash; complete source code ownership transferred at project completion</td></tr>
+            <tr><td>2</td><td>52 Features</td><td>26 P0 + 26 P1 features as defined in PRD across Caregiver App, Customer App, Elderly App, Company Admin, Franchise Admin</td></tr>
+            <tr><td>3</td><td>Database Schema + Migrations</td><td>35+ tables with Prisma schema, all migration scripts, seed data for testing</td></tr>
+            <tr><td>4</td><td>CI/CD Pipeline</td><td>GitHub Actions pipeline: lint &rarr; test &rarr; build &rarr; deploy (staging + production)</td></tr>
+            <tr><td>5</td><td>AWS Infrastructure</td><td>Full provisioning of dev, staging, and production environments (VPC, RDS, ElastiCache, ECS, S3, CloudFront, Route 53)</td></tr>
+            <tr><td>6</td><td>3 Mobile Apps</td><td>Caregiver, Customer (Family), Elderly &mdash; for both iOS and Android (React Native / Expo)</td></tr>
+            <tr><td>7</td><td>2 Web Portals</td><td>Company Admin and Franchise Admin &mdash; responsive Next.js 14 web applications</td></tr>
+            <tr><td>8</td><td>API Documentation</td><td>Swagger/OpenAPI documentation for all backend endpoints</td></tr>
+            <tr><td>9</td><td>Security Audit</td><td>External penetration testing + OWASP compliance check + remediation of critical/high findings</td></tr>
+            <tr><td>10</td><td>App Store Submission</td><td>Submission to Apple App Store + Google Play Store for all 3 mobile apps (6 submissions total)</td></tr>
+            <tr><td>11</td><td>30-Day Post-Launch Support</td><td>Bug fixes only (no new features) during the first 30 days after production launch</td></tr>
+            <tr><td>12</td><td>Source Code Handover</td><td>Complete repository access, documentation, environment variables, secrets management guide</td></tr>
+            <tr><td>13</td><td>Knowledge Transfer</td><td>2 formal knowledge transfer sessions (architecture walkthrough + operations runbook) with Helpee&rsquo;s technical team</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>20.5 What Is Excluded</h3>
+      <div class="card" style="border-left: 4px solid var(--danger);">
+        <table style="margin-bottom: 0;">
+          <thead><tr><th style="width: 5%;">#</th><th>Exclusion</th><th>Rationale</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Content Creation</td><td>Training videos, marketing copy, legal agreement text, T&amp;C documents &mdash; to be provided by Helpee</td></tr>
+            <tr><td>2</td><td>Third-Party Subscriptions (Post-Delivery)</td><td>MSG91, Twilio, Razorpay, AWS bills after Week 52 are Helpee&rsquo;s responsibility (or covered under SaaS license)</td></tr>
+            <tr><td>3</td><td>Hardware Procurement</td><td>Servers, office devices, kiosks &mdash; only test devices (4 Android + 2 iOS) are included</td></tr>
+            <tr><td>4</td><td>Call Center Setup &amp; Staffing</td><td>Physical/virtual call center infrastructure, agent hiring, training, dialer software licensing</td></tr>
+            <tr><td>5</td><td>Franchise Partner Onboarding</td><td>Business-side franchise recruitment, contract negotiation, partner training sessions</td></tr>
+            <tr><td>6</td><td>Custom Features Beyond PRD</td><td>Any feature requests beyond the 52 features defined in the PRD require a formal Change Request</td></tr>
+            <tr><td>7</td><td>Data Migration</td><td>Migration from existing WhatsApp-based operations, spreadsheets, or other legacy systems</td></tr>
+            <tr><td>8</td><td>Performance Marketing / SEO / ASO</td><td>App store optimization, digital marketing campaigns, social media management</td></tr>
+            <tr><td>9</td><td>Legal Compliance Review</td><td>PDPA audit by external legal counsel, regulatory filings &mdash; technical compliance is included, legal review is not</td></tr>
+            <tr><td>10</td><td>Ongoing Feature Development</td><td>New features or enhancements after Week 52 &mdash; available as separate engagement or under SaaS license add-on</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>20.6 UAT (User Acceptance Testing) &mdash; Helpee Responsibilities</h3>
+      <p>Helpee is responsible for User Acceptance Testing at each payment milestone. The development team provides the staging environment and deployment; Helpee validates business correctness.</p>
+      <div class="card" style="border-left: 4px solid var(--accent);">
+        <table style="margin-bottom: 0;">
+          <thead><tr><th>Parameter</th><th>Terms</th></tr></thead>
+          <tbody>
+            <tr><td><strong>UAT Window</strong></td><td>5 business days per milestone (starting from milestone demo date)</td></tr>
+            <tr><td><strong>Helpee Provides</strong></td><td>Test scenarios, test data, dedicated UAT testers, business sign-off authority</td></tr>
+            <tr><td><strong>Dev Team Provides</strong></td><td>Staging environment, deployment, bug fix turnaround during UAT window, test account credentials</td></tr>
+            <tr><td><strong>Bug Fixes During UAT</strong></td><td>Defects found within agreed scope are fixed at no additional cost</td></tr>
+            <tr><td><strong>Deemed Acceptance</strong></td><td>If no response from Helpee within 5 business days after demo, milestone is deemed accepted</td></tr>
+            <tr><td><strong>UAT Environment</strong></td><td>Staging (staging.helpee.in) &mdash; mirrors production topology, refreshed before each UAT cycle</td></tr>
+            <tr><td><strong>Severity Classification</strong></td><td>
+              <strong>Blocker:</strong> Feature non-functional, must fix before sign-off<br>
+              <strong>Major:</strong> Feature works but with significant issues, fix within UAT window<br>
+              <strong>Minor:</strong> Cosmetic or low-impact, can be deferred to next sprint<br>
+              <strong>Enhancement:</strong> Not a bug &mdash; treated as Change Request
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h4>UAT Schedule</h4>
+      <table>
+        <thead><tr><th>Milestone</th><th>UAT Start</th><th>UAT End</th><th>Scope</th></tr></thead>
+        <tbody>
+          <tr><td>P0 MVP Beta</td><td>W14 Day 1</td><td>W14 Day 5</td><td>Core Caregiver + Customer + Company Admin flows</td></tr>
+          <tr><td>P0 Complete</td><td>W24 Day 1</td><td>W24 Day 5</td><td>All 26 P0 features across all 5 apps</td></tr>
+          <tr><td>P1 Feature Complete</td><td>W42 Day 1</td><td>W42 Day 5</td><td>All 52 features, cross-app integration, Elderly App</td></tr>
+          <tr><td>Security Cleared</td><td>W48 Day 1</td><td>W48 Day 5</td><td>Security fixes verification, compliance check</td></tr>
+          <tr><td>Production Launch</td><td>W52 Day 1</td><td>W52 Day 3</td><td>Production smoke test, go-live readiness</td></tr>
+        </tbody>
+      </table>
+
+      <h3>20.7 Change Request (CR) Policy</h3>
+      <div class="card" style="border-left: 4px solid var(--warning);">
+        <table style="margin-bottom: 0;">
+          <thead><tr><th>Parameter</th><th>Terms</th></tr></thead>
+          <tbody>
+            <tr><td><strong>When Required</strong></td><td>Any scope change after Sprint 2 (W4) that adds, removes, or modifies features beyond the 52 defined in the PRD</td></tr>
+            <tr><td><strong>CR Process</strong></td><td>
+              1. Helpee submits CR with description and business justification<br>
+              2. Dev team assesses effort (story points), timeline impact, and cost<br>
+              3. Impact assessment shared within 3 business days<br>
+              4. Both PM and Helpee stakeholder must approve before implementation
+            </td></tr>
+            <tr><td><strong>Cost</strong></td><td>CRs are billed at ₹10,000/story point (or pro-rata team rate for larger requests)</td></tr>
+            <tr><td><strong>Timeline Impact</strong></td><td>CRs that exceed 20 story points may extend the overall project timeline. Impact communicated upfront.</td></tr>
+            <tr><td><strong>Priority Handling</strong></td><td>CRs are scheduled in upcoming sprints and do not displace committed sprint work unless mutually agreed</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>20.8 Warranty Period</h3>
+      <div class="card" style="border-left: 4px solid var(--success);">
+        <h4 style="margin-top: 0;">30-Day Post-Launch Warranty</h4>
+        <p>Effective from production launch date (Week 52). Covers defect fixes only &mdash; not new features or enhancements.</p>
+        <table style="margin-bottom: 0;">
+          <thead><tr><th>Severity</th><th>Response Time</th><th>Resolution Time</th><th>Examples</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Critical (P0)</strong></td><td>4 hours</td><td>24 hours</td><td>App crash, data loss, payment failure, security vulnerability</td></tr>
+            <tr><td><strong>Major (P1)</strong></td><td>8 hours</td><td>3 business days</td><td>Feature malfunction, incorrect calculations, broken workflow</td></tr>
+            <tr><td><strong>Minor (P2)</strong></td><td>24 hours</td><td>5 business days</td><td>UI glitch, typo, non-critical edge case, cosmetic issue</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top: 0.75rem; margin-bottom: 0; font-size: 0.9rem;"><strong>After warranty:</strong> Defect resolution and support are covered under the SaaS license (Section 20.3) or as a separate maintenance contract.</p>
+      </div>
+      </section>
+
+      <hr style="margin: 3rem 0 1rem; border: none; border-top: 1px solid var(--border);">
+      <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">Helpee Technical Plan & Architecture v2.0</p>

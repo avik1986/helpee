@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Helpee &mdash; UI Wireframes &amp; Mockups (5 Apps)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8fafc;
+      color: #333;
+      line-height: 1.5;
+    }
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: 280px;
+      background: #1a1a2e;
+      color: #fff;
+      padding: 24px 0;
+      overflow-y: auto;
+      z-index: 100;
+    }
+    .sidebar .brand { font-size: 22px; font-weight: 800; padding: 0 24px 6px; letter-spacing: 0.05em; color: #4cc9f0; }
+    .sidebar .brand-sub { font-size: 11px; padding: 0 24px 20px; color: rgba(255,255,255,0.5); }
+    .sidebar h3 {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 16px 24px 6px; color: rgba(255,255,255,0.4); font-weight: 700;
+    }
+    .sidebar a {
+      display: flex; align-items: baseline; gap: 6px; padding: 5px 24px; color: rgba(255,255,255,0.85);
+      text-decoration: none; font-size: 12px; transition: background 0.2s;
+    }
+    .sidebar a:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .sidebar .nav-step { font-size: 9px; font-weight: 800; color: #4cc9f0; min-width: 14px; }
+    .sidebar .nav-prd { font-size: 9px; color: rgba(255,255,255,0.35); margin-left: auto; white-space: nowrap; }
+    .main { margin-left: 280px; padding: 32px 48px 80px; width: calc(100% - 280px); }
+    .page-title { font-size: 28px; color: #1a1a2e; margin-bottom: 4px; }
+    .page-sub { color: #64748b; margin-bottom: 40px; font-size: 14px; }
+    .section { margin-bottom: 64px; }
+    .section h2 { font-size: 24px; color: #1a1a2e; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 3px solid #4361ee; }
+    .section-desc { color: #666; margin-bottom: 12px; font-size: 14px; }
+
+    /* Flow overview strip */
+    .flow-overview {
+      display: flex; align-items: center; gap: 0; padding: 16px 0; margin-bottom: 32px;
+      overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .flow-step {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      min-width: 80px; padding: 6px 8px; font-size: 10px; color: #475569; position: relative;
+    }
+    .flow-step-num {
+      width: 28px; height: 28px; border-radius: 50%; background: #4361ee; color: #fff;
+      font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+      margin-bottom: 4px;
+    }
+    .flow-step-name { font-weight: 600; line-height: 1.2; max-width: 80px; }
+    .flow-step-prd { font-size: 8px; color: #94a3b8; margin-top: 1px; }
+    .flow-arrow-h { color: #cbd5e1; font-size: 16px; flex-shrink: 0; margin: 0 -2px; }
+
+    /* Screen block with step and PRD ref */
+    .screen-block { margin-bottom: 48px; padding-bottom: 40px; border-bottom: 1px solid #e2e8f0; position: relative; }
+    .screen-block:last-child { border-bottom: none; }
+    .screen-header { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+    .screen-title { font-size: 18px; color: #1a1a2e; font-weight: 700; }
+    .screen-desc { font-size: 13px; color: #64748b; margin-bottom: 16px; }
+    .prd-ref {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+      background: linear-gradient(135deg, #4361ee, #7c3aed); color: #fff;
+      letter-spacing: 0.02em;
+    }
+    .step-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+      background: #f0fdf4; color: #047857; border: 1px solid #86efac;
+    }
+    .priority-badge {
+      display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px;
+      border-radius: 999px; margin-left: 4px;
+    }
+    .priority-badge.p0 { background: #fee2e2; color: #dc2626; }
+    .priority-badge.p1 { background: #fef3c7; color: #d97706; }
+
+    /* Flow connector between screens */
+    .flow-connector {
+      display: flex; align-items: center; justify-content: center; padding: 8px 0; margin: -20px 0 12px;
+    }
+    .flow-connector-line {
+      display: flex; flex-direction: column; align-items: center; color: #94a3b8;
+    }
+    .flow-connector-line .pipe { width: 2.5px; height: 24px; background: #cbd5e1; }
+    .flow-connector-line .arrow { font-size: 10px; color: #94a3b8; }
+    .flow-connector-label {
+      font-size: 10px; color: #64748b; font-weight: 600; background: #f1f5f9;
+      padding: 2px 10px; border-radius: 999px; border: 1px solid #e2e8f0; margin-top: 2px;
+    }
+
+    /* Mobile frame */
+    .mobile-frame {
+      width: 375px; min-height: 700px; border-radius: 40px; border: 10px solid #1a1a2e;
+      background: #fff; margin: 0 auto; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+      display: flex; flex-direction: column;
+    }
+    .mobile-status { height: 44px; background: #1a1a2e; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; font-size: 14px; font-weight: 600; color: #fff; }
+    .mobile-body { flex: 1; padding: 16px; overflow-y: auto; background: #f8fafc; }
+    .mobile-nav {
+      height: 56px; background: #fff; display: flex; align-items: center; justify-content: space-around;
+      font-size: 10px; color: #94a3b8; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); flex-shrink: 0;
+    }
+    .mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .mobile-nav-item.active { color: #4361ee; font-weight: 700; }
+    .nav-icon { width: 20px; height: 20px; border-radius: 4px; background: currentColor; opacity: 0.3; }
+    .mobile-nav-item.active .nav-icon { opacity: 0.7; }
+
+    /* Web frame */
+    .web-frame {
+      width: 100%; max-width: 1000px; min-height: 560px; border: 1px solid #d1d5db;
+      border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      display: flex; flex-direction: column; margin: 0 auto;
+    }
+    .web-titlebar {
+      height: 40px; background: #f1f5f9; display: flex; align-items: center; padding: 0 16px; gap: 8px;
+      border-bottom: 1px solid #e2e8f0; flex-shrink: 0;
+    }
+    .web-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .web-dot.r { background: #ef476f; } .web-dot.y { background: #ffd166; } .web-dot.g { background: #06d6a0; }
+    .web-body { flex: 1; display: flex; }
+    .web-sidebar { width: 200px; background: #1e293b; color: #fff; padding: 16px 0; flex-shrink: 0; }
+    .web-sidebar .ws-logo { padding: 0 16px 12px; font-weight: 700; font-size: 16px; letter-spacing: 0.05em; color: #4cc9f0; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 8px; }
+    .web-sidebar a { display: block; padding: 6px 16px; color: rgba(255,255,255,0.7); font-size: 12px; text-decoration: none; }
+    .web-sidebar a.active { color: #fff; background: rgba(255,255,255,0.1); font-weight: 600; }
+    .web-content { flex: 1; padding: 20px; background: #fff; overflow-y: auto; }
+
+    /* Wireframe elements */
+    .wf-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .wf-title { font-size: 16px; font-weight: 700; color: #1e293b; }
+    .wf-subtitle { font-size: 11px; color: #94a3b8; }
+    .wf-btn { display: inline-block; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: center; cursor: default; }
+    .wf-btn-primary { background: #4361ee; color: #fff; }
+    .wf-btn-success { background: #06d6a0; color: #fff; }
+    .wf-btn-danger { background: #ef476f; color: #fff; }
+    .wf-btn-outline { background: #fff; border: 2px solid #4361ee; color: #4361ee; }
+    .wf-btn-lg { padding: 14px 24px; font-size: 16px; border-radius: 12px; width: 100%; }
+    .wf-btn-sos { background: #ef476f; color: #fff; padding: 20px; border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; margin: 0 auto; }
+    .wf-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .wf-input { width: 100%; padding: 10px 12px; border: 1.5px solid #d1d5db; border-radius: 8px; font-size: 13px; margin-bottom: 8px; background: #fff; color: #333; }
+    .wf-label { font-size: 11px; color: #64748b; margin-bottom: 4px; font-weight: 600; display: block; }
+    .wf-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+    .wf-badge-green { background: #d1fae5; color: #059669; }
+    .wf-badge-blue { background: #dbeafe; color: #2563eb; }
+    .wf-badge-orange { background: #fef3c7; color: #d97706; }
+    .wf-badge-red { background: #fee2e2; color: #dc2626; }
+    .wf-badge-purple { background: #ede9fe; color: #7c3aed; }
+    .wf-avatar { width: 48px; height: 48px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .wf-avatar-lg { width: 80px; height: 80px; font-size: 28px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; }
+    .wf-row { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
+    .wf-stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px; }
+    .wf-stat { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; text-align: center; }
+    .wf-stat .num { font-size: 20px; font-weight: 800; color: #1e293b; display: block; }
+    .wf-stat .label { font-size: 10px; color: #94a3b8; }
+    .wf-timeline-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 6px; font-size: 12px; }
+    .wf-timeline-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+    .wf-timeline-dot.active { background: #06d6a0; }
+    .wf-timeline-dot.pending { background: #d1d5db; }
+    .wf-timeline-dot.current { background: #4361ee; }
+    .wf-divider { border: none; border-top: 1px solid #e2e8f0; margin: 12px 0; }
+    .wf-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .wf-table th { background: #f1f5f9; padding: 6px 8px; text-align: left; font-weight: 600; color: #475569; border-bottom: 1px solid #e2e8f0; }
+    .wf-table td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; }
+    .wf-progress { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin-top: 4px; }
+    .wf-progress-bar { height: 100%; border-radius: 3px; }
+    .wf-checklist-item { display: flex; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+    .wf-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #d1d5db; flex-shrink: 0; }
+    .wf-check.done { background: #06d6a0; border-color: #06d6a0; }
+    .wf-stars { color: #f59e0b; font-size: 14px; letter-spacing: 2px; }
+    .wf-map { background: linear-gradient(135deg, #e0f2fe, #dbeafe, #ede9fe); border-radius: 8px; height: 160px; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 12px; margin-bottom: 10px; position: relative; }
+    .wf-map-pin { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #ef476f; border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+    .wf-elderly { font-size: 22px !important; }
+    .wf-elderly .wf-btn-lg { font-size: 20px; padding: 18px 24px; }
+    .wf-chart { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 8px; height: 120px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 12px; margin-bottom: 10px; }
+    .wf-bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; padding: 0 8px; }
+    .wf-bar { width: 24px; border-radius: 4px 4px 0 0; }
+
+    @media print {
+      .sidebar { display: none !important; }
+      .main { margin-left: 0 !important; width: 100% !important; }
+      .mobile-frame { box-shadow: none; border-color: #999; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">HELPEE</div>
+      <div class="brand-sub">UI Mockups &middot; 5 Apps &middot; Step-by-Step Flows</div>
+
+      <h3>App 1: Company Admin (PRD &sect;5)</h3>
+      <a href="#ca-login"><span class="nav-step">1.</span> Admin Login<span class="nav-prd">Auth</span></a>
+      <a href="#ca-dashboard"><span class="nav-step">2.</span> National Dashboard<span class="nav-prd">&sect;5.1</span></a>
+      <a href="#ca-roster"><span class="nav-step">3.</span> Roster Calendar<span class="nav-prd">&sect;5.2</span></a>
+      <a href="#ca-approvals"><span class="nav-step">4.</span> Approvals Queue<span class="nav-prd">&sect;5.3</span></a>
+      <a href="#ca-governance"><span class="nav-step">5.</span> Governance<span class="nav-prd">&sect;5.4</span></a>
+      <a href="#ca-ledger"><span class="nav-step">6.</span> Financial Ledger<span class="nav-prd">&sect;5.5</span></a>
+      <a href="#ca-onboarding"><span class="nav-step">7.</span> CT Onboarding<span class="nav-prd">&sect;5.6</span></a>
+      <a href="#ca-livemap"><span class="nav-step">8.</span> Live Shift Map<span class="nav-prd">&sect;5.11</span></a>
+      <a href="#ca-reports"><span class="nav-step">9.</span> Reports &amp; Analytics<span class="nav-prd">&sect;5.9</span></a>
+
+      <h3>App 2: Franchise Admin (PRD &sect;6)</h3>
+      <a href="#fa-dashboard"><span class="nav-step">1.</span> City Dashboard<span class="nav-prd">&sect;6.1</span></a>
+      <a href="#fa-pool"><span class="nav-step">2.</span> Caregiver Pool<span class="nav-prd">&sect;6.2</span></a>
+      <a href="#fa-roster"><span class="nav-step">3.</span> Local Rostering<span class="nav-prd">&sect;6.3</span></a>
+      <a href="#fa-attendance"><span class="nav-step">4.</span> Attendance<span class="nav-prd">&sect;6.4</span></a>
+      <a href="#fa-training"><span class="nav-step">5.</span> Training Mgmt<span class="nav-prd">&sect;6.5</span></a>
+      <a href="#fa-ledger"><span class="nav-step">6.</span> Franchise Ledger<span class="nav-prd">&sect;6.6</span></a>
+      <a href="#fa-recruitment"><span class="nav-step">7.</span> Recruitment Pipeline<span class="nav-prd">&sect;6.9</span></a>
+
+      <h3>App 3: Caregiver App (PRD &sect;7)</h3>
+      <a href="#cg-otp"><span class="nav-step">1.</span> OTP Login<span class="nav-prd">&sect;7.1</span></a>
+      <a href="#cg-profile"><span class="nav-step">2.</span> Profile Setup<span class="nav-prd">&sect;7.1</span></a>
+      <a href="#cg-training"><span class="nav-step">3.</span> Training Modules<span class="nav-prd">&sect;7.10</span></a>
+      <a href="#cg-joboffer"><span class="nav-step">4.</span> Job Offer<span class="nav-prd">&sect;7.2</span></a>
+      <a href="#cg-home"><span class="nav-step">5.</span> Home &mdash; Shifts<span class="nav-prd">&sect;7.2</span></a>
+      <a href="#cg-checkin"><span class="nav-step">6.</span> Geo Check-in<span class="nav-prd">&sect;7.3</span></a>
+      <a href="#cg-tasks"><span class="nav-step">7.</span> Task Checklist<span class="nav-prd">&sect;7.4</span></a>
+      <a href="#cg-vitals"><span class="nav-step">8.</span> Vitals Logging<span class="nav-prd">&sect;7.7</span></a>
+      <a href="#cg-sos"><span class="nav-step">9.</span> SOS Emergency<span class="nav-prd">&sect;7.6</span></a>
+      <a href="#cg-earnings"><span class="nav-step">10.</span> Earnings<span class="nav-prd">&sect;7.5</span></a>
+
+      <h3>App 4: Family App (PRD &sect;8)</h3>
+      <a href="#fm-home"><span class="nav-step">1.</span> Family Home<span class="nav-prd">&sect;8.1</span></a>
+      <a href="#fm-request"><span class="nav-step">2.</span> Care Request<span class="nav-prd">&sect;8.2</span></a>
+      <a href="#fm-select"><span class="nav-step">3.</span> CT Selection<span class="nav-prd">&sect;8.3</span></a>
+      <a href="#fm-video"><span class="nav-step">4.</span> Video Interview<span class="nav-prd">&sect;8.9</span></a>
+      <a href="#fm-agreement"><span class="nav-step">5.</span> Sign Agreement<span class="nav-prd">&sect;8.4</span></a>
+      <a href="#fm-tracking"><span class="nav-step">6.</span> Live Tracking<span class="nav-prd">&sect;8.5</span></a>
+      <a href="#fm-summary"><span class="nav-step">7.</span> Daily Summary<span class="nav-prd">&sect;8.6</span></a>
+      <a href="#fm-vitals"><span class="nav-step">8.</span> Vitals Dashboard<span class="nav-prd">&sect;8.11</span></a>
+      <a href="#fm-invoice"><span class="nav-step">9.</span> Invoice &amp; Pay<span class="nav-prd">&sect;8.4</span></a>
+      <a href="#fm-dispute"><span class="nav-step">10.</span> Raise Dispute<span class="nav-prd">&sect;8.7</span></a>
+      <a href="#fm-control"><span class="nav-step">11.</span> Control Panel<span class="nav-prd">&sect;8.8</span></a>
+
+      <h3>App 5: Elderly App (PRD &sect;9)</h3>
+      <a href="#el-wellness"><span class="nav-step">1.</span> Wellness Check-In<span class="nav-prd">&sect;9.8</span></a>
+      <a href="#el-home"><span class="nav-step">2.</span> Today&rsquo;s Caregiver<span class="nav-prd">&sect;9.1</span></a>
+      <a href="#el-schedule"><span class="nav-step">3.</span> Daily Schedule<span class="nav-prd">&sect;9.6</span></a>
+      <a href="#el-medicine"><span class="nav-step">4.</span> Medicine Confirm<span class="nav-prd">&sect;9.4</span></a>
+      <a href="#el-sos"><span class="nav-step">5.</span> SOS &amp; Help<span class="nav-prd">&sect;9.2</span></a>
+      <a href="#el-feedback"><span class="nav-step">6.</span> Feedback<span class="nav-prd">&sect;9.5</span></a>
+    </aside>
+
+    <main class="main">
+      <h1 class="page-title">Helpee &mdash; UI Wireframes &amp; Mockups</h1>
+      <p class="page-sub">All 5 applications &middot; 43 screens &middot; Step-by-step flows mapped to PRD sections &middot; CXO Presentation</p>
+
+      <!-- ==================== APP 1: COMPANY ADMIN ==================== -->
+      <div class="section" id="app1-section">
+        <h2>App 1: Company Admin Web Portal <span style="font-size:14px;color:#64748b;font-weight:400;">&mdash; PRD Section 5</span></h2>
+        <p class="section-desc">Next.js web portal for national operations, finance, governance, and caregiver onboarding. Used by Helpee HQ team.</p>
+
+        <div class="flow-overview">
+          <div class="flow-step"><div class="flow-step-num">1</div><div class="flow-step-name">Login</div><div class="flow-step-prd">Auth</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">2</div><div class="flow-step-name">Dashboard</div><div class="flow-step-prd">&sect;5.1</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">3</div><div class="flow-step-name">Roster</div><div class="flow-step-prd">&sect;5.2</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">4</div><div class="flow-step-name">Approvals</div><div class="flow-step-prd">&sect;5.3</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">5</div><div class="flow-step-name">Governance</div><div class="flow-step-prd">&sect;5.4</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">6</div><div class="flow-step-name">Ledger</div><div class="flow-step-prd">&sect;5.5</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">7</div><div class="flow-step-name">CT Onboard</div><div class="flow-step-prd">&sect;5.6</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">8</div><div class="flow-step-name">Live Map</div><div class="flow-step-prd">&sect;5.11</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">9</div><div class="flow-step-name">Reports</div><div class="flow-step-prd">&sect;5.9</div></div>
+        </div>
+
+        <!-- Step 1: Admin Login -->
+        <div class="screen-block" id="ca-login">
+          <div class="screen-header"><div class="step-badge">Step 1 of 9</div><div class="prd-ref">PRD &sect;5 &mdash; Auth</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Admin Login</div>
+          <div class="screen-desc">Entry point. Company admin authenticates with email + password. RBAC determines role-based access (National Ops Head, Finance Controller, Quality Manager).</div>
+          <div class="web-frame" style="min-height: 400px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div style="flex:1; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, #1a1a2e, #16213e);">
+              <div style="background:#fff; padding:32px; border-radius:12px; width:340px; box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+                <div style="text-align:center; margin-bottom:20px;">
+                  <div style="font-size:24px; font-weight:800; color:#4361ee; letter-spacing:0.05em;">HELPEE</div>
+                  <div style="font-size:12px; color:#94a3b8;">Company Admin Portal</div>
+                </div>
+                <div class="wf-label">Email</div>
+                <div class="wf-input">admin@helpee.in</div>
+                <div class="wf-label">Password</div>
+                <div class="wf-input" style="letter-spacing:3px;">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</div>
+                <div class="wf-btn wf-btn-primary" style="width:100%; text-align:center; margin-top:8px;">Sign In</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div></div>
+
+        <!-- Step 2: Dashboard -->
+        <div class="screen-block" id="ca-dashboard">
+          <div class="screen-header"><div class="step-badge">Step 2 of 9</div><div class="prd-ref">PRD &sect;5.1</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">National Dashboard</div>
+          <div class="screen-desc">Landing screen after login. Real-time overview of active shifts, no-shows, caregiver count, pending approvals across all cities. City-wise bar chart and alert panel.</div>
+          <div class="web-frame">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar">
+                <div class="ws-logo">HELPEE</div>
+                <a class="active">Dashboard</a><a>Roster</a><a>Approvals</a><a>Governance</a><a>Ledger</a><a>Live Map</a><a>Reports</a><a>VAS Config</a><a>Settings</a>
+              </div>
+              <div class="web-content">
+                <div class="wf-header"><div class="wf-title">National Dashboard</div><div class="wf-subtitle">Last updated: 2 min ago</div></div>
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:16px;">
+                  <div class="wf-stat"><span class="num" style="color:#4361ee;">247</span><span class="label">Active Shifts</span></div>
+                  <div class="wf-stat"><span class="num" style="color:#ef476f;">3</span><span class="label">No-Shows</span></div>
+                  <div class="wf-stat"><span class="num" style="color:#06d6a0;">1,842</span><span class="label">Active Caregivers</span></div>
+                  <div class="wf-stat"><span class="num" style="color:#f59e0b;">12</span><span class="label">Pending Approvals</span></div>
+                </div>
+                <div style="display:grid; grid-template-columns:2fr 1fr; gap:12px;">
+                  <div>
+                    <div style="font-size:12px; font-weight:700; color:#475569; margin-bottom:6px;">City-wise Active Shifts</div>
+                    <div class="wf-bar-chart">
+                      <div><div class="wf-bar" style="height:60px; background:#4361ee;"></div><div style="font-size:9px;color:#94a3b8;text-align:center;">MUM</div></div>
+                      <div><div class="wf-bar" style="height:45px; background:#4895ef;"></div><div style="font-size:9px;color:#94a3b8;text-align:center;">DEL</div></div>
+                      <div><div class="wf-bar" style="height:55px; background:#4361ee;"></div><div style="font-size:9px;color:#94a3b8;text-align:center;">BLR</div></div>
+                      <div><div class="wf-bar" style="height:35px; background:#4895ef;"></div><div style="font-size:9px;color:#94a3b8;text-align:center;">CHN</div></div>
+                      <div><div class="wf-bar" style="height:25px; background:#4361ee;"></div><div style="font-size:9px;color:#94a3b8;text-align:center;">HYD</div></div>
+                      <div><div class="wf-bar" style="height:40px; background:#4895ef;"></div><div style="font-size:9px;color:#94a3b8;text-align:center;">PUN</div></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="font-size:12px; font-weight:700; color:#475569; margin-bottom:6px;">Alerts</div>
+                    <div style="background:#fee2e2; padding:8px; border-radius:6px; font-size:11px; margin-bottom:6px;"><strong style="color:#dc2626;">No-Show:</strong> Priya S. &mdash; Shift #4821, Mumbai</div>
+                    <div style="background:#fef3c7; padding:8px; border-radius:6px; font-size:11px; margin-bottom:6px;"><strong style="color:#d97706;">Vitals:</strong> High BP &mdash; Patient #1203</div>
+                    <div style="background:#dbeafe; padding:8px; border-radius:6px; font-size:11px;"><strong style="color:#2563eb;">Approval:</strong> 5 payroll batches pending</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Admin clicks Roster in sidebar</div></div>
+
+        <!-- Step 3: Roster -->
+        <div class="screen-block" id="ca-roster">
+          <div class="screen-header"><div class="step-badge">Step 3 of 9</div><div class="prd-ref">PRD &sect;5.2</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Roster Calendar</div>
+          <div class="screen-desc">Global calendar view showing all scheduled shifts across cities. Supports week/month toggle, drag-drop reassignment, and gap detection.</div>
+          <div class="web-frame" style="min-height: 480px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar"><div class="ws-logo">HELPEE</div><a>Dashboard</a><a class="active">Roster</a><a>Approvals</a><a>Governance</a><a>Ledger</a></div>
+              <div class="web-content">
+                <div class="wf-header"><div class="wf-title">Roster Calendar</div><div><span class="wf-btn wf-btn-outline" style="font-size:11px; padding:4px 10px;">Week</span> <span class="wf-btn wf-btn-primary" style="font-size:11px; padding:4px 10px;">Month</span></div></div>
+                <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; font-size:10px; margin-bottom:4px;">
+                  <div style="text-align:center;font-weight:700;color:#64748b;">Mon</div><div style="text-align:center;font-weight:700;color:#64748b;">Tue</div><div style="text-align:center;font-weight:700;color:#64748b;">Wed</div><div style="text-align:center;font-weight:700;color:#64748b;">Thu</div><div style="text-align:center;font-weight:700;color:#64748b;">Fri</div><div style="text-align:center;font-weight:700;color:#64748b;">Sat</div><div style="text-align:center;font-weight:700;color:#64748b;">Sun</div>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px;">
+                  <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:4px; min-height:60px; font-size:10px;"><strong>24</strong><br><span style="background:#dbeafe;padding:1px 4px;border-radius:3px;font-size:9px;">3 shifts</span></div>
+                  <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:4px; min-height:60px; font-size:10px;"><strong>25</strong><br><span style="background:#d1fae5;padding:1px 4px;border-radius:3px;font-size:9px;">5 shifts</span></div>
+                  <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:4px; min-height:60px; font-size:10px;"><strong>26</strong><br><span style="background:#fee2e2;padding:1px 4px;border-radius:3px;font-size:9px;">1 no-show</span></div>
+                  <div style="background:#eff6ff; border:2px solid #4361ee; border-radius:4px; padding:4px; min-height:60px; font-size:10px;"><strong style="color:#4361ee;">27 Today</strong><br><span style="background:#dbeafe;padding:1px 4px;border-radius:3px;font-size:9px;">8 shifts</span></div>
+                  <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:4px; min-height:60px; font-size:10px;"><strong>28</strong><br><span style="background:#dbeafe;padding:1px 4px;border-radius:3px;font-size:9px;">6 shifts</span></div>
+                  <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:4px; min-height:60px; font-size:10px;"><strong>1</strong><br><span style="background:#fef3c7;padding:1px 4px;border-radius:3px;font-size:9px;">2 gaps</span></div>
+                  <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:4px; min-height:60px; font-size:10px;"><strong>2</strong></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Pending items need approval</div></div>
+
+        <!-- Step 4: Approvals -->
+        <div class="screen-block" id="ca-approvals">
+          <div class="screen-header"><div class="step-badge">Step 4 of 9</div><div class="prd-ref">PRD &sect;5.3</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Approvals Queue</div>
+          <div class="screen-desc">Centralized approval workflow. Payroll batches, CT activations, refund requests, and commission payouts all require explicit admin approval before processing.</div>
+          <div class="web-frame" style="min-height: 400px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar"><div class="ws-logo">HELPEE</div><a>Dashboard</a><a>Roster</a><a class="active">Approvals</a><a>Governance</a><a>Ledger</a></div>
+              <div class="web-content">
+                <div class="wf-header"><div class="wf-title">Pending Approvals <span class="wf-badge wf-badge-orange">12</span></div></div>
+                <table class="wf-table">
+                  <thead><tr><th>Type</th><th>Entity</th><th>Requested</th><th>Status</th><th>Action</th></tr></thead>
+                  <tbody>
+                    <tr><td><span class="wf-badge wf-badge-blue">Payroll</span></td><td>Mumbai &mdash; Feb batch</td><td>2 hrs ago</td><td><span class="wf-badge wf-badge-orange">Pending</span></td><td><span class="wf-btn wf-btn-success" style="font-size:10px;padding:3px 8px;">Approve</span> <span class="wf-btn wf-btn-danger" style="font-size:10px;padding:3px 8px;">Reject</span></td></tr>
+                    <tr><td><span class="wf-badge wf-badge-green">Activation</span></td><td>Rajesh K. &mdash; Caregiver</td><td>5 hrs ago</td><td><span class="wf-badge wf-badge-orange">Pending</span></td><td><span class="wf-btn wf-btn-success" style="font-size:10px;padding:3px 8px;">Approve</span> <span class="wf-btn wf-btn-danger" style="font-size:10px;padding:3px 8px;">Reject</span></td></tr>
+                    <tr><td><span class="wf-badge wf-badge-red">Refund</span></td><td>Invoice #8842 &mdash; &#8377;2,400</td><td>1 day ago</td><td><span class="wf-badge wf-badge-orange">Pending</span></td><td><span class="wf-btn wf-btn-success" style="font-size:10px;padding:3px 8px;">Approve</span> <span class="wf-btn wf-btn-danger" style="font-size:10px;padding:3px 8px;">Reject</span></td></tr>
+                    <tr><td><span class="wf-badge wf-badge-purple">Commission</span></td><td>Franchise: CareFirst Delhi</td><td>1 day ago</td><td><span class="wf-badge wf-badge-orange">Pending</span></td><td><span class="wf-btn wf-btn-success" style="font-size:10px;padding:3px 8px;">Approve</span> <span class="wf-btn wf-btn-danger" style="font-size:10px;padding:3px 8px;">Reject</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">CT incident reported &mdash; drill into Governance</div></div>
+
+        <!-- Step 5: Governance -->
+        <div class="screen-block" id="ca-governance">
+          <div class="screen-header"><div class="step-badge">Step 5 of 9</div><div class="prd-ref">PRD &sect;5.4</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Governance &mdash; Caregiver Detail</div>
+          <div class="screen-desc">CT management with blacklist/suspend actions, full audit trail, rating, and incident history. This is where admins handle escalation outcomes from PRD Flowchart A Phase 6.</div>
+          <div class="web-frame" style="min-height: 400px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar"><div class="ws-logo">HELPEE</div><a>Dashboard</a><a>Roster</a><a>Approvals</a><a class="active">Governance</a><a>Ledger</a></div>
+              <div class="web-content">
+                <div class="wf-row" style="margin-bottom:16px;">
+                  <div class="wf-avatar">RS</div>
+                  <div>
+                    <div style="font-weight:700; font-size:14px;">Rekha Sharma</div>
+                    <div style="font-size:11px; color:#64748b;">ID: CG-00482 &middot; Mumbai &middot; Franchise: CareFirst</div>
+                    <div><span class="wf-badge wf-badge-green">Active</span> <span class="wf-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span> <span style="font-size:11px;color:#64748b;">4.2</span></div>
+                  </div>
+                  <div style="margin-left:auto; display:flex; gap:6px;">
+                    <span class="wf-btn wf-btn-danger" style="font-size:11px; padding:4px 10px;">Blacklist</span>
+                    <span class="wf-btn wf-btn-outline" style="font-size:11px; padding:4px 10px; border-color:#f59e0b; color:#f59e0b;">Suspend</span>
+                  </div>
+                </div>
+                <div style="font-size:12px;font-weight:700;color:#475569;margin-bottom:6px;">Audit Trail</div>
+                <table class="wf-table">
+                  <thead><tr><th>Date</th><th>Action</th><th>By</th><th>Details</th></tr></thead>
+                  <tbody>
+                    <tr><td>Feb 22</td><td>Check-in</td><td>System</td><td>Shift #5201, on time</td></tr>
+                    <tr><td>Feb 20</td><td>Warning issued</td><td>Ops Admin</td><td>Late arrival &mdash; 22 min</td></tr>
+                    <tr><td>Feb 18</td><td>Activated</td><td>System</td><td>Docs verified</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Review financials</div></div>
+
+        <!-- Step 6: Ledger -->
+        <div class="screen-block" id="ca-ledger">
+          <div class="screen-header"><div class="step-badge">Step 6 of 9</div><div class="prd-ref">PRD &sect;5.5</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Financial Ledger</div>
+          <div class="screen-desc">Revenue, payouts, commissions, and net margin across all cities. Export-ready for accounting. Feeds into PRD Flowchart A Phase 7 (Billing).</div>
+          <div class="web-frame" style="min-height: 400px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar"><div class="ws-logo">HELPEE</div><a>Dashboard</a><a>Roster</a><a>Approvals</a><a>Governance</a><a class="active">Ledger</a></div>
+              <div class="web-content">
+                <div class="wf-header"><div class="wf-title">Financial Ledger &mdash; February 2026</div><div><span class="wf-btn wf-btn-outline" style="font-size:10px;padding:3px 8px;">Export CSV</span></div></div>
+                <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px;">
+                  <div class="wf-stat"><span class="num" style="color:#059669;font-size:16px;">&#8377;24.8L</span><span class="label">Revenue</span></div>
+                  <div class="wf-stat"><span class="num" style="color:#4361ee;font-size:16px;">&#8377;18.2L</span><span class="label">Payouts</span></div>
+                  <div class="wf-stat"><span class="num" style="color:#7c3aed;font-size:16px;">&#8377;2.1L</span><span class="label">Commissions</span></div>
+                  <div class="wf-stat"><span class="num" style="color:#f59e0b;font-size:16px;">&#8377;4.5L</span><span class="label">Net Margin</span></div>
+                </div>
+                <div class="wf-chart">Revenue by City &mdash; Bar Chart</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Supply side &mdash; onboard new CTs directly</div></div>
+
+        <!-- Step 7: CT Onboarding -->
+        <div class="screen-block" id="ca-onboarding">
+          <div class="screen-header"><div class="step-badge">Step 7 of 9</div><div class="prd-ref">PRD &sect;5.6</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">CT Onboarding</div>
+          <div class="screen-desc">Direct caregiver onboarding by HQ. Maps to PRD Flowchart B Phase 2 (Screening Gates). Admin reviews docs, triggers background check, and activates the CT into the pool.</div>
+          <div class="web-frame" style="min-height: 480px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar"><div class="ws-logo">HELPEE</div><a>Dashboard</a><a>Roster</a><a>Approvals</a><a>Governance</a><a>Ledger</a><a>Live Map</a><a class="active">CT Onboarding</a></div>
+              <div class="web-content">
+                <div class="wf-header"><div class="wf-title">CT Onboarding &mdash; New Candidate</div></div>
+                <div class="wf-row" style="margin-bottom:16px;">
+                  <div class="wf-avatar">RK</div>
+                  <div style="flex:1;">
+                    <div class="wf-label">Candidate Name</div>
+                    <div style="font-weight:700;font-size:14px;">Rajesh Kumar</div>
+                    <div class="wf-label">Phone</div>
+                    <div style="font-size:13px;">+91 98765 43210</div>
+                    <div class="wf-label">Skill Level</div>
+                    <div class="wf-input" style="width:200px; display:inline-block; margin:0;">Nursing &mdash; Intermediate &#9662;</div>
+                  </div>
+                </div>
+                <div style="font-size:12px;font-weight:700;color:#475569;margin-bottom:8px;">Document Checklist</div>
+                <div class="wf-checklist-item"><div class="wf-check done"></div><div>Aadhaar <span class="wf-badge wf-badge-green">&#10003; Verified</span></div></div>
+                <div class="wf-checklist-item"><div class="wf-check done"></div><div>PAN <span class="wf-badge wf-badge-green">&#10003; Verified</span></div></div>
+                <div class="wf-checklist-item"><div class="wf-check"></div><div>Certificates <span class="wf-badge wf-badge-orange">&#8856; Pending</span></div></div>
+                <div style="margin-top:12px;"><span class="wf-badge wf-badge-orange">Verification Status: Pending Documents</span></div>
+                <div style="margin-top:16px;"><span class="wf-btn wf-btn-success" style="padding:10px 20px;">Approve &amp; Activate</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Monitor active shifts in real-time</div></div>
+
+        <!-- Step 8: Live Map -->
+        <div class="screen-block" id="ca-livemap">
+          <div class="screen-header"><div class="step-badge">Step 8 of 9</div><div class="prd-ref">PRD &sect;5.11</div><span class="priority-badge p1">P1</span></div>
+          <div class="screen-title">Live Shift Map</div>
+          <div class="screen-desc">Real-time Mapbox GL view of all caregiver locations with status pins (en route, active, alert). Maps to PRD Flowchart A Phase 5 monitoring.</div>
+          <div class="web-frame" style="min-height: 440px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar"><div class="ws-logo">HELPEE</div><a>Dashboard</a><a>Roster</a><a>Approvals</a><a>Governance</a><a>Ledger</a><a class="active">Live Map</a></div>
+              <div class="web-content" style="padding:0; position:relative;">
+                <div style="background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 30%, #ede9fe 60%, #fce7f3 100%); height:100%; display:flex; align-items:center; justify-content:center; position:relative;">
+                  <div class="wf-map-pin" style="top:30%;left:25%;"></div>
+                  <div class="wf-map-pin" style="top:45%;left:55%;background:#06d6a0;"></div>
+                  <div class="wf-map-pin" style="top:60%;left:35%;"></div>
+                  <div class="wf-map-pin" style="top:25%;left:65%;background:#06d6a0;"></div>
+                  <div class="wf-map-pin" style="top:70%;left:70%;background:#f59e0b;"></div>
+                  <div style="position:absolute; top:12px; right:12px; background:#fff; padding:8px 12px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); font-size:11px;">
+                    <div><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef476f;margin-right:4px;"></span> En Route (3)</div>
+                    <div><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#06d6a0;margin-right:4px;"></span> Active (12)</div>
+                    <div><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f59e0b;margin-right:4px;"></span> Alert (1)</div>
+                  </div>
+                  <span style="color:#94a3b8;">Map &mdash; Mapbox GL JS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Generate reports for CXO review</div></div>
+
+        <!-- Step 9: Reports -->
+        <div class="screen-block" id="ca-reports">
+          <div class="screen-header"><div class="step-badge">Step 9 of 9</div><div class="prd-ref">PRD &sect;5.9</div><span class="priority-badge p1">P1</span></div>
+          <div class="screen-title">Reports &amp; Analytics</div>
+          <div class="screen-desc">City-wise and franchise-wise reports: revenue, CT utilization, shift completion rate, GST summary. Exportable to CSV/PDF for board presentations.</div>
+          <div class="web-frame" style="min-height: 520px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar"><div class="ws-logo">HELPEE</div><a>Dashboard</a><a>Roster</a><a>Approvals</a><a>Governance</a><a>Ledger</a><a>Live Map</a><a class="active">Reports</a></div>
+              <div class="web-content">
+                <div class="wf-header">
+                  <div class="wf-title">Reports &amp; Analytics</div>
+                  <div style="display:flex;gap:8px;align-items:center;">
+                    <div class="wf-input" style="width:140px;margin:0;">City &#9662;</div>
+                    <div class="wf-input" style="width:140px;margin:0;">Period &#9662;</div>
+                    <span class="wf-btn wf-btn-outline" style="font-size:11px;padding:6px 12px;">Export CSV</span>
+                    <span class="wf-btn wf-btn-primary" style="font-size:11px;padding:6px 12px;">Export PDF</span>
+                  </div>
+                </div>
+                <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; margin-top:16px;">
+                  <div class="wf-chart">Revenue by City</div>
+                  <div class="wf-chart">CT Utilization</div>
+                  <div class="wf-chart">Shift Completion Rate</div>
+                  <div class="wf-chart">GST Summary</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== APP 2: FRANCHISE ADMIN ==================== -->
+      <div class="section" id="app2-section">
+        <h2>App 2: Franchise Admin Web Portal <span style="font-size:14px;color:#64748b;font-weight:400;">&mdash; PRD Section 6</span></h2>
+        <p class="section-desc">Separate web portal for franchise operators. Scoped to their city and caregiver pool. Blue-tinted sidebar distinguishes from Company Admin.</p>
+
+        <div class="flow-overview">
+          <div class="flow-step"><div class="flow-step-num">1</div><div class="flow-step-name">Dashboard</div><div class="flow-step-prd">&sect;6.1</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">2</div><div class="flow-step-name">CT Pool</div><div class="flow-step-prd">&sect;6.2</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">3</div><div class="flow-step-name">Rostering</div><div class="flow-step-prd">&sect;6.3</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">4</div><div class="flow-step-name">Attendance</div><div class="flow-step-prd">&sect;6.4</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">5</div><div class="flow-step-name">Training</div><div class="flow-step-prd">&sect;6.5</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">6</div><div class="flow-step-name">Ledger</div><div class="flow-step-prd">&sect;6.6</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">7</div><div class="flow-step-name">Recruitment</div><div class="flow-step-prd">&sect;6.9</div></div>
+        </div>
+
+        <div class="screen-block" id="fa-dashboard">
+          <div class="screen-header"><div class="step-badge">Step 1 of 7</div><div class="prd-ref">PRD &sect;6.1</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">City Dashboard</div>
+          <div class="screen-desc">Franchise operator&rsquo;s landing page. Shows today&rsquo;s shifts, CT pool size, and no-show alerts scoped to their city only.</div>
+          <div class="web-frame" style="min-height: 420px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar" style="background:#1e3a5f;"><div class="ws-logo" style="color:#60a5fa;">HELPEE <span style="font-size:10px;color:rgba(255,255,255,0.5);display:block;">Franchise Portal</span></div><a class="active">Dashboard</a><a>Caregiver Pool</a><a>Roster</a><a>Attendance</a><a>Training</a><a>Ledger</a><a>Escalations</a></div>
+              <div class="web-content">
+                <div class="wf-header"><div class="wf-title">CareFirst Mumbai &mdash; Dashboard</div><div class="wf-badge wf-badge-blue">Franchise</div></div>
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px;">
+                  <div class="wf-stat"><span class="num" style="color:#4361ee;">34</span><span class="label">Active Shifts Today</span></div>
+                  <div class="wf-stat"><span class="num" style="color:#06d6a0;">89</span><span class="label">Caregivers in Pool</span></div>
+                  <div class="wf-stat"><span class="num" style="color:#ef476f;">1</span><span class="label">No-Show Alert</span></div>
+                </div>
+                <div style="font-size:12px;font-weight:700;color:#475569;margin-bottom:6px;">Today&rsquo;s Schedule</div>
+                <table class="wf-table">
+                  <thead><tr><th>Caregiver</th><th>Patient</th><th>Shift</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr><td>Anita M.</td><td>Mr. Gupta</td><td>8:00&ndash;16:00</td><td><span class="wf-badge wf-badge-green">Active</span></td></tr>
+                    <tr><td>Priya S.</td><td>Mrs. Iyer</td><td>9:00&ndash;17:00</td><td><span class="wf-badge wf-badge-blue">En Route</span></td></tr>
+                    <tr><td>Kavita R.</td><td>Mr. Shah</td><td>8:00&ndash;20:00</td><td><span class="wf-badge wf-badge-red">No-Show</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Manage caregiver availability</div></div>
+
+        <div class="screen-block" id="fa-pool">
+          <div class="screen-header"><div class="step-badge">Step 2 of 7</div><div class="prd-ref">PRD &sect;6.2</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Caregiver Pool</div>
+          <div class="screen-desc">Franchise&rsquo;s own CTs. Filter by skill, availability, certification, rating. This pool feeds into the matching algorithm (PRD Flowchart A Phase 2).</div>
+          <div class="web-frame" style="min-height: 380px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar" style="background:#1e3a5f;"><div class="ws-logo" style="color:#60a5fa;">HELPEE</div><a>Dashboard</a><a class="active">Caregiver Pool</a><a>Roster</a><a>Training</a><a>Ledger</a></div>
+              <div class="web-content">
+                <div class="wf-header"><div class="wf-title">Caregiver Pool <span style="font-size:12px;color:#94a3b8;">(89 total)</span></div><div class="wf-input" style="width:200px;margin:0;">Search caregivers...</div></div>
+                <table class="wf-table">
+                  <thead><tr><th>Name</th><th>Skill</th><th>Rating</th><th>Status</th><th>Certification</th></tr></thead>
+                  <tbody>
+                    <tr><td>Anita M.</td><td><span class="wf-badge wf-badge-green">Nursing</span></td><td><span class="wf-stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span> 4.3</td><td><span class="wf-badge wf-badge-green">Available</span></td><td><span class="wf-badge wf-badge-blue">Certified</span></td></tr>
+                    <tr><td>Priya S.</td><td><span class="wf-badge wf-badge-blue">Companion</span></td><td><span class="wf-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span> 4.8</td><td><span class="wf-badge wf-badge-orange">On Shift</span></td><td><span class="wf-badge wf-badge-blue">Certified</span></td></tr>
+                    <tr><td>Kavita R.</td><td><span class="wf-badge wf-badge-purple">Critical Care</span></td><td><span class="wf-stars">&#9733;&#9733;&#9733;&#9734;&#9734;</span> 3.5</td><td><span class="wf-badge wf-badge-green">Available</span></td><td><span class="wf-badge wf-badge-orange">Expiring</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Assign CTs to shifts</div></div>
+
+        <div class="screen-block" id="fa-roster">
+          <div class="screen-header"><div class="step-badge">Step 3 of 7</div><div class="prd-ref">PRD &sect;6.3</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Local Rostering</div>
+          <div class="screen-desc">Franchise-scoped shift assignment with conflict detection. Weekly view with CT rows and patient shift blocks.</div>
+          <div class="web-frame" style="min-height: 300px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar" style="background:#1e3a5f;"><div class="ws-logo" style="color:#60a5fa;">HELPEE</div><a>Dashboard</a><a>Caregiver Pool</a><a class="active">Roster</a><a>Training</a><a>Ledger</a></div>
+              <div class="web-content">
+                <div class="wf-header"><div class="wf-title">Roster &mdash; This Week</div><div><span class="wf-btn wf-btn-primary" style="font-size:11px;padding:4px 10px;">+ Assign Shift</span></div></div>
+                <div class="wf-chart">Week view calendar with caregiver rows &amp; patient shift blocks</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Verify CT attendance compliance</div></div>
+
+        <div class="screen-block" id="fa-attendance">
+          <div class="screen-header"><div class="step-badge">Step 4 of 7</div><div class="prd-ref">PRD &sect;6.4</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Attendance Monitoring</div>
+          <div class="screen-desc">Real-time check-in/out log with geofence validation. Tracks on-time %, late arrivals, no-shows, and geo violations. Feeds into CT rating in matching algorithm.</div>
+          <div class="web-frame" style="min-height: 440px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar" style="background:#1e3a5f;"><div class="ws-logo" style="color:#60a5fa;">HELPEE</div><a>Dashboard</a><a>Caregiver Pool</a><a>Roster</a><a class="active">Attendance</a><a>Training</a><a>Ledger</a></div>
+              <div class="web-content">
+                <div class="wf-header"><div class="wf-title">Attendance Monitoring</div><div class="wf-subtitle">Real-time check-in/out</div></div>
+                <table class="wf-table">
+                  <thead><tr><th>Caregiver</th><th>Patient</th><th>Scheduled</th><th>Check-in</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr><td>Anita M.</td><td>Mr. Gupta</td><td>8:00 AM</td><td>8:02 AM</td><td><span class="wf-badge wf-badge-green">On-time</span></td></tr>
+                    <tr><td>Priya S.</td><td>Mrs. Iyer</td><td>9:00 AM</td><td>9:18 AM</td><td><span class="wf-badge wf-badge-orange">Late</span></td></tr>
+                    <tr><td>Kavita R.</td><td>Mr. Shah</td><td>8:00 AM</td><td>&mdash;</td><td><span class="wf-badge wf-badge-red">No-show</span></td></tr>
+                    <tr><td>Sunita P.</td><td>Mrs. Nair</td><td>10:00 AM</td><td>10:05 AM</td><td><span class="wf-badge wf-badge-red">Geo Violation</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Upskill CTs via training</div></div>
+
+        <div class="screen-block" id="fa-training">
+          <div class="screen-header"><div class="step-badge">Step 5 of 7</div><div class="prd-ref">PRD &sect;6.5</div><span class="priority-badge p1">P1</span></div>
+          <div class="screen-title">Training Management</div>
+          <div class="screen-desc">Batch training creation, score uploads, certification tracking. Maps to PRD Flowchart B Phase 3 (Training &amp; Certification gate).</div>
+          <div class="web-frame" style="min-height: 300px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar" style="background:#1e3a5f;"><div class="ws-logo" style="color:#60a5fa;">HELPEE</div><a>Dashboard</a><a>Caregiver Pool</a><a>Roster</a><a class="active">Training</a><a>Ledger</a></div>
+              <div class="web-content">
+                <div class="wf-header"><div class="wf-title">Training Batches</div><div><span class="wf-btn wf-btn-primary" style="font-size:11px;padding:4px 10px;">+ Create Batch</span> <span class="wf-btn wf-btn-outline" style="font-size:11px;padding:4px 10px;">Upload Scores</span></div></div>
+                <table class="wf-table">
+                  <thead><tr><th>Batch</th><th>Module</th><th>Attendees</th><th>Avg Score</th><th>Certified</th></tr></thead>
+                  <tbody>
+                    <tr><td>B-2026-02-A</td><td>Elder Care Basics</td><td>12</td><td>82%</td><td><span class="wf-badge wf-badge-green">10/12</span></td></tr>
+                    <tr><td>B-2026-02-B</td><td>Critical Care Skills</td><td>8</td><td>75%</td><td><span class="wf-badge wf-badge-orange">6/8</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Track franchise earnings</div></div>
+
+        <div class="screen-block" id="fa-ledger">
+          <div class="screen-header"><div class="step-badge">Step 6 of 7</div><div class="prd-ref">PRD &sect;6.6</div><span class="priority-badge p1">P1</span></div>
+          <div class="screen-title">Franchise Ledger</div>
+          <div class="screen-desc">Franchise commission earnings and CT payout summaries. Scoped to this franchise&rsquo;s city data only.</div>
+          <div class="web-frame" style="min-height: 300px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar" style="background:#1e3a5f;"><div class="ws-logo" style="color:#60a5fa;">HELPEE</div><a>Dashboard</a><a>Caregiver Pool</a><a>Roster</a><a>Training</a><a class="active">Ledger</a></div>
+              <div class="web-content">
+                <div class="wf-header"><div class="wf-title">Franchise Ledger &mdash; Feb 2026</div></div>
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px;">
+                  <div class="wf-stat"><span class="num" style="color:#059669;font-size:16px;">&#8377;1.8L</span><span class="label">Total Commission</span></div>
+                  <div class="wf-stat"><span class="num" style="color:#f59e0b;font-size:16px;">&#8377;42K</span><span class="label">Pending</span></div>
+                  <div class="wf-stat"><span class="num" style="color:#4361ee;font-size:16px;">&#8377;1.38L</span><span class="label">Paid</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Grow supply &mdash; recruit new CTs</div></div>
+
+        <div class="screen-block" id="fa-recruitment">
+          <div class="screen-header"><div class="step-badge">Step 7 of 7</div><div class="prd-ref">PRD &sect;6.9</div><span class="priority-badge p1">P1</span></div>
+          <div class="screen-title">Recruitment Pipeline</div>
+          <div class="screen-desc">Onboarding funnel showing lead-to-certified conversion. Maps directly to PRD Flowchart B (Supply Side) &mdash; all 5 phases visible as pipeline stages.</div>
+          <div class="web-frame" style="min-height: 480px;">
+            <div class="web-titlebar"><span class="web-dot r"></span><span class="web-dot y"></span><span class="web-dot g"></span></div>
+            <div class="web-body">
+              <div class="web-sidebar" style="background:#1e3a5f;"><div class="ws-logo" style="color:#60a5fa;">HELPEE</div><a>Dashboard</a><a>Caregiver Pool</a><a>Roster</a><a>Attendance</a><a class="active">Recruitment</a><a>Ledger</a></div>
+              <div class="web-content">
+                <div class="wf-header"><div class="wf-title">Recruitment Pipeline</div></div>
+                <div style="display:flex;gap:8px;margin-bottom:16px;font-size:11px;flex-wrap:wrap;">
+                  <div class="wf-stat" style="padding:8px 12px; text-align:center;"><span class="num" style="font-size:16px;">48</span><span class="label">Leads</span></div>
+                  <div style="align-self:center;">&rarr;</div>
+                  <div class="wf-stat" style="padding:8px 12px;"><span class="num" style="font-size:16px;">32</span><span class="label">Eligible</span></div>
+                  <div style="align-self:center;">&rarr;</div>
+                  <div class="wf-stat" style="padding:8px 12px;"><span class="num" style="font-size:16px;">28</span><span class="label">BG Check</span></div>
+                  <div style="align-self:center;">&rarr;</div>
+                  <div class="wf-stat" style="padding:8px 12px;"><span class="num" style="font-size:16px;">22</span><span class="label">Assessed</span></div>
+                  <div style="align-self:center;">&rarr;</div>
+                  <div class="wf-stat" style="padding:8px 12px;"><span class="num" style="font-size:16px;">18</span><span class="label">Training</span></div>
+                  <div style="align-self:center;">&rarr;</div>
+                  <div class="wf-stat" style="padding:8px 12px;"><span class="num" style="font-size:16px;color:#059669;">15</span><span class="label">Certified</span></div>
+                </div>
+                <div style="font-size:12px;font-weight:700;color:#475569;margin-bottom:6px;">Recent Leads</div>
+                <table class="wf-table">
+                  <thead><tr><th>Name</th><th>Source</th><th>Stage</th></tr></thead>
+                  <tbody>
+                    <tr><td>Meera K.</td><td><span class="wf-badge wf-badge-blue">Aggregator</span></td><td>Leads</td></tr>
+                    <tr><td>Lakshmi R.</td><td><span class="wf-badge wf-badge-green">Referral</span></td><td>Eligible</td></tr>
+                    <tr><td>Deepa S.</td><td><span class="wf-badge wf-badge-purple">Digital</span></td><td>BG Check</td></tr>
+                    <tr><td>Vijaya P.</td><td><span class="wf-badge wf-badge-orange">Field</span></td><td>Training</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== APP 3: CAREGIVER ==================== -->
+      <div class="section" id="app3-section">
+        <h2>App 3: Caregiver Mobile App <span style="font-size:14px;color:#64748b;font-weight:400;">&mdash; PRD Section 7</span></h2>
+        <p class="section-desc">React Native (Expo) mobile app. CT lifecycle: register &rarr; train &rarr; get certified &rarr; receive jobs &rarr; execute shifts &rarr; earn. Maps to PRD Flowchart B (Supply) + Flowchart A Phase 5 (Active Shift).</p>
+
+        <div class="flow-overview">
+          <div class="flow-step"><div class="flow-step-num">1</div><div class="flow-step-name">OTP Login</div><div class="flow-step-prd">&sect;7.1</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">2</div><div class="flow-step-name">Profile</div><div class="flow-step-prd">&sect;7.1</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">3</div><div class="flow-step-name">Training</div><div class="flow-step-prd">&sect;7.10</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">4</div><div class="flow-step-name">Job Offer</div><div class="flow-step-prd">&sect;7.2</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">5</div><div class="flow-step-name">Shifts</div><div class="flow-step-prd">&sect;7.2</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">6</div><div class="flow-step-name">Check-in</div><div class="flow-step-prd">&sect;7.3</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">7</div><div class="flow-step-name">Tasks</div><div class="flow-step-prd">&sect;7.4</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">8</div><div class="flow-step-name">Vitals</div><div class="flow-step-prd">&sect;7.7</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">9</div><div class="flow-step-name">SOS</div><div class="flow-step-prd">&sect;7.6</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">10</div><div class="flow-step-name">Earnings</div><div class="flow-step-prd">&sect;7.5</div></div>
+        </div>
+
+        <div class="screen-block" id="cg-otp">
+          <div class="screen-header"><div class="step-badge">Step 1 of 10</div><div class="prd-ref">PRD &sect;7.1</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">OTP Login</div>
+          <div class="screen-desc">Entry point for all caregivers. Phone + OTP (MSG91). New users flow into profile setup; returning users land on home. Maps to Flowchart B Phase 1.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body" style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+              <div style="font-size:28px;font-weight:800;color:#4361ee;letter-spacing:0.05em;margin-bottom:4px;">HELPEE</div>
+              <div style="font-size:12px;color:#94a3b8;margin-bottom:32px;">Caregiver App</div>
+              <div style="width:100%;text-align:left;">
+                <div class="wf-label">Phone Number</div>
+                <div class="wf-input" style="font-size:16px;">+91 98765 43210</div>
+                <div class="wf-btn wf-btn-primary wf-btn-lg" style="margin-top:8px;">Send OTP</div>
+              </div>
+              <div style="margin-top:24px;font-size:12px;color:#94a3b8;">By continuing, you agree to our Terms of Service</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">New user &rarr; complete profile</div></div>
+
+        <div class="screen-block" id="cg-profile">
+          <div class="screen-header"><div class="step-badge">Step 2 of 10</div><div class="prd-ref">PRD &sect;7.1</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Profile Setup</div>
+          <div class="screen-desc">Multi-step onboarding (4 steps): personal info, skills, documents, city. Application must reach 100% to proceed. If incomplete, call center auto-dials (Flowchart B Phase 1).</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:4px;">Profile Setup</div>
+              <div style="font-size:11px;color:#94a3b8;margin-bottom:12px;">Step 2 of 4 &mdash; Skills &amp; Experience</div>
+              <div class="wf-progress" style="margin-bottom:16px;"><div class="wf-progress-bar" style="width:50%;background:#4361ee;"></div></div>
+              <div class="wf-avatar-lg">&#128247;</div>
+              <div class="wf-label">Full Name</div>
+              <div class="wf-input">Anita Menon</div>
+              <div class="wf-label">Skill Level</div>
+              <div class="wf-input">Nursing &mdash; Intermediate &#9662;</div>
+              <div class="wf-label">Years of Experience</div>
+              <div class="wf-input">4 years</div>
+              <div class="wf-label">City</div>
+              <div class="wf-input">Mumbai</div>
+              <div class="wf-btn wf-btn-primary wf-btn-lg" style="margin-top:8px;">Continue</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Screening passed &rarr; mandatory training</div></div>
+
+        <div class="screen-block" id="cg-training">
+          <div class="screen-header"><div class="step-badge">Step 3 of 10</div><div class="prd-ref">PRD &sect;7.10</div><span class="priority-badge p1">P1</span></div>
+          <div class="screen-title">Training Modules</div>
+          <div class="screen-desc">Must pass all training to get certified. Maps to Flowchart B Phase 3. Modules: app usage, etiquette, safety protocols. Mix of classroom + digital. No certification = no jobs.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:12px;">Training</div>
+              <div class="wf-card">
+                <div class="wf-row">
+                  <div style="width:40px;height:40px;border-radius:8px;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:20px;">&#128218;</div>
+                  <div style="flex:1;"><div style="font-weight:700;font-size:14px;">Elder Care Basics</div><div style="font-size:11px;color:#64748b;">Score: 92%</div></div>
+                  <span class="wf-badge wf-badge-green">Completed</span>
+                </div>
+              </div>
+              <div class="wf-card">
+                <div class="wf-row">
+                  <div style="width:40px;height:40px;border-radius:8px;background:#fef3c7;display:flex;align-items:center;justify-content:center;font-size:20px;">&#9877;&#65039;</div>
+                  <div style="flex:1;"><div style="font-weight:700;font-size:14px;">Critical Care Skills</div><div class="wf-progress"><div class="wf-progress-bar" style="width:60%;background:#f59e0b;"></div></div><div style="font-size:11px;color:#64748b;">60% complete</div></div>
+                  <span class="wf-badge wf-badge-orange">In Progress</span>
+                </div>
+              </div>
+              <div class="wf-card" style="opacity:0.7;">
+                <div class="wf-row">
+                  <div style="width:40px;height:40px;border-radius:8px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:20px;">&#128241;</div>
+                  <div style="flex:1;"><div style="font-weight:700;font-size:14px;">App &amp; Payment Training</div><div style="font-size:11px;color:#94a3b8;">Complete previous modules</div></div>
+                  <span class="wf-badge" style="background:#e2e8f0;color:#64748b;">Locked</span>
+                </div>
+              </div>
+            </div>
+            <div class="mobile-nav">
+              <div class="mobile-nav-item"><div class="nav-icon"></div>Home</div>
+              <div class="mobile-nav-item"><div class="nav-icon"></div>Shifts</div>
+              <div class="mobile-nav-item"><div class="nav-icon"></div>Earnings</div>
+              <div class="mobile-nav-item active"><div class="nav-icon"></div>Training</div>
+              <div class="mobile-nav-item"><div class="nav-icon"></div>Profile</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Certified &rarr; enters active pool &rarr; receives job offer</div></div>
+
+        <div class="screen-block" id="cg-joboffer">
+          <div class="screen-header"><div class="step-badge">Step 4 of 10</div><div class="prd-ref">PRD &sect;7.2</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Job Offer</div>
+          <div class="screen-desc">Push notification for new job. CT has 2 hours to accept/reject. If rejected, next-ranked CT gets offer. Maps to Flowchart A Phase 4 (CT accepts assignment?).</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body" style="display:flex;flex-direction:column;justify-content:center;">
+              <div style="text-align:center;margin-bottom:16px;"><div style="font-size:16px;font-weight:700;">New Job Offer</div><div style="font-size:12px;color:#64748b;">Respond within 2 hours</div></div>
+              <div class="wf-card" style="border:2px solid #4361ee;">
+                <div style="text-align:center;margin-bottom:8px;"><div class="wf-avatar-lg">&#128116;</div><div style="font-weight:700;font-size:15px;">Mr. Rajan Pillai</div><div style="font-size:12px;color:#64748b;">Bandra West, Mumbai</div></div>
+                <hr class="wf-divider">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;">
+                  <div><strong>Type:</strong> Nursing</div>
+                  <div><strong>Shift:</strong> 12hr (8AM&ndash;8PM)</div>
+                  <div><strong>Duration:</strong> 30 days</div>
+                  <div><strong>Pay:</strong> &#8377;2,100/shift</div>
+                  <div><strong>Start:</strong> Feb 25, 2026</div>
+                  <div><strong>Distance:</strong> 3.2 km</div>
+                </div>
+                <hr class="wf-divider">
+                <div style="display:flex;gap:8px;">
+                  <span class="wf-btn wf-btn-success" style="flex:1;text-align:center;">Accept</span>
+                  <span class="wf-btn wf-btn-danger" style="flex:1;text-align:center;">Reject</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Accepted &rarr; shift appears on home</div></div>
+
+        <div class="screen-block" id="cg-home">
+          <div class="screen-header"><div class="step-badge">Step 5 of 10</div><div class="prd-ref">PRD &sect;7.2</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Home &mdash; Upcoming Shifts</div>
+          <div class="screen-desc">CT&rsquo;s main screen. Shows today&rsquo;s active shift with Navigate/Check-in buttons, plus upcoming confirmed shifts.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div class="wf-header"><div class="wf-title" style="font-size:18px;">Hi, Anita &#128075;</div><div class="wf-avatar" style="width:36px;height:36px;font-size:14px;">AM</div></div>
+              <div style="font-size:12px;font-weight:700;color:#475569;margin-bottom:6px;">Today&rsquo;s Shift</div>
+              <div class="wf-card" style="border-left:4px solid #4361ee;">
+                <div class="wf-row"><div><div style="font-weight:700;font-size:14px;">Mr. Gupta</div><div style="font-size:11px;color:#64748b;">Companion Care &middot; 8:00 AM &ndash; 4:00 PM</div></div><div style="margin-left:auto;"><span class="wf-badge wf-badge-blue">Scheduled</span></div></div>
+                <div style="font-size:11px;color:#64748b;">&#128205; Andheri West, Mumbai</div>
+                <div style="display:flex;gap:6px;margin-top:8px;">
+                  <span class="wf-btn wf-btn-primary" style="font-size:11px;flex:1;text-align:center;">Navigate</span>
+                  <span class="wf-btn wf-btn-success" style="font-size:11px;flex:1;text-align:center;">Check In</span>
+                </div>
+              </div>
+              <div style="font-size:12px;font-weight:700;color:#475569;margin:8px 0 6px;">Upcoming</div>
+              <div class="wf-card"><div class="wf-row"><div><div style="font-weight:600;font-size:13px;">Mrs. Iyer</div><div style="font-size:11px;color:#64748b;">Nursing &middot; Tomorrow 9:00 AM</div></div><div style="margin-left:auto;"><span class="wf-badge wf-badge-green">Confirmed</span></div></div></div>
+              <div class="wf-card"><div class="wf-row"><div><div style="font-weight:600;font-size:13px;">Mr. Shah</div><div style="font-size:11px;color:#64748b;">Companion &middot; Feb 25, 8:00 AM</div></div><div style="margin-left:auto;"><span class="wf-badge wf-badge-green">Confirmed</span></div></div></div>
+            </div>
+            <div class="mobile-nav"><div class="mobile-nav-item active"><div class="nav-icon"></div>Home</div><div class="mobile-nav-item"><div class="nav-icon"></div>Shifts</div><div class="mobile-nav-item"><div class="nav-icon"></div>Earnings</div><div class="mobile-nav-item"><div class="nav-icon"></div>Training</div><div class="mobile-nav-item"><div class="nav-icon"></div>Profile</div></div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">CT arrives at patient location</div></div>
+
+        <div class="screen-block" id="cg-checkin">
+          <div class="screen-header"><div class="step-badge">Step 6 of 10</div><div class="prd-ref">PRD &sect;7.3</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Geo Check-in</div>
+          <div class="screen-desc">GPS-validated check-in within geofence radius (100m) of patient address. Selfie captured as proof. Maps to Flowchart A Phase 5 &mdash; elderly app shows &ldquo;CT arrived.&rdquo;</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>8:02 AM</span><span>&#128268;</span></div>
+            <div class="mobile-body" style="text-align:center;">
+              <div style="font-size:16px;font-weight:700;margin-bottom:4px;">Check In</div>
+              <div style="font-size:12px;color:#64748b;margin-bottom:12px;">Mr. Gupta &middot; Andheri West</div>
+              <div class="wf-map" style="height:200px;">
+                <div class="wf-map-pin" style="top:45%;left:48%;background:#4361ee;"></div>
+                <div style="position:absolute;top:30%;left:33%;width:80px;height:80px;border-radius:50%;border:2px dashed #4361ee;opacity:0.3;"></div>
+                GPS Map
+              </div>
+              <div style="background:#d1fae5;padding:10px;border-radius:8px;margin-bottom:12px;">
+                <div style="font-size:13px;font-weight:700;color:#059669;">&#10003; Within geofence</div>
+                <div style="font-size:11px;color:#059669;">42m from patient address (limit: 100m)</div>
+              </div>
+              <div class="wf-btn wf-btn-success wf-btn-lg">Confirm Check-In</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Shift active &rarr; execute tasks</div></div>
+
+        <div class="screen-block" id="cg-tasks">
+          <div class="screen-header"><div class="step-badge">Step 7 of 10</div><div class="prd-ref">PRD &sect;7.4</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Task Checklist</div>
+          <div class="screen-desc">Admin-defined tasks for this shift. CT marks completion with timestamps. Progress visible to family in real-time via Live Tracking (Family App &sect;8.5).</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>10:15 AM</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:2px;">Tasks &mdash; Mr. Gupta</div>
+              <div style="font-size:11px;color:#64748b;margin-bottom:12px;">Active Shift &middot; 4 of 7 completed</div>
+              <div class="wf-progress" style="margin-bottom:14px;"><div class="wf-progress-bar" style="width:57%;background:#06d6a0;"></div></div>
+              <div class="wf-checklist-item"><div class="wf-check done"></div><div><div style="font-weight:600;">Morning medication</div><div style="font-size:10px;color:#94a3b8;">Completed at 8:15 AM</div></div></div>
+              <div class="wf-checklist-item"><div class="wf-check done"></div><div><div style="font-weight:600;">Blood pressure check</div><div style="font-size:10px;color:#94a3b8;">Completed at 8:30 AM</div></div></div>
+              <div class="wf-checklist-item"><div class="wf-check done"></div><div><div style="font-weight:600;">Breakfast assistance</div><div style="font-size:10px;color:#94a3b8;">Completed at 9:00 AM</div></div></div>
+              <div class="wf-checklist-item"><div class="wf-check done"></div><div><div style="font-weight:600;">Morning walk</div><div style="font-size:10px;color:#94a3b8;">Completed at 10:00 AM</div></div></div>
+              <div class="wf-checklist-item"><div class="wf-check"></div><div><div style="font-weight:600;">Lunch preparation</div><div style="font-size:10px;color:#94a3b8;">Pending</div></div></div>
+              <div class="wf-checklist-item"><div class="wf-check"></div><div><div style="font-weight:600;">Afternoon medication</div><div style="font-size:10px;color:#94a3b8;">Pending</div></div></div>
+              <div class="wf-checklist-item"><div class="wf-check"></div><div><div style="font-weight:600;">Evening vitals</div><div style="font-size:10px;color:#94a3b8;">Pending</div></div></div>
+            </div>
+            <div class="mobile-nav"><div class="mobile-nav-item"><div class="nav-icon"></div>Home</div><div class="mobile-nav-item active"><div class="nav-icon"></div>Tasks</div><div class="mobile-nav-item"><div class="nav-icon"></div>Earnings</div><div class="mobile-nav-item"><div class="nav-icon"></div>Training</div><div class="mobile-nav-item"><div class="nav-icon"></div>Profile</div></div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Log patient vitals during shift</div></div>
+
+        <div class="screen-block" id="cg-vitals">
+          <div class="screen-header"><div class="step-badge">Step 8 of 10</div><div class="prd-ref">PRD &sect;7.7</div><span class="priority-badge p1">P1</span></div>
+          <div class="screen-title">Vitals Logging</div>
+          <div class="screen-desc">BP, pulse, blood sugar, temperature with threshold indicators. Abnormal readings trigger Flowchart A &ldquo;Vitals abnormal?&rdquo; decision &mdash; alert pushed to family + admin.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>10:30 AM</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:12px;">Log Vitals &mdash; Mr. Gupta</div>
+              <div class="wf-label">BP Systolic <span style="font-size:10px;color:#64748b;">(90-140)</span></div><div class="wf-input">128</div>
+              <div class="wf-label">BP Diastolic <span style="font-size:10px;color:#64748b;">(60-90)</span></div><div class="wf-input">82</div>
+              <div class="wf-label">Pulse <span style="font-size:10px;color:#64748b;">(60-100)</span></div><div class="wf-input">72</div>
+              <div class="wf-label">Blood Sugar <span style="font-size:10px;color:#64748b;">(70-180)</span></div><div class="wf-input">142</div>
+              <div class="wf-label">Temperature <span style="font-size:10px;color:#64748b;">(&deg;C)</span></div><div class="wf-input">36.5</div>
+              <div class="wf-label">Photo Proof</div>
+              <div style="border:2px dashed #d1d5db;border-radius:8px;padding:24px;text-align:center;font-size:12px;color:#94a3b8;margin-bottom:12px;">&#128247; Tap to upload</div>
+              <div style="background:#d1fae5;padding:10px;border-radius:8px;margin-bottom:12px;"><div style="font-size:13px;font-weight:700;color:#059669;">Normal</div></div>
+              <div class="wf-btn wf-btn-primary wf-btn-lg">Save Vitals</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Emergency? Trigger SOS</div></div>
+
+        <div class="screen-block" id="cg-sos">
+          <div class="screen-header"><div class="step-badge">Step 9 of 10</div><div class="prd-ref">PRD &sect;7.6</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">SOS Emergency</div>
+          <div class="screen-desc">One-tap emergency button. Admin notified, family notified, GPS location shared instantly. Always accessible from any screen.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status" style="background:#ef476f;"><span>9:41</span><span>EMERGENCY</span></div>
+            <div class="mobile-body" style="background:#fef2f2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+              <div class="wf-btn-sos">SOS</div>
+              <div style="font-size:18px;font-weight:800;color:#dc2626;margin-top:16px;">SOS Activated</div>
+              <div style="font-size:13px;color:#64748b;margin-top:4px;">Contacting Helpee support...</div>
+              <div style="margin-top:20px;font-size:12px;color:#64748b;">
+                <div>&#10003; Admin notified</div><div>&#10003; Family notified</div><div>&#10003; Location shared</div>
+              </div>
+              <div class="wf-btn wf-btn-danger wf-btn-lg" style="margin-top:24px;">Cancel SOS</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Shift complete &rarr; check out &rarr; view earnings</div></div>
+
+        <div class="screen-block" id="cg-earnings">
+          <div class="screen-header"><div class="step-badge">Step 10 of 10</div><div class="prd-ref">PRD &sect;7.5</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Earnings</div>
+          <div class="screen-desc">Shift-wise earnings breakdown with payout status. Shows this month&rsquo;s total, pending payouts, and shift history. Super Star CTs see reduced commission here.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:12px;">Earnings</div>
+              <div class="wf-stat-grid">
+                <div class="wf-stat"><span class="num" style="color:#059669;">&#8377;18,400</span><span class="label">This Month</span></div>
+                <div class="wf-stat"><span class="num" style="color:#4361ee;">&#8377;4,200</span><span class="label">Pending Payout</span></div>
+              </div>
+              <div style="font-size:12px;font-weight:700;color:#475569;margin-bottom:6px;">Recent Shifts</div>
+              <div class="wf-card"><div class="wf-row"><div><div style="font-weight:600;font-size:13px;">Mr. Gupta &mdash; Feb 22</div><div style="font-size:11px;color:#64748b;">8hr shift &middot; Companion</div></div><div style="margin-left:auto;text-align:right;"><div style="font-weight:700;color:#059669;">&#8377;1,200</div><div><span class="wf-badge wf-badge-green" style="font-size:9px;">Paid</span></div></div></div></div>
+              <div class="wf-card"><div class="wf-row"><div><div style="font-weight:600;font-size:13px;">Mrs. Iyer &mdash; Feb 21</div><div style="font-size:11px;color:#64748b;">12hr shift &middot; Nursing</div></div><div style="margin-left:auto;text-align:right;"><div style="font-weight:700;color:#059669;">&#8377;2,100</div><div><span class="wf-badge wf-badge-orange" style="font-size:9px;">Pending</span></div></div></div></div>
+            </div>
+            <div class="mobile-nav"><div class="mobile-nav-item"><div class="nav-icon"></div>Home</div><div class="mobile-nav-item"><div class="nav-icon"></div>Shifts</div><div class="mobile-nav-item active"><div class="nav-icon"></div>Earnings</div><div class="mobile-nav-item"><div class="nav-icon"></div>Training</div><div class="mobile-nav-item"><div class="nav-icon"></div>Profile</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== APP 4: FAMILY ==================== -->
+      <div class="section" id="app4-section">
+        <h2>App 4: Family Mobile App <span style="font-size:14px;color:#64748b;font-weight:400;">&mdash; PRD Section 8</span></h2>
+        <p class="section-desc">React Native app for family members. End-to-end customer journey from care request to payment. Maps directly to PRD Flowchart A (Demand Side) Phases 1&ndash;7.</p>
+
+        <div class="flow-overview">
+          <div class="flow-step"><div class="flow-step-num">1</div><div class="flow-step-name">Home</div><div class="flow-step-prd">&sect;8.1</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">2</div><div class="flow-step-name">Request</div><div class="flow-step-prd">&sect;8.2</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">3</div><div class="flow-step-name">Select CT</div><div class="flow-step-prd">&sect;8.3</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">4</div><div class="flow-step-name">Interview</div><div class="flow-step-prd">&sect;8.9</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">5</div><div class="flow-step-name">Agreement</div><div class="flow-step-prd">&sect;8.4</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">6</div><div class="flow-step-name">Track</div><div class="flow-step-prd">&sect;8.5</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">7</div><div class="flow-step-name">Summary</div><div class="flow-step-prd">&sect;8.6</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">8</div><div class="flow-step-name">Vitals</div><div class="flow-step-prd">&sect;8.11</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">9</div><div class="flow-step-name">Pay</div><div class="flow-step-prd">&sect;8.4</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">10</div><div class="flow-step-name">Dispute</div><div class="flow-step-prd">&sect;8.7</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">11</div><div class="flow-step-name">Control</div><div class="flow-step-prd">&sect;8.8</div></div>
+        </div>
+
+        <div class="screen-block" id="fm-home">
+          <div class="screen-header"><div class="step-badge">Step 1 of 11</div><div class="prd-ref">PRD &sect;8.1</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Family Home</div>
+          <div class="screen-desc">Dashboard for family. Shows active care status, today&rsquo;s CT, on-time rate, and pending invoices. Entry to all other flows.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div class="wf-header"><div class="wf-title" style="font-size:18px;">Hello, Rahul &#128075;</div><div class="wf-avatar" style="width:36px;height:36px;font-size:14px;">RK</div></div>
+              <div style="font-size:12px;color:#64748b;margin-bottom:12px;">Your mother&rsquo;s care &middot; Mumbai</div>
+              <div class="wf-card" style="border-left:4px solid #06d6a0;">
+                <div style="font-size:11px;color:#64748b;">TODAY&rsquo;S SHIFT</div>
+                <div class="wf-row" style="margin-top:4px;"><div class="wf-avatar" style="width:40px;height:40px;font-size:16px;">AM</div><div><div style="font-weight:700;">Anita Menon</div><div style="font-size:11px;color:#64748b;">Companion &middot; 8AM&ndash;4PM</div></div><div style="margin-left:auto;"><span class="wf-badge wf-badge-green">Active</span></div></div>
+                <div class="wf-btn wf-btn-primary" style="font-size:11px;width:100%;text-align:center;margin-top:8px;">Track Live &rarr;</div>
+              </div>
+              <div class="wf-stat-grid" style="margin-top:12px;">
+                <div class="wf-stat"><span class="num" style="font-size:16px;color:#4361ee;">28</span><span class="label">Days Active</span></div>
+                <div class="wf-stat"><span class="num" style="font-size:16px;color:#059669;">96%</span><span class="label">On-time Rate</span></div>
+              </div>
+              <div class="wf-card"><div class="wf-row"><div>&#128196; <strong style="font-size:13px;">Invoice #1842</strong></div><div style="margin-left:auto;"><span class="wf-badge wf-badge-orange">Due Feb 28</span></div></div></div>
+            </div>
+            <div class="mobile-nav"><div class="mobile-nav-item active"><div class="nav-icon"></div>Home</div><div class="mobile-nav-item"><div class="nav-icon"></div>Track</div><div class="mobile-nav-item"><div class="nav-icon"></div>Summary</div><div class="mobile-nav-item"><div class="nav-icon"></div>Payments</div><div class="mobile-nav-item"><div class="nav-icon"></div>More</div></div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Family needs new care &rarr; submit request (Flowchart A Phase 1)</div></div>
+
+        <div class="screen-block" id="fm-request">
+          <div class="screen-header"><div class="step-badge">Step 2 of 11</div><div class="prd-ref">PRD &sect;8.2</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Create Care Request</div>
+          <div class="screen-desc">Submit care needs: service type, shift type (visit/8h/12h/24h/live-in), dates, region preference, special requirements. Price estimate shown. Triggers matching algorithm (48h SLA).</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:12px;">New Care Request</div>
+              <div class="wf-label">Service Type</div><div class="wf-input">Nursing &#9662;</div>
+              <div class="wf-label">Shift Type</div><div class="wf-input">12 hours (8AM&ndash;8PM) &#9662;</div>
+              <div class="wf-label">Start Date</div><div class="wf-input">March 1, 2026</div>
+              <div class="wf-label">Duration</div><div class="wf-input">30 days</div>
+              <div class="wf-label">Special Requirements</div><div class="wf-input" style="min-height:48px;">Diabetes management experience preferred</div>
+              <div style="background:#eff6ff;padding:10px;border-radius:8px;margin:10px 0;"><div style="font-size:12px;color:#2563eb;font-weight:600;">Estimated: &#8377;63,000/month</div><div style="font-size:10px;color:#64748b;">Based on nursing, 12hr shifts, Mumbai</div></div>
+              <div class="wf-btn wf-btn-primary wf-btn-lg">Submit Request</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Algorithm matches top 3 CTs (Flowchart A Phase 2&ndash;3)</div></div>
+
+        <div class="screen-block" id="fm-select">
+          <div class="screen-header"><div class="step-badge">Step 3 of 11</div><div class="prd-ref">PRD &sect;8.3</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Caregiver Selection</div>
+          <div class="screen-desc">Family reviews top 3 matched profiles. Can select directly or request video interview first. If all rejected, re-matching runs (max 2 retries per Flowchart A).</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:2px;">Matched Caregivers</div>
+              <div style="font-size:11px;color:#64748b;margin-bottom:12px;">Top 3 matches for your care request</div>
+              <div class="wf-card" style="border:2px solid #4361ee;">
+                <div class="wf-row"><div class="wf-avatar">AM</div><div><div style="font-weight:700;">Anita Menon</div><div style="font-size:11px;color:#64748b;">4 yrs exp &middot; Nursing</div><div class="wf-stars" style="font-size:12px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div></div><div style="margin-left:auto;"><span class="wf-badge wf-badge-blue">#1 Match</span></div></div>
+                <div style="display:flex;gap:6px;margin-top:6px;">
+                  <span class="wf-btn wf-btn-primary" style="flex:1;font-size:11px;text-align:center;">Select</span>
+                  <span class="wf-btn wf-btn-outline" style="flex:1;font-size:11px;text-align:center;">Interview</span>
+                </div>
+              </div>
+              <div class="wf-card"><div class="wf-row"><div class="wf-avatar">PS</div><div><div style="font-weight:700;">Priya Sharma</div><div style="font-size:11px;color:#64748b;">6 yrs exp &middot; Nursing</div><div class="wf-stars" style="font-size:12px;">&#9733;&#9733;&#9733;&#9733;&#9734;</div></div><div style="margin-left:auto;"><span class="wf-badge wf-badge-green">#2 Match</span></div></div></div>
+              <div class="wf-card"><div class="wf-row"><div class="wf-avatar">KR</div><div><div style="font-weight:700;">Kavita Rao</div><div style="font-size:11px;color:#64748b;">3 yrs exp &middot; Nursing</div><div class="wf-stars" style="font-size:12px;">&#9733;&#9733;&#9733;&#9733;&#9734;</div></div><div style="margin-left:auto;"><span class="wf-badge wf-badge-green">#3 Match</span></div></div></div>
+            </div>
+            <div class="mobile-nav"><div class="mobile-nav-item"><div class="nav-icon"></div>Home</div><div class="mobile-nav-item active"><div class="nav-icon"></div>Booking</div><div class="mobile-nav-item"><div class="nav-icon"></div>Track</div><div class="mobile-nav-item"><div class="nav-icon"></div>Payments</div><div class="mobile-nav-item"><div class="nav-icon"></div>More</div></div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Family taps &ldquo;Interview&rdquo; &rarr; video call scheduled</div></div>
+
+        <div class="screen-block" id="fm-video">
+          <div class="screen-header"><div class="step-badge">Step 4 of 11</div><div class="prd-ref">PRD &sect;8.9</div><span class="priority-badge p1">P1</span></div>
+          <div class="screen-title">Video Interview</div>
+          <div class="screen-desc">Twilio-powered video call between family and shortlisted CT. Helpee moderator can join. After call, family confirms or requests new profiles.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="text-align:center;margin-bottom:8px;"><div class="wf-avatar-lg" style="width:64px;height:64px;font-size:24px;">AM</div><div style="font-weight:700;font-size:16px;">Anita Menon</div></div>
+              <div style="background:#1e293b;border-radius:12px;height:200px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:14px;margin-bottom:12px;">&#128249; Video call area</div>
+              <div style="display:flex;justify-content:center;gap:12px;margin-bottom:8px;">
+                <span class="wf-btn wf-btn-outline" style="padding:10px 16px;">Mute</span>
+                <span class="wf-btn wf-btn-outline" style="padding:10px 16px;">Camera Off</span>
+                <span class="wf-btn wf-btn-danger" style="padding:10px 16px;">End Call</span>
+              </div>
+              <div style="font-size:11px;color:#94a3b8;text-align:center;">Helpee moderator can join</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">CT selected &rarr; sign agreement (Flowchart A Phase 4)</div></div>
+
+        <div class="screen-block" id="fm-agreement">
+          <div class="screen-header"><div class="step-badge">Step 5 of 11</div><div class="prd-ref">PRD &sect;8.4</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Service Agreement</div>
+          <div class="screen-desc">Terms summary: pricing, schedule, cancellation policy, non-solicitation. OTP-based digital signing. Once signed, shift roster is created and CT is notified.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:12px;">Service Agreement</div>
+              <div class="wf-card">
+                <div style="font-size:12px;font-weight:700;color:#475569;margin-bottom:6px;">Summary</div>
+                <div style="font-size:12px;color:#64748b;">Service Type: Nursing &middot; 12hr shifts</div>
+                <div style="font-size:12px;color:#64748b;">Schedule: 8AM&ndash;8PM, 30 days</div>
+                <div style="font-size:12px;color:#64748b;">Pricing: &#8377;63,000/month</div>
+                <hr class="wf-divider">
+                <div style="font-size:11px;color:#475569;">
+                  <div>&bull; Cancellation policy: 7 days notice</div>
+                  <div>&bull; Non-solicitation clause applies</div>
+                  <div>&bull; Dispute resolution via Helpee</div>
+                </div>
+              </div>
+              <div class="wf-label">Enter OTP to sign</div>
+              <div class="wf-input" style="letter-spacing:8px;text-align:center;">&bull;&bull;&bull;&bull;&bull;&bull;</div>
+              <div class="wf-btn wf-btn-primary wf-btn-lg">Sign with OTP</div>
+              <div style="font-size:10px;color:#94a3b8;text-align:center;margin-top:8px;">Agreement stored securely</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">CT deployed &rarr; shift starts &rarr; track in real-time (Flowchart A Phase 5)</div></div>
+
+        <div class="screen-block" id="fm-tracking">
+          <div class="screen-header"><div class="step-badge">Step 6 of 11</div><div class="prd-ref">PRD &sect;8.5</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Live Shift Tracking</div>
+          <div class="screen-desc">Real-time GPS location of CT, shift timeline (check-in &rarr; tasks &rarr; check-out), and task progress. Family can monitor remotely.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>10:30 AM</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:8px;">Live Tracking</div>
+              <div class="wf-map" style="height:180px;">
+                <div class="wf-map-pin" style="top:40%;left:50%;background:#06d6a0;"></div>
+                &#128205; Caregiver is at patient&rsquo;s location
+              </div>
+              <div style="font-size:12px;font-weight:700;color:#475569;margin-bottom:6px;">Shift Timeline</div>
+              <div class="wf-timeline-item"><div class="wf-timeline-dot active"></div><div><strong>Checked In</strong> &mdash; 8:02 AM<br><span style="color:#64748b;">Within geofence (42m)</span></div></div>
+              <div class="wf-timeline-item"><div class="wf-timeline-dot active"></div><div><strong>Shift Active</strong> &mdash; 8:02 AM<br><span style="color:#64748b;">Tasks in progress</span></div></div>
+              <div class="wf-timeline-item"><div class="wf-timeline-dot current"></div><div><strong>4/7 Tasks Done</strong> &mdash; 10:15 AM<br><span style="color:#64748b;">Morning tasks completed</span></div></div>
+              <div class="wf-timeline-item"><div class="wf-timeline-dot pending"></div><div style="color:#94a3b8;"><strong>Check-Out</strong> &mdash; Scheduled 4:00 PM</div></div>
+            </div>
+            <div class="mobile-nav"><div class="mobile-nav-item"><div class="nav-icon"></div>Home</div><div class="mobile-nav-item active"><div class="nav-icon"></div>Track</div><div class="mobile-nav-item"><div class="nav-icon"></div>Summary</div><div class="mobile-nav-item"><div class="nav-icon"></div>Payments</div><div class="mobile-nav-item"><div class="nav-icon"></div>More</div></div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Shift ends &rarr; auto-generated summary</div></div>
+
+        <div class="screen-block" id="fm-summary">
+          <div class="screen-header"><div class="step-badge">Step 7 of 11</div><div class="prd-ref">PRD &sect;8.6</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Daily Summary</div>
+          <div class="screen-desc">Auto-generated end-of-shift report: tasks completed, duration, vitals recorded, caregiver notes. Replaces scattered WhatsApp messages (V1 core deliverable).</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>5:00 PM</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:2px;">Daily Summary</div>
+              <div style="font-size:11px;color:#64748b;margin-bottom:12px;">February 22, 2026 &middot; Anita Menon</div>
+              <div class="wf-stat-grid">
+                <div class="wf-stat"><span class="num" style="font-size:14px;color:#059669;">7/7</span><span class="label">Tasks Done</span></div>
+                <div class="wf-stat"><span class="num" style="font-size:14px;color:#4361ee;">7h 58m</span><span class="label">Duration</span></div>
+              </div>
+              <div style="font-size:12px;font-weight:700;color:#475569;margin-bottom:4px;">Vitals Recorded</div>
+              <div class="wf-card" style="font-size:12px;">
+                <div>BP: <strong>128/82</strong> mmHg <span class="wf-badge wf-badge-green" style="font-size:9px;">Normal</span></div>
+                <div>Pulse: <strong>72</strong> bpm <span class="wf-badge wf-badge-green" style="font-size:9px;">Normal</span></div>
+                <div>Sugar: <strong>142</strong> mg/dL <span class="wf-badge wf-badge-green" style="font-size:9px;">Normal</span></div>
+              </div>
+              <div style="font-size:12px;font-weight:700;color:#475569;margin:6px 0 4px;">Caregiver Notes</div>
+              <div class="wf-card" style="font-size:12px;color:#475569;font-style:italic;">&ldquo;Mr. Gupta had a good day. Ate well at lunch. Completed morning walk. No complaints.&rdquo;</div>
+            </div>
+            <div class="mobile-nav"><div class="mobile-nav-item"><div class="nav-icon"></div>Home</div><div class="mobile-nav-item"><div class="nav-icon"></div>Track</div><div class="mobile-nav-item active"><div class="nav-icon"></div>Summary</div><div class="mobile-nav-item"><div class="nav-icon"></div>Payments</div><div class="mobile-nav-item"><div class="nav-icon"></div>More</div></div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Monitor health trends over time</div></div>
+
+        <div class="screen-block" id="fm-vitals">
+          <div class="screen-header"><div class="step-badge">Step 8 of 11</div><div class="prd-ref">PRD &sect;8.11</div><span class="priority-badge p1">P1</span></div>
+          <div class="screen-title">Vitals Dashboard</div>
+          <div class="screen-desc">BP, pulse, blood sugar trends with 7/30-day views. Abnormal readings highlighted. Downloadable report for doctor visits.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:8px;">Vitals &mdash; Mother</div>
+              <div class="wf-input" style="width:auto;display:inline-block;margin:0 0 12px 0;">Last 7 days &#9662;</div>
+              <div class="wf-card"><div style="font-size:12px;font-weight:700;color:#475569;">BP Trend</div><div class="wf-chart" style="height:60px;margin:8px 0;">Chart placeholder</div><div>Latest: <strong>128/82</strong> <span style="color:#059669;">&uarr;</span> <span class="wf-badge wf-badge-green" style="font-size:9px;">Normal</span></div></div>
+              <div class="wf-card"><div style="font-size:12px;font-weight:700;color:#475569;">Pulse Trend</div><div class="wf-chart" style="height:60px;margin:8px 0;">Chart placeholder</div><div>Latest: <strong>72</strong> bpm <span class="wf-badge wf-badge-green" style="font-size:9px;">Normal</span></div></div>
+              <div class="wf-card"><div style="font-size:12px;font-weight:700;color:#475569;">Blood Sugar Trend</div><div class="wf-chart" style="height:60px;margin:8px 0;">Chart placeholder</div><div>Latest: <strong>142</strong> mg/dL <span style="color:#dc2626;">&darr;</span> <span class="wf-badge wf-badge-orange" style="font-size:9px;">Abnormal</span></div></div>
+              <div class="wf-btn wf-btn-primary wf-btn-lg">Download Report</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Billing cycle &rarr; pay invoice (Flowchart A Phase 7)</div></div>
+
+        <div class="screen-block" id="fm-invoice">
+          <div class="screen-header"><div class="step-badge">Step 9 of 11</div><div class="prd-ref">PRD &sect;8.4</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Invoice &amp; Payment</div>
+          <div class="screen-desc">Monthly invoice with line items (shifts, VAS, GST). Razorpay integration (UPI/Card/Net Banking). Failed payments trigger auto-retry &rarr; call center follow-up (Flowchart A Phase 7).</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:12px;">Invoice #1842</div>
+              <div class="wf-card">
+                <div style="font-size:12px;color:#64748b;">Period: Feb 1 &ndash; Feb 28, 2026</div>
+                <div style="font-size:12px;color:#64748b;">Patient: Mr. Gupta</div>
+                <hr class="wf-divider">
+                <div style="display:flex;justify-content:space-between;font-size:13px;"><span>Base (28 shifts &times; &#8377;1,200)</span><span>&#8377;33,600</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;"><span>VAS: Physiotherapy (2 sessions)</span><span>&#8377;3,000</span></div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;color:#64748b;"><span>GST (18%)</span><span>&#8377;6,588</span></div>
+                <hr class="wf-divider">
+                <div style="display:flex;justify-content:space-between;font-size:15px;font-weight:800;"><span>Total</span><span>&#8377;43,188</span></div>
+              </div>
+              <div class="wf-btn wf-btn-primary wf-btn-lg" style="margin-top:8px;">Pay Now via Razorpay</div>
+              <div style="font-size:10px;color:#94a3b8;text-align:center;margin-top:6px;">UPI &middot; Cards &middot; Net Banking &middot; Wallets</div>
+            </div>
+            <div class="mobile-nav"><div class="mobile-nav-item"><div class="nav-icon"></div>Home</div><div class="mobile-nav-item"><div class="nav-icon"></div>Track</div><div class="mobile-nav-item"><div class="nav-icon"></div>Summary</div><div class="mobile-nav-item active"><div class="nav-icon"></div>Payments</div><div class="mobile-nav-item"><div class="nav-icon"></div>More</div></div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Issue with service? Raise dispute</div></div>
+
+        <div class="screen-block" id="fm-dispute">
+          <div class="screen-header"><div class="step-badge">Step 10 of 11</div><div class="prd-ref">PRD &sect;8.7</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Raise Dispute</div>
+          <div class="screen-desc">Categorized dispute form (late arrival, quality, billing). Evidence attachment. Ops investigates within 5 days. Maps to Flowchart A Phase 7 &ldquo;Family raises dispute?&rdquo;</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:12px;">Raise a Dispute</div>
+              <div class="wf-label">Category</div><div class="wf-input">Late Arrival &#9662;</div>
+              <div class="wf-label">Related Shift</div><div class="wf-input">Feb 20 &mdash; Anita M. &mdash; Mr. Gupta &#9662;</div>
+              <div class="wf-label">Description</div><div class="wf-input" style="min-height:60px;">Caregiver arrived 45 minutes late without prior notice.</div>
+              <div class="wf-label">Attach Evidence (optional)</div>
+              <div style="border:2px dashed #d1d5db;border-radius:8px;padding:16px;text-align:center;font-size:12px;color:#94a3b8;margin-bottom:10px;">&#128206; Tap to upload photos</div>
+              <div class="wf-btn wf-btn-danger wf-btn-lg">Submit Dispute</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Ongoing management &mdash; pause, replace, extend</div></div>
+
+        <div class="screen-block" id="fm-control">
+          <div class="screen-header"><div class="step-badge">Step 11 of 11</div><div class="prd-ref">PRD &sect;8.8</div><span class="priority-badge p1">P1</span></div>
+          <div class="screen-title">Control Panel</div>
+          <div class="screen-desc">Ongoing service management: pause, request replacement (triggers Flowchart A Phase 6), extend, reduce, or contact care manager directly.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body">
+              <div style="font-size:16px;font-weight:700;margin-bottom:12px;">Manage Service</div>
+              <div class="wf-card"><div class="wf-row"><div style="width:36px;height:36px;border-radius:8px;background:#fef3c7;display:flex;align-items:center;justify-content:center;">&#9208;</div><div><div style="font-weight:700;font-size:14px;">Pause Service</div><div style="font-size:11px;color:#64748b;">Temporarily halt care</div></div></div></div>
+              <div class="wf-card"><div class="wf-row"><div style="width:36px;height:36px;border-radius:8px;background:#dbeafe;display:flex;align-items:center;justify-content:center;">&#128260;</div><div><div style="font-weight:700;font-size:14px;">Request Replacement</div><div style="font-size:11px;color:#64748b;">Change caregiver</div></div></div></div>
+              <div class="wf-card"><div class="wf-row"><div style="width:36px;height:36px;border-radius:8px;background:#d1fae5;display:flex;align-items:center;justify-content:center;">&#10133;</div><div><div style="font-weight:700;font-size:14px;">Extend Duration</div><div style="font-size:11px;color:#64748b;">Add more days</div></div></div></div>
+              <div class="wf-card"><div class="wf-row"><div style="width:36px;height:36px;border-radius:8px;background:#fef3c7;display:flex;align-items:center;justify-content:center;">&#10134;</div><div><div style="font-weight:700;font-size:14px;">Reduce Service</div><div style="font-size:11px;color:#64748b;">Fewer hours/days</div></div></div></div>
+              <div class="wf-card"><div class="wf-row"><div style="width:36px;height:36px;border-radius:8px;background:#ede9fe;display:flex;align-items:center;justify-content:center;">&#128222;</div><div><div style="font-weight:700;font-size:14px;">Contact Care Manager</div><div style="font-size:11px;color:#64748b;">Direct support</div></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== APP 5: ELDERLY ==================== -->
+      <div class="section" id="app5-section">
+        <h2>App 5: Elderly Mobile App <span style="font-size:14px;color:#64748b;font-weight:400;">&mdash; PRD Section 9</span></h2>
+        <p class="section-desc">Ultra-simplified, high-contrast app. Min 24px font, max 3 actions per screen. Daily flow: morning check &rarr; see caregiver &rarr; follow schedule &rarr; confirm meds &rarr; SOS if needed &rarr; end-of-day feedback.</p>
+
+        <div class="flow-overview">
+          <div class="flow-step"><div class="flow-step-num">1</div><div class="flow-step-name">Wellness</div><div class="flow-step-prd">&sect;9.8</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">2</div><div class="flow-step-name">Caregiver</div><div class="flow-step-prd">&sect;9.1</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">3</div><div class="flow-step-name">Schedule</div><div class="flow-step-prd">&sect;9.6</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">4</div><div class="flow-step-name">Medicine</div><div class="flow-step-prd">&sect;9.4</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">5</div><div class="flow-step-name">SOS</div><div class="flow-step-prd">&sect;9.2</div></div>
+          <div class="flow-arrow-h">&rarr;</div>
+          <div class="flow-step"><div class="flow-step-num">6</div><div class="flow-step-name">Feedback</div><div class="flow-step-prd">&sect;9.5</div></div>
+        </div>
+
+        <div class="screen-block" id="el-wellness">
+          <div class="screen-header"><div class="step-badge">Step 1 of 6</div><div class="prd-ref">PRD &sect;9.8</div><span class="priority-badge p1">P1</span></div>
+          <div class="screen-title">Wellness Check-In</div>
+          <div class="screen-desc">Morning routine. Elderly taps emoji to report how they feel. Family gets notified of mood. No typing required.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status" style="background:#4361ee;"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body wf-elderly" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#fff;gap:20px;padding:24px;">
+              <div style="font-size:24px;font-weight:800;color:#1e293b;">Good Morning!</div>
+              <div style="font-size:20px;color:#475569;">How are you feeling today?</div>
+              <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:12px;">
+                <div style="width:90px;height:90px;border-radius:50%;background:#d1fae5;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:36px;cursor:default;box-shadow:0 2px 8px rgba(0,0,0,0.08);"><span>&#128522;</span><span style="font-size:14px;font-weight:700;color:#059669;">Good</span></div>
+                <div style="width:90px;height:90px;border-radius:50%;background:#fef3c7;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:36px;cursor:default;box-shadow:0 2px 8px rgba(0,0,0,0.08);"><span>&#128528;</span><span style="font-size:14px;font-weight:700;color:#d97706;">Okay</span></div>
+                <div style="width:90px;height:90px;border-radius:50%;background:#fee2e2;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:36px;cursor:default;box-shadow:0 2px 8px rgba(0,0,0,0.08);"><span>&#128532;</span><span style="font-size:14px;font-weight:700;color:#dc2626;">Not Well</span></div>
+              </div>
+              <div style="font-size:14px;color:#94a3b8;">Your family will be notified</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Caregiver arrives &rarr; see who&rsquo;s here</div></div>
+
+        <div class="screen-block" id="el-home">
+          <div class="screen-header"><div class="step-badge">Step 2 of 6</div><div class="prd-ref">PRD &sect;9.1</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">Today&rsquo;s Caregiver</div>
+          <div class="screen-desc">Large, simple view of today&rsquo;s CT: photo, name, status (HERE/on the way). One-tap call button. Updated when CT checks in via geofence (CT App &sect;7.3).</div>
+          <div class="mobile-frame">
+            <div class="mobile-status" style="background:#4361ee;"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body wf-elderly" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#fff;">
+              <div style="font-size:14px;color:#64748b;margin-bottom:8px;">TODAY&rsquo;S CAREGIVER</div>
+              <div class="wf-avatar-lg" style="width:120px;height:120px;font-size:44px;background:#dbeafe;">AM</div>
+              <div style="font-size:28px;font-weight:800;margin-top:12px;">Anita</div>
+              <div style="font-size:18px;color:#059669;font-weight:700;margin-top:4px;">She is HERE &#10003;</div>
+              <div style="margin-top:24px;width:100%;"><div class="wf-btn wf-btn-primary wf-btn-lg">Call Anita</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">See today&rsquo;s plan</div></div>
+
+        <div class="screen-block" id="el-schedule">
+          <div class="screen-header"><div class="step-badge">Step 3 of 6</div><div class="prd-ref">PRD &sect;9.6</div><span class="priority-badge p1">P1</span></div>
+          <div class="screen-title">Daily Schedule</div>
+          <div class="screen-desc">Timeline view of today&rsquo;s activities in large font. Shows completed, current, and upcoming items. Synced with CT&rsquo;s task checklist (CT App &sect;7.4).</div>
+          <div class="mobile-frame">
+            <div class="mobile-status" style="background:#4361ee;"><span>9:41</span><span>&#128268;</span></div>
+            <div class="mobile-body wf-elderly" style="background:#fff;padding:20px;">
+              <div style="font-size:24px;font-weight:800;color:#1e293b;margin-bottom:16px;">Today&rsquo;s Plan</div>
+              <div class="wf-timeline-item" style="font-size:18px;margin-bottom:12px;"><div class="wf-timeline-dot active"></div><div><strong>8:00 AM &mdash; Morning Medicine</strong> &#128138; <span class="wf-badge wf-badge-green">&#10003;</span></div></div>
+              <div class="wf-timeline-item" style="font-size:18px;margin-bottom:12px;background:#eff6ff;padding:8px;border-radius:8px;border-left:4px solid #4361ee;"><div class="wf-timeline-dot current"></div><div><strong>10:00 AM &mdash; Walk</strong> &#128694; <span style="color:#4361ee;">Next</span></div></div>
+              <div class="wf-timeline-item" style="font-size:18px;margin-bottom:12px;"><div class="wf-timeline-dot pending"></div><div><strong>12:00 PM &mdash; Lunch</strong> &#127869;&#65039;</div></div>
+              <div class="wf-timeline-item" style="font-size:18px;"><div class="wf-timeline-dot pending"></div><div><strong>2:00 PM &mdash; Afternoon Medicine</strong> &#128138;</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Medicine time &rarr; confirm</div></div>
+
+        <div class="screen-block" id="el-medicine">
+          <div class="screen-header"><div class="step-badge">Step 4 of 6</div><div class="prd-ref">PRD &sect;9.4</div><span class="priority-badge p1">P1</span></div>
+          <div class="screen-title">Medicine Confirmation</div>
+          <div class="screen-desc">Push notification at scheduled medicine time. Simple YES/NO. Response logged and visible to family in Daily Summary (&sect;8.6).</div>
+          <div class="mobile-frame">
+            <div class="mobile-status" style="background:#4361ee;"><span>12:00 PM</span><span>&#128268;</span></div>
+            <div class="mobile-body wf-elderly" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#fff;gap:16px;">
+              <div style="font-size:48px;">&#128138;</div>
+              <div style="font-size:24px;font-weight:800;color:#1e293b;">Did you take your medicine?</div>
+              <div style="font-size:16px;color:#64748b;">Afternoon dose &mdash; 12:00 PM</div>
+              <div style="width:100%;display:flex;gap:16px;margin-top:12px;">
+                <div class="wf-btn wf-btn-success wf-btn-lg" style="flex:1;font-size:24px;padding:20px;">YES &#10003;</div>
+                <div class="wf-btn wf-btn-danger wf-btn-lg" style="flex:1;font-size:24px;padding:20px;">NO &#10007;</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Emergency? Always accessible</div></div>
+
+        <div class="screen-block" id="el-sos">
+          <div class="screen-header"><div class="step-badge">Step 5 of 6</div><div class="prd-ref">PRD &sect;9.2 + &sect;9.3</div><span class="priority-badge p0">P0</span></div>
+          <div class="screen-title">SOS &amp; Help Buttons</div>
+          <div class="screen-desc">Always accessible. One-tap SOS, Call Helpee, Call Family. Triggers Flowchart A &ldquo;Emergency SOS?&rdquo; decision &mdash; auto-calls emergency contacts + ambulance info.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status" style="background:#ef476f;"><span>9:41</span><span>HELP</span></div>
+            <div class="mobile-body wf-elderly" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#fff;gap:20px;">
+              <div style="font-size:20px;font-weight:700;color:#1e293b;">Need Help?</div>
+              <div class="wf-btn-sos" style="width:120px;height:120px;font-size:24px;border-radius:50%;">SOS</div>
+              <div style="width:100%;display:flex;flex-direction:column;gap:12px;">
+                <div class="wf-btn wf-btn-primary wf-btn-lg" style="font-size:20px;">&#128222; Call Helpee</div>
+                <div class="wf-btn wf-btn-success wf-btn-lg" style="font-size:20px;">&#128104;&zwj;&#128105;&zwj;&#128102; Call Family</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="flow-connector-line"><div class="pipe"></div><div class="arrow">&#9660;</div></div><div class="flow-connector-label">Shift ends &rarr; give feedback</div></div>
+
+        <div class="screen-block" id="el-feedback">
+          <div class="screen-header"><div class="step-badge">Step 6 of 6</div><div class="prd-ref">PRD &sect;9.5</div><span class="priority-badge p1">P1</span></div>
+          <div class="screen-title">Simple Feedback</div>
+          <div class="screen-desc">End-of-shift thumbs up/down. No typing. Response feeds into CT rating algorithm. Family sees feedback in their Daily Summary.</div>
+          <div class="mobile-frame">
+            <div class="mobile-status" style="background:#4361ee;"><span>4:00 PM</span><span>&#128268;</span></div>
+            <div class="mobile-body wf-elderly" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:#fff;gap:16px;">
+              <div style="font-size:20px;font-weight:800;color:#1e293b;">How was today&rsquo;s care?</div>
+              <div class="wf-avatar-lg" style="width:80px;height:80px;font-size:32px;background:#dbeafe;">AM</div>
+              <div style="font-size:18px;color:#475569;">Anita took care of you today</div>
+              <div style="display:flex;gap:24px;margin-top:12px;">
+                <div style="text-align:center;cursor:default;"><div style="width:80px;height:80px;border-radius:50%;background:#d1fae5;display:flex;align-items:center;justify-content:center;font-size:40px;">&#128077;</div><div style="font-size:16px;font-weight:700;margin-top:6px;color:#059669;">Good</div></div>
+                <div style="text-align:center;cursor:default;"><div style="width:80px;height:80px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;font-size:40px;">&#128078;</div><div style="font-size:16px;font-weight:700;margin-top:6px;color:#dc2626;">Not Good</div></div>
+              </div>
+              <div style="font-size:14px;color:#94a3b8;margin-top:8px;cursor:default;text-decoration:underline;">Skip</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

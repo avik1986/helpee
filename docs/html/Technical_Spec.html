@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Helpee — Technical Specification v1.0</title>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --success: #06d6a0;
+      --warning: #ffd166;
+      --danger: #ef476f;
+      --surface: #f7fafc;
+      --border: #e2e8f0;
+      --text: #1a202c;
+      --muted: #718096;
+      --sidebar: #1a1a2e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--surface); color: var(--text); line-height: 1.6; }
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar { position: fixed; left: 0; top: 0; width: 260px; height: 100vh; background: var(--sidebar); color: #fff; overflow-y: auto; z-index: 100; padding-bottom: 2rem; }
+    .logo-area { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .logo-area strong { font-size: 1.4rem; letter-spacing: 0.05em; display: block; }
+    .logo-area small { display: block; color: rgba(255,255,255,0.6); font-size: 0.75rem; margin-top: 0.25rem; }
+    .nav { padding: 0.5rem 0; }
+    .nav-group { padding: 0.75rem 1.25rem 0.25rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); font-weight: 700; }
+    .nav a { display: block; padding: 0.35rem 1.25rem; color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.82rem; }
+    .nav a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .main-wrap { flex: 1; max-width: 1000px; margin-left: 260px; margin-right: auto; background: #fff; padding: 2rem; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+    .sticky-header { position: sticky; top: 0; background: #fff; padding: 0.5rem 0; border-bottom: 1px solid var(--border); margin-bottom: 1rem; z-index: 10; font-weight: 600; font-size: 0.9rem; color: var(--muted); }
+    h1 { font-size: 2rem; color: var(--text); margin-top: 0; }
+    h2 { font-size: 1.6rem; border-left: 4px solid var(--primary); padding-left: 1rem; margin: 2.5rem 0 1rem; }
+    h3 { font-size: 1.2rem; color: #2d3748; margin: 1.5rem 0 0.5rem; }
+    h4 { font-size: 1rem; color: var(--secondary); margin: 1.25rem 0 0.5rem; }
+    p { margin: 0 0 0.75rem; }
+    ul, ol { margin: 0 0 0.75rem; padding-left: 1.5rem; }
+    li { margin-bottom: 0.3rem; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+    th { background: var(--primary); color: #fff; padding: 0.75rem; text-align: left; position: sticky; top: 0; }
+    td { padding: 0.75rem; border-bottom: 1px solid var(--border); }
+    tr:nth-child(even) { background: var(--surface); }
+    code { background: var(--surface); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: var(--secondary); }
+    .card { border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin: 0.75rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600; vertical-align: middle; }
+    .badge-get { background: var(--success); color: #fff; }
+    .badge-post { background: var(--accent); color: #fff; }
+    .badge-put { background: var(--warning); color: #1a202c; }
+    .badge-delete { background: var(--danger); color: #fff; }
+    .badge-patch { background: var(--warning); color: #1a202c; }
+    .flow-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem; margin: 0.5rem 0; }
+    .pill { padding: 0.3rem 0.65rem; border-radius: 999px; font-size: 0.78rem; font-weight: 500; }
+    .pill-blue { background: linear-gradient(135deg,#4361ee,#4895ef); color: #fff; }
+    .pill-green { background: linear-gradient(135deg,#06b881,#06d6a0); color: #fff; }
+    .pill-purple { background: linear-gradient(135deg,#6d28d9,#8b5cf6); color: #fff; }
+    .pill-orange { background: linear-gradient(135deg,#f59e0b,#fbbf24); color: #1a202c; }
+    .pill-red { background: var(--danger); color: #fff; }
+    .flow-arrow { color: var(--muted); font-weight: bold; margin: 0 0.2rem; }
+    details { margin: 0.5rem 0; }
+    summary { cursor: pointer; font-weight: 600; padding: 0.5rem 0; font-size: 0.95rem; }
+    summary:hover { color: var(--primary); }
+    .diagram-row { display: flex; justify-content: center; gap: 1rem; margin: 0.75rem 0; flex-wrap: wrap; }
+    .diagram-box { border-radius: 8px; border: 2px solid; padding: 1rem 1.25rem; font-weight: 600; font-size: 0.85rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .diagram-box .sub { font-size: 0.75rem; font-weight: 500; opacity: 0.9; }
+    .row-label { text-align: center; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-top: 1rem; margin-bottom: 0.25rem; }
+    .arrow-down { text-align: center; font-size: 1.5rem; color: var(--primary); margin: 0.25rem 0; }
+    .flow-box { display: inline-block; padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--border); background: #fff; font-size: 0.85rem; }
+    .flow-step { display: inline-flex; align-items: center; flex-wrap: wrap; }
+    @media print {
+      .sidebar { display: none !important; }
+      .main-wrap { margin-left: 0 !important; max-width: none !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="logo-area">
+    <strong>HELPEE</strong>
+    <small>Technical Specification v1.0</small>
+  </div>
+  <nav class="nav">
+    <div class="nav-group">Architecture</div>
+    <a href="#system-arch">1. System Architecture</a>
+    <a href="#backend-modules">2. Backend Modules</a>
+    <a href="#tech-stack">3. Tech Stack</a>
+    <a href="#data-flows">4. Data Flow Diagrams</a>
+    <div class="nav-group">Data</div>
+    <a href="#status-models">5. Status Models</a>
+    <a href="#sla">6. SLA Targets</a>
+    <a href="#database">7. Database Schema</a>
+    <a href="#er-diagram">8. ER Diagram</a>
+    <div class="nav-group">APIs</div>
+    <a href="#api-reference">9. API Reference</a>
+    <div class="nav-group">Infrastructure</div>
+    <a href="#security">10. Security Architecture</a>
+    <a href="#realtime">11. Real-Time Architecture</a>
+    <a href="#infrastructure">12. Infrastructure &amp; Deploy</a>
+    <a href="#scalability">13. Scalability Strategy</a>
+  </nav>
+</aside>
+
+<main class="main-wrap">
+<div class="sticky-header" id="sticky-nav">Helpee Technical Specification</div>
+
+<!-- ===================== 1. SYSTEM ARCHITECTURE ===================== -->
+<section id="system-arch">
+<h2>1. System Architecture</h2>
+<p>Helpee is a <strong>modular monolith</strong> (NestJS) serving five client applications through a versioned REST API with WebSocket support for real-time features. <strong>PostgreSQL</strong> with <strong>PostGIS</strong> handles all persistent data including geospatial queries. <strong>Redis</strong> provides caching and pub/sub for live location streaming. <strong>BullMQ</strong> handles async jobs. <strong>AWS</strong> provides the cloud infrastructure.</p>
+
+<div class="row-label">Client Applications (5 Apps)</div>
+<div class="diagram-row">
+  <div class="diagram-box" style="background:#4361ee;border-color:#2d4fcc;color:#fff;">Company Admin<br><span class="sub">Next.js 14 &middot; Web</span></div>
+  <div class="diagram-box" style="background:#4361ee;border-color:#2d4fcc;color:#fff;">Franchise Admin<br><span class="sub">Next.js 14 &middot; Web</span></div>
+  <div class="diagram-box" style="background:#4361ee;border-color:#2d4fcc;color:#fff;">Caregiver App<br><span class="sub">React Native &middot; iOS/Android</span></div>
+  <div class="diagram-box" style="background:#4361ee;border-color:#2d4fcc;color:#fff;">Family App<br><span class="sub">React Native &middot; iOS/Android</span></div>
+  <div class="diagram-box" style="background:#4361ee;border-color:#2d4fcc;color:#fff;">Elderly App<br><span class="sub">React Native &middot; iOS/Android</span></div>
+</div>
+<div class="arrow-down">&darr;</div>
+<div class="row-label">Load Balancer</div>
+<div class="diagram-row">
+  <div class="diagram-box" style="background:#3f37c9;border-color:#2e28a0;color:#fff;">AWS ALB<br><span class="sub">HTTPS termination &middot; path-based routing</span></div>
+</div>
+<div class="arrow-down">&darr;</div>
+<div class="row-label">API Gateway</div>
+<div class="diagram-row">
+  <div class="diagram-box" style="background:#3f37c9;border-color:#2e28a0;color:#fff;">NestJS API (ECS Fargate)<br><span class="sub">/api/v1/* &middot; WebSocket /ws</span></div>
+</div>
+<div class="arrow-down">&darr;</div>
+<div class="row-label">Service Modules</div>
+<div class="diagram-row">
+  <div class="diagram-box" style="background:#3f37c9;border-color:#2e28a0;color:#fff;">Auth / RBAC</div>
+  <div class="diagram-box" style="background:#3f37c9;border-color:#2e28a0;color:#fff;">Matching Engine</div>
+  <div class="diagram-box" style="background:#3f37c9;border-color:#2e28a0;color:#fff;">Shift &amp; Attendance</div>
+  <div class="diagram-box" style="background:#3f37c9;border-color:#2e28a0;color:#fff;">Ledger Payroll</div>
+  <div class="diagram-box" style="background:#3f37c9;border-color:#2e28a0;color:#fff;">Notification</div>
+</div>
+<div class="arrow-down">&darr;</div>
+<div class="row-label">Data Layer</div>
+<div class="diagram-row">
+  <div class="diagram-box" style="background:#06d6a0;border-color:#04b386;color:#0d1f1a;">PostgreSQL 16 + PostGIS<br><span class="sub">RDS Multi-AZ</span></div>
+  <div class="diagram-box" style="background:#06d6a0;border-color:#04b386;color:#0d1f1a;">Redis 7.x<br><span class="sub">ElastiCache</span></div>
+  <div class="diagram-box" style="background:#06d6a0;border-color:#04b386;color:#0d1f1a;">AWS S3<br><span class="sub">Documents, Photos</span></div>
+  <div class="diagram-box" style="background:#06d6a0;border-color:#04b386;color:#0d1f1a;">BullMQ<br><span class="sub">Job Queue (Redis-backed)</span></div>
+</div>
+<div class="arrow-down">&darr;</div>
+<div class="row-label">External Services</div>
+<div class="diagram-row">
+  <div class="diagram-box" style="background:#718096;border-color:#4a5568;color:#fff;">MSG91 OTP</div>
+  <div class="diagram-box" style="background:#718096;border-color:#4a5568;color:#fff;">Razorpay</div>
+  <div class="diagram-box" style="background:#718096;border-color:#4a5568;color:#fff;">Twilio Video</div>
+  <div class="diagram-box" style="background:#718096;border-color:#4a5568;color:#fff;">Google Maps</div>
+  <div class="diagram-box" style="background:#718096;border-color:#4a5568;color:#fff;">FCM / APNs</div>
+  <div class="diagram-box" style="background:#718096;border-color:#4a5568;color:#fff;">AuthBridge</div>
+</div>
+
+<h3>Monorepo Structure (Turborepo)</h3>
+<div class="card" style="font-family: monospace; font-size: 0.85rem; line-height: 1.8;">
+  helpee/<br>
+  &nbsp;&nbsp;apps/<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;api/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em style="color:var(--muted)"># NestJS backend</em><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;admin-web/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em style="color:var(--muted)"># Next.js 14 (Company + Franchise with RBAC)</em><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;caregiver-app/ &nbsp;&nbsp;<em style="color:var(--muted)"># React Native (Expo)</em><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;family-app/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em style="color:var(--muted)"># React Native (Expo)</em><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;elderly-app/ &nbsp;&nbsp;&nbsp;&nbsp;<em style="color:var(--muted)"># React Native (Expo) &mdash; accessibility-first</em><br>
+  &nbsp;&nbsp;packages/<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;shared-types/ &nbsp;&nbsp;&nbsp;<em style="color:var(--muted)"># TypeScript types shared across all apps</em><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;ui-kit/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em style="color:var(--muted)"># Shared React Native components</em><br>
+  &nbsp;&nbsp;&nbsp;&nbsp;api-client/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em style="color:var(--muted)"># Auto-generated API client from OpenAPI</em><br>
+  &nbsp;&nbsp;prisma/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em style="color:var(--muted)"># Schema + migrations</em><br>
+  &nbsp;&nbsp;docker/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em style="color:var(--muted)"># Dockerfiles, compose</em><br>
+  &nbsp;&nbsp;.github/workflows/ &nbsp;<em style="color:var(--muted)"># CI/CD pipelines</em>
+</div>
+</section>
+
+<!-- ===================== 2. BACKEND MODULE ARCHITECTURE ===================== -->
+<section id="backend-modules">
+<h2>2. Backend Module Architecture</h2>
+<p>All NestJS modules in a modular monolith. Each module owns its domain, DTOs, services, and controllers. Cross-module communication via dependency injection.</p>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1rem;">
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Auth &amp; RBAC</strong><br>OTP, admin login, JWT, refresh tokens, role guards</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Caregiver</strong><br>Profile CRUD, onboarding, status management, supply pipeline</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Care Request</strong><br>Request lifecycle, status transitions, assessment</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Matching Engine</strong><br>Geo + skill + availability filter, weighted scoring, top-3 ranking</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Shift</strong><br>Shift lifecycle, accept/reject, split shifts, handoff</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Roster</strong><br>Schedule creation, conflict detection, bulk ops, weekly off</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Attendance</strong><br>Geofence validation, check-in/out, no-show cron</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Location</strong><br>GPS batch logging, live streaming, route history</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Task</strong><br>Checklist CRUD, completion tracking, daily summaries</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Vitals</strong><br>Vitals logging, threshold detection, abnormal alerts</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Training</strong><br>Module CRUD, assessments, certification, renewal</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Ledger &amp; Payroll</strong><br>Earnings calc, invoicing, payout cycles, VAS commissions</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Approval</strong><br>Multi-level approval engine, queues, audit</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>VAS</strong><br>Catalog, ordering, commission splits</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Governance</strong><br>Blacklist, suspend, audit logging, incident tracking</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Notification</strong><br>Push (FCM/APNs), SMS (MSG91), in-app, email</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Document</strong><br>S3 upload, verification workflow, presigned URLs</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Dispute</strong><br>Issue lifecycle, evidence, resolution</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Video Call</strong><br>Twilio room creation, scheduling, recording</div>
+  <div class="diagram-box" style="background:#e8ecff;border-color:var(--primary);font-size:0.8rem;text-align:left;"><strong>Replacement</strong><br>CT replacement flow, backup assignment, leave mgmt</div>
+</div>
+</section>
+
+<!-- ===================== 3. TECH STACK ===================== -->
+<section id="tech-stack">
+<h2>3. Tech Stack</h2>
+<table>
+  <thead><tr><th>Layer</th><th>Technology</th><th>Version</th><th>Purpose</th><th>Why Chosen</th></tr></thead>
+  <tbody>
+    <tr><td>Backend Framework</td><td>NestJS</td><td>10.x</td><td>API server</td><td>TypeScript, modular, WebSocket built-in, microservices-ready</td></tr>
+    <tr><td>Language</td><td>TypeScript</td><td>5.x</td><td>All code</td><td>Type safety, shared types across stack</td></tr>
+    <tr><td>Database</td><td>PostgreSQL</td><td>16</td><td>Primary datastore</td><td>ACID, PostGIS for geospatial, mature</td></tr>
+    <tr><td>Geo Extension</td><td>PostGIS</td><td>3.x</td><td>Geospatial queries</td><td>Geofencing, distance calc, location indexing</td></tr>
+    <tr><td>ORM</td><td>Prisma</td><td>6.x</td><td>DB access</td><td>Type-safe queries, migrations, schema-first</td></tr>
+    <tr><td>Cache</td><td>Redis</td><td>7.x</td><td>Caching, pub/sub</td><td>Live location streaming, session cache, OTP store</td></tr>
+    <tr><td>Job Queue</td><td>BullMQ</td><td>5.x</td><td>Async processing</td><td>Payroll, matching, notifications, report gen</td></tr>
+    <tr><td>File Storage</td><td>AWS S3</td><td>&mdash;</td><td>Documents, photos</td><td>Scalable, presigned URLs, lifecycle policies</td></tr>
+    <tr><td>Mobile Framework</td><td>React Native</td><td>0.73+</td><td>iOS + Android</td><td>Single codebase, large ecosystem, Expo</td></tr>
+    <tr><td>Mobile Tooling</td><td>Expo</td><td>50+</td><td>Build, deploy</td><td>OTA updates, managed workflow, fast iteration</td></tr>
+    <tr><td>Offline DB (Mobile)</td><td>WatermelonDB</td><td>&mdash;</td><td>Offline-first</td><td>Sync queue, conflict resolution, SQLite-backed</td></tr>
+    <tr><td>Admin Frontend</td><td>Next.js</td><td>14</td><td>Web portals</td><td>SSR dashboards, App Router, React ecosystem</td></tr>
+    <tr><td>Maps (Mobile)</td><td>Google Maps SDK</td><td>&mdash;</td><td>Navigation, tracking</td><td>Best coverage in India, directions API</td></tr>
+    <tr><td>Maps (Admin)</td><td>Mapbox GL JS</td><td>&mdash;</td><td>Live map dashboard</td><td>Custom styling, clustering, real-time updates</td></tr>
+    <tr><td>Video Calls</td><td>Twilio Video</td><td>&mdash;</td><td>Interviews</td><td>Reliable, India-supported, recording</td></tr>
+    <tr><td>SMS/OTP</td><td>MSG91</td><td>&mdash;</td><td>OTP delivery</td><td>India-focused, DLT registered, high deliverability</td></tr>
+    <tr><td>Payments</td><td>Razorpay</td><td>&mdash;</td><td>Invoicing, payouts</td><td>India-first, UPI, auto-debit, payout APIs</td></tr>
+    <tr><td>Background Checks</td><td>AuthBridge</td><td>&mdash;</td><td>CT verification</td><td>India coverage, police verification, ID checks</td></tr>
+    <tr><td>Push Notifications</td><td>FCM + APNs</td><td>&mdash;</td><td>Real-time alerts</td><td>Universal coverage, reliable delivery</td></tr>
+    <tr><td>Containerization</td><td>Docker</td><td>&mdash;</td><td>Packaging</td><td>Consistent environments</td></tr>
+    <tr><td>Orchestration</td><td>AWS ECS Fargate</td><td>&mdash;</td><td>Container runtime</td><td>Serverless containers, auto-scaling</td></tr>
+    <tr><td>Database Hosting</td><td>AWS RDS</td><td>&mdash;</td><td>Managed PostgreSQL</td><td>Automated backups, replicas, monitoring</td></tr>
+    <tr><td>Cache Hosting</td><td>AWS ElastiCache</td><td>&mdash;</td><td>Managed Redis</td><td>Cluster mode, failover</td></tr>
+    <tr><td>CDN</td><td>AWS CloudFront</td><td>&mdash;</td><td>Static assets, API cache</td><td>Low latency, global edge</td></tr>
+    <tr><td>CI/CD</td><td>GitHub Actions</td><td>&mdash;</td><td>Build pipeline</td><td>Lint, test, build, deploy automation</td></tr>
+    <tr><td>Error Tracking</td><td>Sentry</td><td>&mdash;</td><td>Error monitoring</td><td>Stack traces, breadcrumbs, alerts</td></tr>
+    <tr><td>Observability</td><td>CloudWatch + Grafana</td><td>&mdash;</td><td>Metrics &amp; logs</td><td>Custom dashboards, alerting</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ===================== 4. DATA FLOW DIAGRAMS ===================== -->
+<section id="data-flows">
+<h2>4. Data Flow Diagrams</h2>
+
+<h3>4.1 Care Request to Shift Activation</h3>
+<div style="padding:1rem;background:#f8fafc;border-radius:8px;">
+  <span class="flow-box">Family creates request</span><span class="flow-arrow">&rarr;</span><span class="flow-box">Ops assesses</span><span class="flow-arrow">&rarr;</span><span class="flow-box">Matching Engine runs</span><span class="flow-arrow">&rarr;</span><span class="flow-box">Top 3 shortlisted</span><span class="flow-arrow">&rarr;</span><span class="flow-box">Profiles shared</span><span class="flow-arrow">&rarr;</span><span class="flow-box">Video call</span><span class="flow-arrow">&rarr;</span><span class="flow-box">Family selects</span><span class="flow-arrow">&rarr;</span><span class="flow-box">Agreement signed</span><span class="flow-arrow">&rarr;</span><span class="flow-box">Roster created</span><span class="flow-arrow">&rarr;</span><span class="flow-box">Shift scheduled</span><span class="flow-arrow">&rarr;</span><span class="flow-box">CT notified</span>
+</div>
+
+<h3>4.2 Shift Execution Flow</h3>
+<div style="padding:1rem;background:#f8fafc;border-radius:8px;">
+  <span class="flow-box">Shift scheduled</span> &rarr; <span class="flow-box">CT notified</span> &rarr; <span class="flow-box">Navigates (Maps)</span> &rarr; <span class="flow-box">Geo check-in</span> &rarr; <span class="flow-box">Shift active</span> &rarr; <span class="flow-box">GPS 60s logging</span> &rarr; <span class="flow-box">Tasks + Vitals logged</span> &rarr; <span class="flow-box">Geo check-out</span> &rarr; <span class="flow-box">Shift completed</span> &rarr; <span class="flow-box">Earnings calc</span> &rarr; <span class="flow-box">Summary to family</span>
+</div>
+
+<h3>4.3 Payment Flow</h3>
+<div style="padding:1rem;background:#f8fafc;border-radius:8px;">
+  <span class="flow-box">Shifts in month</span> &rarr; <span class="flow-box">Invoice generated</span> &rarr; <span class="flow-box">Family notified</span> &rarr; <span class="flow-box">Razorpay payment</span> &rarr; <span class="flow-box">Webhook received</span> &rarr; <span class="flow-box">Invoice paid</span> &rarr; <span class="flow-box">Earnings updated</span> &rarr; <span class="flow-box">Payroll batch</span> &rarr; <span class="flow-box">Admin approval</span> &rarr; <span class="flow-box">Payouts (T+7)</span>
+</div>
+
+<h3>4.4 Abnormal Vitals Alert Flow</h3>
+<div style="padding:1rem;background:#f8fafc;border-radius:8px;">
+  <span class="flow-box">CT logs vital</span> &rarr; <span class="flow-box">Threshold check</span> &rarr; <span class="flow-box">Abnormal detected</span> &rarr; <span class="flow-box">Push to family (&le;60s)</span> + <span class="flow-box">Push to admin</span> &rarr; <span class="flow-box">Alert logged</span> &rarr; <span class="flow-box">Admin acknowledges</span> &rarr; <span class="flow-box">Escalation if needed</span>
+</div>
+
+<h3>4.5 CT Onboarding &amp; Supply Pipeline</h3>
+<div style="padding:1rem;background:#f8fafc;border-radius:8px;">
+  <span class="flow-box">Lead captured (digital/field/referral/aggregator)</span> &rarr; <span class="flow-box">Call Center contact</span> &rarr; <span class="flow-box">App registration</span> &rarr; <span class="flow-box">Basic eligibility</span> &rarr; <span class="flow-box">AuthBridge BG check</span> &rarr; <span class="flow-box">Skill assessment</span> &rarr; <span class="flow-box">Helpee training</span> &rarr; <span class="flow-box">Certification</span> &rarr; <span class="flow-box">Active pool</span>
+</div>
+
+<h3>4.6 Replacement Flow</h3>
+<div style="padding:1rem;background:#f8fafc;border-radius:8px;">
+  <span class="flow-box">Replacement requested (family/CT/ops)</span> &rarr; <span class="flow-box">Reason categorised</span> &rarr; <span class="flow-box">Ops validates</span> &rarr; <span class="flow-box">Matching runs (excl. current)</span> &rarr; <span class="flow-box">Backup CT or new top-3</span> &rarr; <span class="flow-box">Family notified</span> &rarr; <span class="flow-box">Handoff scheduled</span> &rarr; <span class="flow-box">Original CT released</span>
+</div>
+</section>
+
+<!-- ===================== 5. STATUS MODELS ===================== -->
+<section id="status-models">
+<h2>5. Status Models</h2>
+
+<h3>Care Request (maps to Demand Workflow Steps 1&ndash;9)</h3>
+<div class="flow-row" style="flex-wrap:wrap;">
+  <span class="pill pill-blue">received</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">assessed</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">matching</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">shortlisted</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">profiles_shared</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">video_scheduled</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">selected</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">agreement_signed</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">scheduled</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">active</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">completed</span>
+  <br><span class="pill pill-red">cancelled</span> (any stage) &nbsp;
+  <span class="pill pill-red">expired</span> (no response 72h) &nbsp;
+  <span class="pill pill-orange">paused</span> (family-initiated, max 30 days)
+</div>
+
+<h3>Shift</h3>
+<div class="flow-row">
+  <span class="pill pill-green">scheduled</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-green">en_route</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-green">arrived</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-green">active</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-green">completed</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-green">audited</span>
+  <br><span class="pill pill-red">cancelled</span> (branch) &nbsp;
+  <span class="pill pill-red">no_show</span> (CT didn&rsquo;t check in within 30 min)
+</div>
+
+<h3>Caregiver Onboarding &amp; Lifecycle</h3>
+<div class="flow-row">
+  <span class="pill pill-purple">lead</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-purple">eligible</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-purple">bg_check</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-purple">assessed</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-purple">training</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-purple">certified</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-purple">active</span>
+  <br><span class="pill pill-red">suspended</span> (temp &mdash; with retraining) &nbsp;
+  <span class="pill pill-red">blacklisted</span> (permanent) &nbsp;
+  <span class="pill pill-red">rejected</span> (failed screening)
+</div>
+<p style="font-size:0.85em;color:var(--muted);margin-top:0.25rem;">
+  lead &rarr; basic eligibility passed &rarr; background check (AuthBridge) &rarr; practical skill assessment &rarr; Helpee training &rarr; certification &rarr; active pool.
+  Failure at any step &rarr; <strong>rejected</strong>. Active CTs can be <strong>suspended</strong> (temp) or <strong>blacklisted</strong> (permanent).
+</p>
+
+<h3>Dispute</h3>
+<div class="flow-row">
+  <span class="pill pill-orange">raised</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-orange">under_review</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-orange">resolved</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-orange">escalated</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-orange">closed</span>
+</div>
+
+<h3>Replacement Request</h3>
+<div class="flow-row">
+  <span class="pill pill-purple">requested</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-purple">matching</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-purple">assigned</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-purple">completed</span>
+  <br><span class="pill pill-red">cancelled</span>
+</div>
+
+<h3>CT Leave</h3>
+<div class="flow-row">
+  <span class="pill pill-orange">requested</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-orange">approved</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-orange">active</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-orange">completed</span>
+  <br><span class="pill pill-red">rejected</span>
+</div>
+</section>
+
+<!-- ===================== 6. SLA TARGETS ===================== -->
+<section id="sla">
+<h2>6. SLA Targets</h2>
+<table>
+  <thead><tr><th>Metric</th><th>Target</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Caregiver Matching</td><td>&le; 48 hours</td><td>From care request to profile sharing</td></tr>
+    <tr><td>Urgent Matching</td><td>&le; 4 hours</td><td>Fast-track for emergency requests</td></tr>
+    <tr><td>Internal Assessment</td><td>&le; 2 hours</td><td>From request received to assessed</td></tr>
+    <tr><td>Algorithm Matching</td><td>&le; 5 minutes</td><td>From assessment to ranked results</td></tr>
+    <tr><td>Geo Check-in Accuracy</td><td>&le; 100m radius</td><td>Haversine distance from patient address</td></tr>
+    <tr><td>Abnormal Vitals Alert</td><td>&le; 60 seconds</td><td>Push notification to family + admin</td></tr>
+    <tr><td>No-Show Detection</td><td>&le; 15 minutes</td><td>After scheduled shift start</td></tr>
+    <tr><td>Emergency Replacement</td><td>&le; 4 hours</td><td>From request to replacement CT on-site</td></tr>
+    <tr><td>Payroll Cycle</td><td>T+7 days</td><td>After shift month ends</td></tr>
+    <tr><td>GPS Poll Interval</td><td>60 seconds</td><td>During active shifts only</td></tr>
+    <tr><td>API p95 Latency</td><td>&le; 300ms</td><td>All endpoints</td></tr>
+    <tr><td>Dashboard Load</td><td>&le; 2 seconds</td><td>Admin portal initial load</td></tr>
+    <tr><td>Real-time Location</td><td>&le; 2 seconds</td><td>Propagation to tracking views</td></tr>
+    <tr><td>Dispute Resolution</td><td>&le; 48 hours</td><td>From raised to resolved/escalated</td></tr>
+    <tr><td>Platform Uptime</td><td>99.9%</td><td>Core services SLA</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ===================== 7. DATABASE SCHEMA ===================== -->
+<section id="database">
+<h2>7. Database Schema</h2>
+<p>32+ tables. Each table shows Column, Type, and Constraints. Tables grouped by domain.</p>
+
+<h3>Core Identity Tables</h3>
+
+<details open><summary><strong>caregiver</strong></summary>
+<table><tr><th>Column</th><th>Type</th><th>Constraints</th></tr>
+<tr><td>id</td><td>UUID</td><td>PK</td></tr>
+<tr><td>phone</td><td>VARCHAR(15)</td><td>UNIQUE</td></tr>
+<tr><td>name</td><td>VARCHAR(100)</td><td></td></tr>
+<tr><td>email</td><td>VARCHAR(255)</td><td></td></tr>
+<tr><td>contract_type</td><td>ENUM('direct','franchise')</td><td></td></tr>
+<tr><td>franchise_id</td><td>UUID</td><td>FK&rarr;franchise nullable</td></tr>
+<tr><td>source_type</td><td>ENUM('aggregator','referral','field_recruiter','digital')</td><td></td></tr>
+<tr><td>source_channel</td><td>VARCHAR(50)</td><td>nullable (job_portal/facebook/whatsapp/local_ad)</td></tr>
+<tr><td>source_agency_id</td><td>UUID</td><td>FK nullable</td></tr>
+<tr><td>referred_by_caregiver_id</td><td>UUID</td><td>FK nullable</td></tr>
+<tr><td>recruited_by_user_id</td><td>UUID</td><td>FK nullable</td></tr>
+<tr><td>agency_commission_end_date</td><td>DATE</td><td>nullable &mdash; 6 months from onboard</td></tr>
+<tr><td>status</td><td>ENUM('lead','eligible','bg_check','assessed','training','certified','active','suspended','blacklisted','rejected')</td><td></td></tr>
+<tr><td>onboarding_step</td><td>VARCHAR(50)</td><td></td></tr>
+<tr><td>city</td><td>VARCHAR(100)</td><td></td></tr>
+<tr><td>address</td><td>TEXT</td><td></td></tr>
+<tr><td>lat</td><td>DOUBLE PRECISION</td><td></td></tr>
+<tr><td>lng</td><td>DOUBLE PRECISION</td><td></td></tr>
+<tr><td>skill_level</td><td>ENUM('basic','intermediate','advanced','critical_care')</td><td></td></tr>
+<tr><td>experience_years</td><td>INTEGER</td><td></td></tr>
+<tr><td>avg_rating</td><td>DECIMAL(3,2)</td><td>DEFAULT 0</td></tr>
+<tr><td>documents_verified</td><td>BOOLEAN</td><td>DEFAULT false</td></tr>
+<tr><td>profile_photo_url</td><td>VARCHAR(500)</td><td></td></tr>
+<tr><td colspan="3" style="background:#eff6ff;font-weight:700;">Call Center &amp; Lead Tracking</td></tr>
+<tr><td>call_center_lead_status</td><td>ENUM('new','contacted','incomplete_app','automated_followup','human_followup','transferred','deployed','irrelevant')</td><td>DEFAULT 'new'</td></tr>
+<tr><td>last_call_at</td><td>TIMESTAMP</td><td>nullable</td></tr>
+<tr><td>next_scheduled_call</td><td>TIMESTAMP</td><td>nullable</td></tr>
+<tr><td>call_attempts</td><td>INTEGER</td><td>DEFAULT 0</td></tr>
+<tr><td>call_disposition</td><td>ENUM('rescheduled','not_reachable','irrelevant','transferred','onboarded')</td><td>nullable</td></tr>
+<tr><td>application_completion_pct</td><td>INTEGER</td><td>DEFAULT 0</td></tr>
+<tr><td colspan="3" style="background:#f0f4ff;font-weight:700;">Screening &amp; Background Check</td></tr>
+<tr><td>background_check_status</td><td>ENUM('pending','in_progress','passed','failed')</td><td>DEFAULT 'pending'</td></tr>
+<tr><td>background_check_vendor</td><td>VARCHAR(100)</td><td>nullable (e.g. AuthBridge)</td></tr>
+<tr><td>background_check_report_url</td><td>VARCHAR(500)</td><td>nullable &mdash; S3 link</td></tr>
+<tr><td>assessment_score</td><td>DECIMAL(5,2)</td><td>nullable</td></tr>
+<tr><td>assessment_date</td><td>DATE</td><td>nullable</td></tr>
+<tr><td>assessment_passed</td><td>BOOLEAN</td><td>DEFAULT false</td></tr>
+<tr><td>assessor_id</td><td>UUID</td><td>FK nullable &rarr; admin_user</td></tr>
+<tr><td>rejection_reason</td><td>TEXT</td><td>nullable</td></tr>
+<tr><td>can_reapply_after</td><td>DATE</td><td>nullable &mdash; 3 months after failed assessment</td></tr>
+<tr><td colspan="3" style="background:#f0fff4;font-weight:700;">Training &amp; Certification</td></tr>
+<tr><td>training_status</td><td>ENUM('not_started','in_progress','completed','failed')</td><td>DEFAULT 'not_started'</td></tr>
+<tr><td>training_start_date</td><td>DATE</td><td>nullable</td></tr>
+<tr><td>training_completion_date</td><td>DATE</td><td>nullable</td></tr>
+<tr><td>certification_id</td><td>VARCHAR(50)</td><td>nullable &mdash; Helpee cert number</td></tr>
+<tr><td>certification_expiry</td><td>DATE</td><td>nullable</td></tr>
+<tr><td>training_cost</td><td>DECIMAL(10,2)</td><td>nullable</td></tr>
+<tr><td>training_cost_recovered</td><td>DECIMAL(10,2)</td><td>DEFAULT 0</td></tr>
+<tr><td colspan="3" style="background:#fffbeb;font-weight:700;">Uniform &amp; Accessories</td></tr>
+<tr><td>uniform_purchase_status</td><td>ENUM('not_purchased','ordered','delivered')</td><td>DEFAULT 'not_purchased'</td></tr>
+<tr><td>uniform_amount_due</td><td>DECIMAL(10,2)</td><td>DEFAULT 0</td></tr>
+<tr><td>payroll_deduction_remaining</td><td>DECIMAL(10,2)</td><td>DEFAULT 0</td></tr>
+<tr><td colspan="3" style="background:#fef2f2;font-weight:700;">Quality Signals &amp; Job Allocation</td></tr>
+<tr><td>cancellation_rate</td><td>DECIMAL(5,2)</td><td>DEFAULT 0</td></tr>
+<tr><td>acceptance_speed_avg_sec</td><td>INTEGER</td><td>DEFAULT 0</td></tr>
+<tr><td>sop_adherence_pct</td><td>DECIMAL(5,2)</td><td>DEFAULT 100</td></tr>
+<tr><td>complaint_count</td><td>INTEGER</td><td>DEFAULT 0</td></tr>
+<tr><td>total_shifts_completed</td><td>INTEGER</td><td>DEFAULT 0</td></tr>
+<tr><td colspan="3" style="background:#fefce8;font-weight:700;">Super Star Program</td></tr>
+<tr><td>is_super_star</td><td>BOOLEAN</td><td>DEFAULT false</td></tr>
+<tr><td>super_star_since</td><td>DATE</td><td>nullable</td></tr>
+<tr><td>commission_override_pct</td><td>DECIMAL(5,2)</td><td>nullable &mdash; reduced rate for stars</td></tr>
+<tr><td>insurance_active</td><td>BOOLEAN</td><td>DEFAULT false</td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td></td></tr>
+<tr><td>updated_at</td><td>TIMESTAMP</td><td></td></tr>
+</table></details>
+
+<details><summary><strong>franchise</strong></summary>
+<table><tr><th>Column</th><th>Type</th><th>Constraints</th></tr>
+<tr><td>id</td><td>UUID</td><td>PK</td></tr>
+<tr><td>name</td><td>VARCHAR(200)</td><td></td></tr>
+<tr><td>owner_name</td><td>VARCHAR(100)</td><td></td></tr>
+<tr><td>city</td><td>VARCHAR(100)</td><td></td></tr>
+<tr><td>status</td><td>ENUM('active','suspended','terminated')</td><td></td></tr>
+<tr><td>commission_rate</td><td>DECIMAL(5,2)</td><td></td></tr>
+<tr><td>contact_phone</td><td>VARCHAR(15)</td><td></td></tr>
+<tr><td>contact_email</td><td>VARCHAR(255)</td><td></td></tr>
+<tr><td>address</td><td>TEXT</td><td></td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td></td></tr>
+</table></details>
+
+<details><summary><strong>family_user</strong></summary>
+<table><tr><th>Column</th><th>Type</th><th>Constraints</th></tr>
+<tr><td>id</td><td>UUID</td><td>PK</td></tr>
+<tr><td>phone</td><td>VARCHAR(15)</td><td>UNIQUE</td></tr>
+<tr><td>name</td><td>VARCHAR(100)</td><td></td></tr>
+<tr><td>email</td><td>VARCHAR(255)</td><td></td></tr>
+<tr><td>relationship_to_patient</td><td>VARCHAR(50)</td><td></td></tr>
+<tr><td>is_primary_contact</td><td>BOOLEAN</td><td>DEFAULT true</td></tr>
+<tr><td>patient_id</td><td>UUID</td><td>FK&rarr;patient</td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td></td></tr>
+</table></details>
+
+<details><summary><strong>patient</strong></summary>
+<table><tr><th>Column</th><th>Type</th><th>Constraints</th></tr>
+<tr><td>id</td><td>UUID</td><td>PK</td></tr>
+<tr><td>name</td><td>VARCHAR(100)</td><td></td></tr>
+<tr><td>age</td><td>INTEGER</td><td></td></tr>
+<tr><td>gender</td><td>ENUM('male','female','other')</td><td></td></tr>
+<tr><td>address</td><td>TEXT</td><td></td></tr>
+<tr><td>city</td><td>VARCHAR(100)</td><td></td></tr>
+<tr><td>lat</td><td>DOUBLE PRECISION</td><td></td></tr>
+<tr><td>lng</td><td>DOUBLE PRECISION</td><td></td></tr>
+<tr><td>care_level</td><td>ENUM('companion','nursing','critical_care')</td><td></td></tr>
+<tr><td>medical_notes</td><td>TEXT</td><td></td></tr>
+<tr><td>emergency_contact</td><td>VARCHAR(15)</td><td></td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td></td></tr>
+</table></details>
+
+<details><summary><strong>admin_user</strong></summary>
+<table><tr><th>Column</th><th>Type</th><th>Constraints</th></tr>
+<tr><td>id</td><td>UUID</td><td>PK</td></tr>
+<tr><td>email</td><td>VARCHAR(255)</td><td>UNIQUE</td></tr>
+<tr><td>password_hash</td><td>VARCHAR(255)</td><td></td></tr>
+<tr><td>name</td><td>VARCHAR(100)</td><td></td></tr>
+<tr><td>role</td><td>ENUM('company_admin','franchise_admin')</td><td></td></tr>
+<tr><td>franchise_id</td><td>UUID</td><td>FK nullable &mdash; set for franchise_admin</td></tr>
+<tr><td>is_active</td><td>BOOLEAN</td><td>DEFAULT true</td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td></td></tr>
+</table></details>
+
+<h3>Care Request &amp; Matching Tables</h3>
+
+<details><summary><strong>care_request</strong></summary>
+<table><tr><th>Column</th><th>Type</th><th>Constraints</th></tr>
+<tr><td>id</td><td>UUID</td><td>PK</td></tr>
+<tr><td>family_user_id</td><td>UUID</td><td>FK</td></tr>
+<tr><td>patient_id</td><td>UUID</td><td>FK</td></tr>
+<tr><td>service_type</td><td>ENUM('companion','nursing','critical_care')</td><td></td></tr>
+<tr><td>shift_type</td><td>ENUM('visit','8hr','12hr','24hr','live_in')</td><td>visit = short-duration (e.g. 2h IV infusion)</td></tr>
+<tr><td>shift_duration_hours</td><td>DECIMAL(4,1)</td><td>nullable &mdash; for visit type</td></tr>
+<tr><td>is_split_shift</td><td>BOOLEAN</td><td>DEFAULT false</td></tr>
+<tr><td>split_config</td><td>JSONB</td><td>nullable &mdash; e.g. {"day":"06:00-18:00","night":"18:00-06:00"}</td></tr>
+<tr><td>start_date</td><td>DATE</td><td></td></tr>
+<tr><td>end_date</td><td>DATE</td><td>nullable &mdash; open-ended if ongoing</td></tr>
+<tr><td>duration_days</td><td>INTEGER</td><td>nullable</td></tr>
+<tr><td>recurrence</td><td>ENUM('one_time','daily','weekly','custom')</td><td>DEFAULT 'daily'</td></tr>
+<tr><td>recurrence_schedule</td><td>JSONB</td><td>nullable</td></tr>
+<tr><td>ct_count_required</td><td>INTEGER</td><td>DEFAULT 1 &mdash; 2 for split shift</td></tr>
+<tr><td>status</td><td>ENUM('received','assessed','matching','shortlisted','profiles_shared','video_scheduled','selected','agreement_signed','scheduled','active','paused','completed','cancelled','expired')</td><td></td></tr>
+<tr><td colspan="3" style="background:#f0f4ff;font-weight:700;">Assessment &amp; Matching</td></tr>
+<tr><td>assessed_service_level</td><td>ENUM('companion','junior_nurse','critical_care_nurse')</td><td>nullable</td></tr>
+<tr><td>assessed_by</td><td>UUID</td><td>FK nullable &rarr; admin_user</td></tr>
+<tr><td>assessed_at</td><td>TIMESTAMP</td><td>nullable</td></tr>
+<tr><td>language_preference</td><td>VARCHAR(50)</td><td>nullable</td></tr>
+<tr><td>gender_preference</td><td>ENUM('male','female','no_preference')</td><td>DEFAULT 'no_preference'</td></tr>
+<tr><td>region_preference</td><td>VARCHAR(100)</td><td>nullable</td></tr>
+<tr><td>special_requirements</td><td>TEXT</td><td>nullable</td></tr>
+<tr><td>is_urgent</td><td>BOOLEAN</td><td>DEFAULT false &mdash; fast-track 4h SLA</td></tr>
+<tr><td>is_multi_location</td><td>BOOLEAN</td><td>DEFAULT false</td></tr>
+<tr><td>locations</td><td>JSONB</td><td>nullable &mdash; array of {address, lat, lng, schedule}</td></tr>
+<tr><td>weekly_off_day</td><td>VARCHAR(10)</td><td>nullable</td></tr>
+<tr><td>profiles_shared_at</td><td>TIMESTAMP</td><td>nullable &mdash; SLA: &le;48h from created_at</td></tr>
+<tr><td>expires_at</td><td>TIMESTAMP</td><td>nullable &mdash; 72h after profiles_shared</td></tr>
+<tr><td>rejection_count</td><td>INTEGER</td><td>DEFAULT 0</td></tr>
+<tr><td>price_estimate</td><td>DECIMAL(10,2)</td><td></td></tr>
+<tr><td>assigned_caregiver_id</td><td>UUID</td><td>FK nullable &mdash; primary CT</td></tr>
+<tr><td>secondary_caregiver_id</td><td>UUID</td><td>FK nullable &mdash; night CT for split shift</td></tr>
+<tr><td>backup_caregiver_id</td><td>UUID</td><td>FK nullable &mdash; covers weekly off / leave</td></tr>
+<tr><td>notes</td><td>TEXT</td><td></td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td></td></tr>
+<tr><td>updated_at</td><td>TIMESTAMP</td><td></td></tr>
+</table></details>
+
+<details><summary><strong>match_result, service_agreement, shift, roster</strong></summary>
+<p><strong>match_result:</strong> id (PK), care_request_id (FK), caregiver_id (FK), rank (1-3), score, status, created_at</p>
+<p><strong>service_agreement:</strong> id (PK), care_request_id (FK), caregiver_id (FK), family_user_id (FK), franchise_id (FK nullable), contract_type, terms, monthly_rate, start_date, end_date, status, signed_at, created_at</p>
+<p><strong>shift:</strong> id (PK), roster_id (FK), care_request_id (FK), caregiver_id (FK), patient_id (FK), status, scheduled_start/end, actual_start/end, geofence_lat/lng/radius_m, no_show_detected, created_at</p>
+<p><strong>roster:</strong> id (PK), care_request_id (FK), caregiver_id (FK), patient_id (FK), franchise_id (FK nullable), shift_date, shift_type, status, created_by, created_at</p>
+</details>
+
+<h3>Shift Activity Tables</h3>
+
+<details><summary><strong>task_log, vitals_log, earning, commission</strong></summary>
+<p><strong>task_log:</strong> id (PK), shift_id (FK), caregiver_id (FK), task_name, task_category, completed, completed_at, notes, proof_photo_url, created_at</p>
+<p><strong>vitals_log:</strong> id (PK), shift_id (FK), patient_id (FK), caregiver_id (FK), vital_type, value, unit, is_abnormal, alert_sent, recorded_at</p>
+<p><strong>earning:</strong> id (PK), caregiver_id (FK), shift_id (FK), base_amount, incentive, deduction, net_amount, payout_status, payout_date, created_at</p>
+<p><strong>commission:</strong> id (PK), franchise_id (FK), shift_id (FK nullable), vas_order_id (FK nullable), amount, type, status, paid_at, created_at</p>
+</details>
+
+<h3>Supply &amp; Retention Tables</h3>
+
+<details><summary><strong>source_agency, referral_bonus</strong></summary>
+<p><strong>source_agency:</strong> id (PK), name, city, contact_name, contact_phone, finder_fee_amount, commission_pct (% of job revenue for 6 months), status (active/inactive), created_at</p>
+<p><strong>referral_bonus:</strong> id (PK), referring_caregiver_id (FK), referred_caregiver_id (FK), bonus_amount, status (pending/eligible/paid), eligible_after (first shift date), paid_at, created_at</p>
+</details>
+
+<details><summary><strong>ct_incident, ct_suspension, super_star_history</strong></summary>
+<p><strong>ct_incident:</strong> id (PK), caregiver_id (FK), reported_by_user_id (FK nullable), care_request_id (FK nullable), severity ENUM('minor','moderate','severe'), description, evidence_urls (TEXT[]), action_taken ENUM('warning','reduced_assignments','temp_suspension','permanent_blacklist'), suspension_days (nullable), retraining_required (BOOLEAN DEFAULT false), resolved_at (nullable), created_at</p>
+<p><strong>ct_suspension:</strong> id (PK), caregiver_id (FK), incident_id (FK nullable), type ENUM('temporary','permanent'), reason, start_date, end_date (nullable for permanent), reinstated_by (FK nullable), created_at</p>
+<p><strong>super_star_history:</strong> id (PK), caregiver_id (FK), awarded_at, revoked_at (nullable), commission_rate_applied DECIMAL(5,2), insurance_policy_id (nullable), reason</p>
+</details>
+
+<h3>Scheduling &amp; Coverage Tables</h3>
+
+<details><summary><strong>replacement_request, ct_leave, ct_weekly_off</strong></summary>
+<p><strong>replacement_request:</strong> id (PK), care_request_id (FK), requested_by_type ENUM('family','caregiver','admin'), requested_by_id (FK), reason ENUM('dissatisfied','ct_leave','ct_sick','ct_personal','family_preference','personality_mismatch','other'), reason_detail (nullable), current_caregiver_id (FK), replacement_caregiver_id (FK nullable), status ENUM('requested','matching','assigned','completed','cancelled'), is_permanent (BOOLEAN DEFAULT false), effective_date, created_at, resolved_at (nullable)</p>
+<p><strong>ct_leave:</strong> id (PK), caregiver_id (FK), care_request_id (FK nullable), leave_type ENUM('weekly_off','sick','personal','long_leave','emergency'), start_date, end_date, total_days, status ENUM('requested','approved','rejected','active','completed'), approved_by (FK nullable), backup_caregiver_id (FK nullable), reason (nullable), created_at</p>
+<p><strong>ct_weekly_off:</strong> id (PK), caregiver_id (FK), care_request_id (FK), day_of_week ENUM('mon','tue','wed','thu','fri','sat','sun'), backup_caregiver_id (FK nullable), is_active (BOOLEAN DEFAULT true), created_at</p>
+</details>
+
+<h3>Platform Tables</h3>
+
+<details><summary><strong>dispute, vas_catalog, vas_order, approval</strong></summary>
+<p><strong>dispute:</strong> id (PK), raised_by_id, raised_by_type, shift_id, category, description, evidence_urls, status, resolution_notes, resolved_at, created_at</p>
+<p><strong>vas_catalog:</strong> id (PK), name, description, category, base_price, city, franchise_commission_pct, caregiver_commission_pct, is_active, created_at</p>
+<p><strong>vas_order:</strong> id (PK), vas_id (FK), family_user_id (FK), patient_id (FK), caregiver_id (FK), shift_id (FK), price, status, scheduled_at, created_at</p>
+<p><strong>approval:</strong> id (PK), type, entity_id, entity_type, requested_by, approved_by, status, notes, decided_at, created_at</p>
+</details>
+
+<details><summary><strong>document, training_module, certification, caregiver_skill</strong></summary>
+<p><strong>document:</strong> id (PK), caregiver_id (FK), doc_type, file_url, verified, verified_by, rejection_reason, uploaded_at</p>
+<p><strong>training_module:</strong> id (PK), title, description, content_url, duration_mins, skill_category, is_mandatory, is_active, created_at</p>
+<p><strong>certification:</strong> id (PK), caregiver_id (FK), module_id (FK), score, passed, certified_at, expires_at</p>
+<p><strong>caregiver_skill:</strong> id (PK), caregiver_id (FK), skill_name, level</p>
+</details>
+
+<details><summary><strong>caregiver_location_log, geofence, notification, video_call</strong></summary>
+<p><strong>caregiver_location_log:</strong> id (PK), caregiver_id (FK), shift_id (FK), lat, lng, accuracy, recorded_at, synced_at &mdash; INDEX(shift_id, recorded_at)</p>
+<p><strong>geofence:</strong> id (PK), patient_id (FK), lat, lng, radius_m, is_active, created_at</p>
+<p><strong>notification:</strong> id (PK), user_id, user_type, title, body, type, data, read, created_at &mdash; INDEX(user_id, user_type)</p>
+<p><strong>video_call:</strong> id (PK), care_request_id (FK), family_user_id (FK), caregiver_id (FK), scheduled_at, status, duration_secs, room_id, created_at</p>
+</details>
+
+<details><summary><strong>audit_log, invoice, family_payment, elderly_feedback, company_report, franchise_training_log</strong></summary>
+<p><strong>audit_log:</strong> id (PK), actor_id, actor_type, action, entity_type, entity_id, details, ip_address, created_at &mdash; INDEX(entity_type, entity_id)</p>
+<p><strong>invoice:</strong> id (PK), family_user_id (FK), patient_id (FK), amount, tax_amount, total_amount, period_start, period_end, status, due_date, created_at</p>
+<p><strong>family_payment:</strong> id (PK), family_user_id (FK), amount, invoice_id (FK), razorpay_payment_id, status, paid_at, created_at</p>
+<p><strong>elderly_feedback:</strong> id (PK), shift_id (FK), patient_id (FK), feedback_type, created_at</p>
+<p><strong>company_report:</strong> id (PK), report_type, city, metric, value, generated_at</p>
+<p><strong>franchise_training_log:</strong> id (PK), franchise_id (FK), caregiver_id (FK), batch_id, attendance, score, created_at</p>
+</details>
+</section>
+
+<!-- ===================== 8. ER DIAGRAM ===================== -->
+<section id="er-diagram">
+<h2>8. ER Diagram (Visual)</h2>
+<p>Tables grouped by domain with colour coding. Key columns shown.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:0.75rem;margin:1rem 0;">
+  <div class="diagram-box" style="border-color:#4361ee;background:#eef2ff;text-align:left;"><strong>caregiver</strong><br>id, franchise_id, status, skills</div>
+  <div class="diagram-box" style="border-color:#4361ee;background:#eef2ff;text-align:left;"><strong>franchise</strong><br>id, name, city</div>
+  <div class="diagram-box" style="border-color:#4361ee;background:#eef2ff;text-align:left;"><strong>family_user</strong><br>id, phone, patient_id</div>
+  <div class="diagram-box" style="border-color:#4361ee;background:#eef2ff;text-align:left;"><strong>patient</strong><br>id, family_user_id, address</div>
+  <div class="diagram-box" style="border-color:#4361ee;background:#eef2ff;text-align:left;"><strong>admin_user</strong><br>id, role, franchise_id</div>
+  <div class="diagram-box" style="border-color:#06d6a0;background:#d1fae5;text-align:left;"><strong>care_request</strong><br>id, family_user_id, patient_id</div>
+  <div class="diagram-box" style="border-color:#06d6a0;background:#d1fae5;text-align:left;"><strong>match_result</strong><br>id, care_request_id, rank</div>
+  <div class="diagram-box" style="border-color:#06d6a0;background:#d1fae5;text-align:left;"><strong>service_agreement</strong><br>id, care_request_id</div>
+  <div class="diagram-box" style="border-color:#06d6a0;background:#d1fae5;text-align:left;"><strong>shift</strong><br>id, caregiver_id, roster_id</div>
+  <div class="diagram-box" style="border-color:#06d6a0;background:#d1fae5;text-align:left;"><strong>roster</strong><br>id, patient_id, dates</div>
+  <div class="diagram-box" style="border-color:#7c3aed;background:#ede9fe;text-align:left;"><strong>task_log</strong><br>id, shift_id</div>
+  <div class="diagram-box" style="border-color:#7c3aed;background:#ede9fe;text-align:left;"><strong>vitals_log</strong><br>id, shift_id, vital_type</div>
+  <div class="diagram-box" style="border-color:#7c3aed;background:#ede9fe;text-align:left;"><strong>location_log</strong><br>id, shift_id, lat, lng</div>
+  <div class="diagram-box" style="border-color:#ea580c;background:#ffedd5;text-align:left;"><strong>earning</strong><br>id, caregiver_id, shift_id</div>
+  <div class="diagram-box" style="border-color:#ea580c;background:#ffedd5;text-align:left;"><strong>commission</strong><br>id, franchise_id, shift_id</div>
+  <div class="diagram-box" style="border-color:#ea580c;background:#ffedd5;text-align:left;"><strong>invoice</strong><br>id, family_user_id</div>
+  <div class="diagram-box" style="border-color:#ea580c;background:#ffedd5;text-align:left;"><strong>family_payment</strong><br>id, invoice_id</div>
+  <div class="diagram-box" style="border-color:#718096;background:#f1f5f9;text-align:left;"><strong>replacement_request</strong><br>id, care_request_id</div>
+  <div class="diagram-box" style="border-color:#718096;background:#f1f5f9;text-align:left;"><strong>ct_leave</strong><br>id, caregiver_id</div>
+  <div class="diagram-box" style="border-color:#718096;background:#f1f5f9;text-align:left;"><strong>ct_incident</strong><br>id, caregiver_id</div>
+  <div class="diagram-box" style="border-color:#718096;background:#f1f5f9;text-align:left;"><strong>dispute</strong><br>id, shift_id</div>
+  <div class="diagram-box" style="border-color:#718096;background:#f1f5f9;text-align:left;"><strong>notification</strong><br>id, user_id</div>
+  <div class="diagram-box" style="border-color:#718096;background:#f1f5f9;text-align:left;"><strong>audit_log</strong><br>id, actor_id</div>
+</div>
+<p style="font-size:0.85rem;color:var(--muted);"><strong>Key relationships:</strong> caregiver &rarr; franchise (belongs_to, optional) &middot; care_request &rarr; family_user, patient &middot; shift &rarr; caregiver, patient, roster, care_request &middot; task_log, vitals_log &rarr; shift &middot; earning &rarr; caregiver, shift &middot; commission &rarr; franchise, shift/vas_order</p>
+</section>
+
+<!-- ===================== 9. API REFERENCE ===================== -->
+<section id="api-reference">
+<h2>9. API Reference</h2>
+<p>All paths prefixed with <code>/api/v1/</code>. Method badges: <span class="badge badge-get">GET</span> <span class="badge badge-post">POST</span> <span class="badge badge-put">PUT</span>/<span class="badge badge-patch">PATCH</span> <span class="badge badge-delete">DELETE</span></p>
+
+<h3>Auth APIs</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th><th>Roles</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/auth/otp/send</td><td>Send OTP to phone</td><td>No</td><td>&mdash;</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/auth/otp/verify</td><td>Verify OTP, return JWT</td><td>No</td><td>&mdash;</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/auth/admin/login</td><td>Admin email+password login</td><td>No</td><td>&mdash;</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/auth/refresh</td><td>Refresh access token</td><td>Yes</td><td>All</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/auth/me</td><td>Get current user profile</td><td>Yes</td><td>All</td></tr>
+  </tbody>
+</table>
+
+<h3>Caregiver APIs</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th><th>Roles</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/caregiver/profile</td><td>Own profile</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-put">PUT</span></td><td>/caregiver/profile</td><td>Update profile</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/caregiver/onboard</td><td>Direct onboard (admin)</td><td>Yes</td><td>company_admin</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/caregiver/:id</td><td>Get by ID</td><td>Yes</td><td>admin, franchise_admin</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/caregiver</td><td>List with filters</td><td>Yes</td><td>admin, franchise_admin</td></tr>
+    <tr><td><span class="badge badge-patch">PATCH</span></td><td>/caregiver/:id/status</td><td>Update status</td><td>Yes</td><td>company_admin</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/caregiver/performance</td><td>Performance metrics</td><td>Yes</td><td>caregiver</td></tr>
+  </tbody>
+</table>
+
+<h3>Care Request APIs</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th><th>Roles</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/care-request</td><td>Create request</td><td>Yes</td><td>family</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/care-request/:id</td><td>Get by ID</td><td>Yes</td><td>family, admin</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/care-request</td><td>List (filtered)</td><td>Yes</td><td>admin</td></tr>
+    <tr><td><span class="badge badge-patch">PATCH</span></td><td>/care-request/:id/status</td><td>Update status</td><td>Yes</td><td>admin</td></tr>
+  </tbody>
+</table>
+
+<h3>Matching APIs</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th><th>Roles</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/match/:care_request_id</td><td>Get matched profiles</td><td>Yes</td><td>family</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/match/select</td><td>Select caregiver</td><td>Yes</td><td>family</td></tr>
+  </tbody>
+</table>
+
+<h3>Shift APIs</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th><th>Roles</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/shift/upcoming</td><td>Upcoming for caregiver</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/shift/:id</td><td>Get details</td><td>Yes</td><td>All</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/shift/:id/track</td><td>Live tracking</td><td>Yes</td><td>family</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/shift/:id/summary</td><td>Daily summary</td><td>Yes</td><td>family, admin</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/shift/:id/accept</td><td>Accept shift</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/shift/:id/reject</td><td>Reject shift</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/shift/live-map</td><td>All active (map)</td><td>Yes</td><td>admin</td></tr>
+    <tr><td><span class="badge badge-patch">PATCH</span></td><td>/shift/:id/status</td><td>Update status</td><td>Yes</td><td>admin</td></tr>
+  </tbody>
+</table>
+
+<h3>Attendance APIs</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th><th>Roles</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/attendance/checkin</td><td>Geofence check-in</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/attendance/checkout</td><td>Geofence check-out</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/attendance/franchise</td><td>Franchise records</td><td>Yes</td><td>franchise_admin</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/attendance/shift/:shiftId</td><td>Shift attendance</td><td>Yes</td><td>admin</td></tr>
+  </tbody>
+</table>
+
+<h3>Location APIs</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th><th>Roles</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/location/log</td><td>Batch GPS log</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/location/live/:shiftId</td><td>Latest location</td><td>Yes</td><td>family, admin</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/location/history/:shiftId</td><td>Location trail</td><td>Yes</td><td>admin</td></tr>
+  </tbody>
+</table>
+
+<h3>Task, Vitals, Roster APIs</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th><th>Roles</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/task/log</td><td>Log task</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/task/shift/:shiftId</td><td>Tasks for shift</td><td>Yes</td><td>All</td></tr>
+    <tr><td><span class="badge badge-patch">PATCH</span></td><td>/task/:id</td><td>Update task</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/vitals/log</td><td>Log vitals</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/vitals/shift/:shiftId</td><td>Vitals for shift</td><td>Yes</td><td>family, admin</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/vitals/patient/:patientId</td><td>Patient history</td><td>Yes</td><td>family, admin</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/vitals/alerts</td><td>Abnormal alerts</td><td>Yes</td><td>admin</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/roster/create</td><td>Create roster</td><td>Yes</td><td>admin, franchise_admin</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/roster</td><td>List roster</td><td>Yes</td><td>admin, franchise_admin</td></tr>
+    <tr><td><span class="badge badge-patch">PATCH</span></td><td>/roster/:id</td><td>Update roster</td><td>Yes</td><td>admin, franchise_admin</td></tr>
+  </tbody>
+</table>
+
+<h3>Ledger, Approval, Governance APIs</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th><th>Roles</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/ledger/company</td><td>Company ledger</td><td>Yes</td><td>company_admin</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/ledger/franchise/:id</td><td>Franchise ledger</td><td>Yes</td><td>franchise_admin, company_admin</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/earnings/me</td><td>My earnings</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/approval/queue</td><td>Pending approvals</td><td>Yes</td><td>company_admin</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/approval/:id/decide</td><td>Approve/reject</td><td>Yes</td><td>company_admin</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/governance/blacklist</td><td>Blacklist caregiver</td><td>Yes</td><td>company_admin</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/governance/suspend-franchise</td><td>Suspend franchise</td><td>Yes</td><td>company_admin</td></tr>
+  </tbody>
+</table>
+
+<h3>Dispute, VAS, Notification, Document APIs</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th><th>Roles</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/dispute/create</td><td>Raise dispute</td><td>Yes</td><td>family, caregiver</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/dispute/:id</td><td>Get dispute</td><td>Yes</td><td>All</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/vas/config</td><td>Create/update VAS</td><td>Yes</td><td>company_admin</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/vas/catalog</td><td>Browse catalog</td><td>Yes</td><td>All</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/vas/suggest</td><td>Suggest to family</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/vas/request</td><td>Purchase VAS</td><td>Yes</td><td>family</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/notification/list</td><td>Inbox</td><td>Yes</td><td>All</td></tr>
+    <tr><td><span class="badge badge-put">PUT</span></td><td>/notification/read</td><td>Mark read</td><td>Yes</td><td>All</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/document/upload</td><td>Upload document</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/document/caregiver/:id</td><td>Caregiver docs</td><td>Yes</td><td>admin</td></tr>
+  </tbody>
+</table>
+
+<h3>Training, Video, Payment, Agreement, Elderly APIs</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th><th>Roles</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/training/modules</td><td>List modules</td><td>Yes</td><td>caregiver, admin</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/training/complete</td><td>Complete module</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/training/upload</td><td>Upload batch results</td><td>Yes</td><td>franchise_admin</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/video-call/schedule</td><td>Schedule call</td><td>Yes</td><td>family</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/payment/pay</td><td>Pay invoice</td><td>Yes</td><td>family</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/invoice/:id</td><td>View invoice</td><td>Yes</td><td>family</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/payroll/run</td><td>Run payroll batch</td><td>Yes</td><td>company_admin</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/payroll/approve</td><td>Approve batch</td><td>Yes</td><td>company_admin</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/agreement/sign</td><td>E-sign agreement</td><td>Yes</td><td>family</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/patient/create</td><td>Create elderly profile</td><td>Yes</td><td>family</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/today/caregiver/:patient_id</td><td>Today&rsquo;s caregiver</td><td>Yes</td><td>elderly, family</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/elderly/sos</td><td>Trigger SOS</td><td>Yes</td><td>elderly</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/elderly/task-confirm</td><td>Confirm medicine</td><td>Yes</td><td>elderly</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/elderly/feedback</td><td>Submit feedback</td><td>Yes</td><td>elderly</td></tr>
+  </tbody>
+</table>
+
+<h3>SOS &amp; Escalation</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th><th>Roles</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/sos</td><td>Emergency SOS</td><td>Yes</td><td>caregiver, elderly</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/escalation/create</td><td>Raise escalation</td><td>Yes</td><td>franchise_admin</td></tr>
+  </tbody>
+</table>
+
+<h3>Replacement &amp; Leave APIs</h3>
+<table>
+  <thead><tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th><th>Roles</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/replacement/request</td><td>Request CT replacement</td><td>Yes</td><td>family, caregiver, admin</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/replacement/:id</td><td>Get replacement status</td><td>Yes</td><td>family, admin</td></tr>
+    <tr><td><span class="badge badge-patch">PATCH</span></td><td>/replacement/:id/assign</td><td>Assign replacement CT</td><td>Yes</td><td>admin, franchise_admin</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td>/leave/request</td><td>CT requests leave</td><td>Yes</td><td>caregiver</td></tr>
+    <tr><td><span class="badge badge-patch">PATCH</span></td><td>/leave/:id/approve</td><td>Approve/reject leave</td><td>Yes</td><td>admin, franchise_admin</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td>/leave/caregiver/:id</td><td>CT leave history</td><td>Yes</td><td>admin, franchise_admin</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ===================== 10. SECURITY ARCHITECTURE ===================== -->
+<section id="security">
+<h2>10. Security Architecture</h2>
+<h3>Layers</h3>
+<ul>
+  <li><strong>TLS 1.3</strong> everywhere (client &harr; ALB &harr; services)</li>
+  <li><strong>JWT auth flow:</strong> Login &rarr; Access Token (15min) + Refresh Token (7d) &rarr; Refresh rotation</li>
+  <li><strong>RBAC:</strong> 5 roles with permission matrix below</li>
+  <li><strong>Data encryption:</strong> AES-256 at rest (RDS, S3), TLS in transit</li>
+  <li><strong>Health data segregation:</strong> vitals_log in separate schema/access controls</li>
+  <li><strong>API rate limiting</strong> per role</li>
+  <li><strong>Audit logging</strong> on all admin actions</li>
+  <li><strong>Anti-spoofing:</strong> Mock location detection, WiFi triangulation, movement pattern analysis</li>
+</ul>
+<h3>Permission Matrix</h3>
+<table style="font-size:0.8rem;">
+  <thead><tr><th>Resource</th><th>company_admin</th><th>franchise_admin</th><th>caregiver</th><th>family</th><th>elderly</th></tr></thead>
+  <tbody>
+    <tr><td>Dashboard</td><td>Full (national)</td><td>Own city only</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+    <tr><td>Caregivers</td><td>All</td><td>Own franchise</td><td>Own profile</td><td>&mdash;</td><td>&mdash;</td></tr>
+    <tr><td>Shifts</td><td>All</td><td>Own franchise</td><td>Own shifts</td><td>Own patient</td><td>Today&rsquo;s only</td></tr>
+    <tr><td>Roster</td><td>All</td><td>Own franchise</td><td>View own</td><td>&mdash;</td><td>&mdash;</td></tr>
+    <tr><td>Vitals</td><td>All alerts</td><td>Own franchise</td><td>Log only</td><td>Own patient</td><td>&mdash;</td></tr>
+    <tr><td>Ledger</td><td>Full</td><td>Own commission</td><td>Own earnings</td><td>Own invoices</td><td>&mdash;</td></tr>
+    <tr><td>Governance</td><td>Full</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+    <tr><td>VAS Config</td><td>Full</td><td>View</td><td>Suggest</td><td>Purchase</td><td>&mdash;</td></tr>
+    <tr><td>Approval</td><td>Full</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td></tr>
+    <tr><td>Dispute</td><td>All + resolve</td><td>Escalate</td><td>Create</td><td>Create</td><td>&mdash;</td></tr>
+    <tr><td>SOS</td><td>Receive alerts</td><td>Receive alerts</td><td>Trigger</td><td>Receive alerts</td><td>Trigger</td></tr>
+    <tr><td>Replacement</td><td>Assign</td><td>Assign (own)</td><td>Request</td><td>Request</td><td>&mdash;</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ===================== 11. REAL-TIME ARCHITECTURE ===================== -->
+<section id="realtime">
+<h2>11. Real-Time Architecture</h2>
+
+<h3>Location Streaming</h3>
+<p>Caregiver app sends GPS every 60s &rarr; API batch endpoint &rarr; PostgreSQL (location_log) + Redis pub/sub &rarr; Admin/Family clients poll or WebSocket subscription</p>
+
+<h3>Shift Status Updates</h3>
+<p>Status change &rarr; PostgreSQL update &rarr; Redis publish &rarr; WebSocket broadcast to subscribed clients (family, admin)</p>
+
+<h3>Abnormal Vitals Alerts</h3>
+<p>Vitals logged &rarr; Threshold check (server-side) &rarr; If abnormal &rarr; BullMQ job &rarr; Push (FCM/APNs) + In-app notification + WebSocket event (&le;60s SLA)</p>
+
+<h3>No-Show Detection</h3>
+<p>Cron every 5 min &rarr; Checks shifts where <code>scheduled_start + 15min &lt; now AND status = 'scheduled'</code> &rarr; Marks no_show &rarr; Triggers alert to admin + family</p>
+
+<div style="padding:1rem;background:#f8fafc;border-radius:8px;margin-top:1rem;">
+  <p style="font-size:0.9rem;margin-bottom:0.5rem;"><strong>Summary of Real-Time Channels:</strong></p>
+  <span class="flow-box">GPS 60s</span> &rarr; <span class="flow-box">API</span> &rarr; <span class="flow-box">Redis Pub/Sub</span> &rarr; <span class="flow-box">WebSocket / Poll</span><br><br>
+  <span class="flow-box">Vitals</span> &rarr; <span class="flow-box">Threshold</span> &rarr; <span class="flow-box">BullMQ</span> &rarr; <span class="flow-box">Push + WebSocket</span><br><br>
+  <span class="flow-box">Cron 5min</span> &rarr; <span class="flow-box">No-show check</span> &rarr; <span class="flow-box">Alert</span><br><br>
+  <span class="flow-box">Status change</span> &rarr; <span class="flow-box">Redis publish</span> &rarr; <span class="flow-box">WebSocket broadcast</span>
+</div>
+</section>
+
+<!-- ===================== 12. INFRASTRUCTURE & DEPLOYMENT ===================== -->
+<section id="infrastructure">
+<h2>12. Infrastructure &amp; Deployment</h2>
+
+<h3>12.1 AWS Infrastructure</h3>
+<div style="padding:1.5rem;background:#f8fafc;border-radius:8px;border:1px solid var(--border);">
+  <div class="row-label">Traffic Flow</div>
+  <div class="flow-step"><span class="flow-box">Internet</span> &rarr; <span class="flow-box">Route 53 (DNS)</span> &rarr; <span class="flow-box">CloudFront (CDN)</span> &rarr; <span class="flow-box">ALB (Load Balancer)</span></div>
+  <div class="arrow-down">&darr;</div>
+  <div class="row-label">ECS Fargate Cluster</div>
+  <div class="diagram-row">
+    <div class="diagram-box" style="background:#3f37c9;color:#fff;">API Service (&times;3)<br><span class="sub">Auto-scaling</span></div>
+    <div class="diagram-box" style="background:#3f37c9;color:#fff;">Worker Service<br><span class="sub">BullMQ consumers</span></div>
+  </div>
+  <div class="arrow-down">&darr;</div>
+  <div class="row-label">Data &amp; Observability</div>
+  <div class="diagram-row">
+    <div class="diagram-box" style="background:#06d6a0;color:#0d1f1a;">RDS PostgreSQL (Multi-AZ)<br><span class="sub">Primary + Read replica</span></div>
+    <div class="diagram-box" style="background:#06d6a0;color:#0d1f1a;">ElastiCache Redis<br><span class="sub">Cache + Pub/Sub</span></div>
+    <div class="diagram-box" style="background:#06d6a0;color:#0d1f1a;">S3 Buckets<br><span class="sub">uploads, training, exports</span></div>
+    <div class="diagram-box" style="background:#718096;color:#fff;">CloudWatch<br><span class="sub">Logs/Metrics &rarr; Grafana, Sentry</span></div>
+  </div>
+  <p style="font-size:0.85rem;margin-top:1rem;"><strong>Network:</strong> VPC with public subnets (ALB) and private subnets (services, DB). Multi-AZ for high availability.</p>
+</div>
+
+<h3>12.2 Deployment Pipeline</h3>
+<div style="padding:1.5rem;background:#f8fafc;border-radius:8px;overflow-x:auto;">
+  <div class="flow-step" style="flex-wrap:wrap;gap:0.5rem;">
+    <span class="flow-box" style="background:#06d6a0;color:#0d1f1a;border:none;">Developer pushes</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-box" style="background:#06d6a0;color:#0d1f1a;border:none;">GitHub Actions</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-box" style="background:#06d6a0;color:#0d1f1a;border:none;">Lint + TypeCheck</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-box" style="background:#06d6a0;color:#0d1f1a;border:none;">Unit Tests</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-box" style="background:#06d6a0;color:#0d1f1a;border:none;">Build Docker</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-box" style="background:#06d6a0;color:#0d1f1a;border:none;">Push ECR</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-box" style="background:#06d6a0;color:#0d1f1a;border:none;">Deploy Staging</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-box" style="background:#06d6a0;color:#0d1f1a;border:none;">E2E Tests</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-box" style="background:#4361ee;color:#fff;border:none;">Manual Approval</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-box" style="background:#06d6a0;color:#0d1f1a;border:none;">Deploy Prod</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-box" style="background:#06d6a0;color:#0d1f1a;border:none;">Health Check</span><span class="flow-arrow">&rarr;</span>
+    <span class="flow-box" style="background:#ef476f;color:#fff;border:none;">Rollback if unhealthy</span>
+  </div>
+  <p style="font-size:0.85rem;margin-top:1rem;color:var(--muted);"><strong>Environments:</strong> Development (local Docker Compose) &rarr; Staging (AWS, mirrors prod) &rarr; Production (AWS, multi-AZ). Green = automated, Blue = manual gate.</p>
+</div>
+
+<h3>12.3 Environment Configuration</h3>
+<table>
+  <thead><tr><th>Environment</th><th>Infra</th><th>Database</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td>Development</td><td>Docker Compose (local)</td><td>PostgreSQL + Redis containers</td><td>Local development, hot reload</td></tr>
+    <tr><td>Staging</td><td>AWS ECS (single instance)</td><td>RDS (single AZ)</td><td>QA, integration testing, client demos</td></tr>
+    <tr><td>Production</td><td>AWS ECS Fargate (auto-scale)</td><td>RDS (Multi-AZ) + Read replica</td><td>Live platform</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- ===================== 13. SCALABILITY STRATEGY ===================== -->
+<section id="scalability">
+<h2>13. Scalability Strategy</h2>
+
+<h3>Current Architecture (Phase 1)</h3>
+<ul>
+  <li><strong>Modular monolith:</strong> Single NestJS app &mdash; fast development, simple deployment, easy debugging</li>
+  <li><strong>Horizontal scaling:</strong> ECS auto-scaling based on CPU/memory (target 70%)</li>
+  <li><strong>Database:</strong> Read replicas for dashboard queries, connection pooling (PgBouncer)</li>
+  <li><strong>Caching:</strong> Redis for hot data (active shifts, caregiver locations, dashboard metrics)</li>
+  <li><strong>CDN:</strong> Static assets via CloudFront, API response caching for catalog endpoints</li>
+</ul>
+
+<h3>Scale Targets</h3>
+<table>
+  <thead><tr><th>Metric</th><th>Year 1</th><th>Year 2</th></tr></thead>
+  <tbody>
+    <tr><td>Concurrent caregivers</td><td>2,000</td><td>10,000</td></tr>
+    <tr><td>Active patients</td><td>10,000</td><td>50,000</td></tr>
+    <tr><td>Peak RPS</td><td>~100</td><td>~500</td></tr>
+    <tr><td>Cities</td><td>5</td><td>20+</td></tr>
+    <tr><td>GPS writes/sec</td><td>~30</td><td>~170</td></tr>
+  </tbody>
+</table>
+
+<h3>Future Extraction Candidates (Phase 2+)</h3>
+<table>
+  <thead><tr><th>Service</th><th>Reason to Extract</th><th>When</th></tr></thead>
+  <tbody>
+    <tr><td>Location Tracking Service</td><td>Highest write volume (GPS every 60s per active CT), independent scaling</td><td>When GPS writes exceed 100/s sustained</td></tr>
+    <tr><td>Notification Service</td><td>Async, independent, multi-channel (push, SMS, email, in-app)</td><td>When notification volume impacts API latency</td></tr>
+    <tr><td>Matching Engine</td><td>CPU-intensive scoring, can benefit from dedicated compute</td><td>When matching latency exceeds 5s p95</td></tr>
+  </tbody>
+</table>
+</section>
+
+</main>
+</div>
+
+<script>
+(function(){
+  var sections = document.querySelectorAll('section[id]');
+  var sticky = document.querySelector('.sticky-header');
+  function update() {
+    var top = window.scrollY || document.documentElement.scrollTop;
+    var found = null;
+    for (var i = sections.length - 1; i >= 0; i--) {
+      if (sections[i].offsetTop - 100 <= top) { found = sections[i]; break; }
+    }
+    if (found && sticky) {
+      var h = found.querySelector('h2');
+      if (h) sticky.textContent = h.textContent;
+    }
+  }
+  window.addEventListener('scroll', update);
+  window.addEventListener('load', update);
+})();
+</script>
+</body>
+</html>

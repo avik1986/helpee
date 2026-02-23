@@ -1,0 +1,2773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Helpee — Product Requirements Document v1.0</title>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --success: #06d6a0;
+      --warning: #ffd166;
+      --danger: #ef476f;
+      --surface: #f7fafc;
+      --border: #e2e8f0;
+      --text: #1a202c;
+      --muted: #718096;
+      --sidebar: #1a1a2e;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      color: var(--text);
+      background: var(--surface);
+      line-height: 1.6;
+    }
+    .layout { display: flex; min-height: 100vh; }
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0;
+      width: 240px;
+      height: 100vh;
+      background: var(--sidebar);
+      color: #fff;
+      overflow-y: auto;
+      z-index: 100;
+      padding-bottom: 2rem;
+    }
+    .logo-area { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .logo-area strong { font-size: 1.4rem; letter-spacing: 0.05em; display: block; }
+    .logo-area small { display: block; color: rgba(255,255,255,0.6); font-size: 0.75rem; margin-top: 0.25rem; }
+    .nav { padding: 0.5rem 0; }
+    .nav-group { padding: 0.75rem 1.25rem 0.25rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); font-weight: 700; }
+    .nav a {
+      display: block;
+      padding: 0.35rem 1.25rem;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      font-size: 0.82rem;
+    }
+    .nav a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .main-wrap {
+      flex: 1;
+      max-width: 960px;
+      margin-left: 240px;
+      margin-right: auto;
+      background: #fff;
+      padding: 2rem;
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    }
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+      z-index: 10;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    h1 { font-size: 2rem; color: var(--text); margin-top: 0; }
+    h2 {
+      font-size: 1.6rem;
+      border-left: 4px solid var(--primary);
+      padding-left: 1rem;
+      margin: 2.5rem 0 1rem;
+    }
+    h3 { font-size: 1.2rem; color: #2d3748; margin: 1.5rem 0 0.5rem; }
+    h4 { font-size: 1rem; color: var(--secondary); margin: 1.25rem 0 0.5rem; }
+    p { margin: 0 0 0.75rem; }
+    ul, ol { margin: 0 0 0.75rem; padding-left: 1.5rem; }
+    li { margin-bottom: 0.3rem; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+    th { background: var(--primary); color: #fff; padding: 0.75rem; text-align: left; position: sticky; top: 0; }
+    td { padding: 0.75rem; border-bottom: 1px solid var(--border); }
+    tr:nth-child(even) { background: var(--surface); }
+    code { background: var(--surface); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: var(--secondary); }
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 0.75rem 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600; vertical-align: middle; }
+    .badge-p0 { background: var(--success); color: #fff; }
+    .badge-p1 { background: var(--accent); color: #fff; }
+    .badge-get { background: var(--success); color: #fff; }
+    .badge-post { background: var(--accent); color: #fff; }
+    .badge-put { background: var(--warning); color: #1a202c; }
+    .badge-delete { background: var(--danger); color: #fff; }
+    .badge-patch { background: var(--warning); color: #1a202c; }
+    .flow-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem; margin: 0.5rem 0; }
+    .pill { padding: 0.3rem 0.65rem; border-radius: 999px; font-size: 0.78rem; font-weight: 500; }
+    .pill-blue { background: linear-gradient(135deg,#4361ee,#4895ef); color: #fff; }
+    .pill-green { background: linear-gradient(135deg,#06b881,#06d6a0); color: #fff; }
+    .pill-purple { background: linear-gradient(135deg,#6d28d9,#8b5cf6); color: #fff; }
+    .pill-orange { background: linear-gradient(135deg,#f59e0b,#fbbf24); color: #1a202c; }
+    .pill-red { background: var(--danger); color: #fff; }
+    .flow-arrow { color: var(--muted); font-weight: bold; margin: 0 0.2rem; }
+    .icon-circle {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 0.5rem;
+    }
+    .icon-shield { background: rgba(67,97,238,0.15); color: var(--primary); }
+    .icon-building { background: rgba(63,55,201,0.15); color: var(--secondary); }
+    .icon-heart { background: rgba(239,71,111,0.15); color: var(--danger); }
+    .icon-users { background: rgba(6,214,160,0.15); color: var(--success); }
+    .icon-smile { background: rgba(255,209,102,0.2); color: #b45309; }
+    details { margin: 0.5rem 0; }
+    summary { cursor: pointer; font-weight: 600; padding: 0.5rem 0; font-size: 0.95rem; }
+    summary:hover { color: var(--primary); }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start; }
+    /* ===== Flowchart System — CXO Presentation Grade ===== */
+    .fc { position: relative; padding: 2rem 0; overflow-x: auto; }
+    .fc-col { display: flex; flex-direction: column; align-items: center; gap: 0; min-width: 600px; }
+
+    /* — Process Node (rectangle) — */
+    .fc-node {
+      position: relative; text-align: center; font-size: 0.8rem; font-weight: 500;
+      padding: 12px 20px; border-radius: 8px; border: 2px solid;
+      min-width: 180px; max-width: 280px; line-height: 1.4; z-index: 1;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    /* — Start / End (stadium / rounded pill — ISO 5807 terminal) — */
+    .fc-node.start, .fc-node.end {
+      border-radius: 999px; padding: 12px 32px; font-weight: 700; font-size: 0.85rem;
+      letter-spacing: 0.02em; box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    .fc-node.start { background: linear-gradient(135deg,#4361ee,#3a0ca3); color: #fff; border-color: transparent; }
+    .fc-node.end   { background: linear-gradient(135deg,#1e293b,#0f172a); color: #fff; border-color: transparent; }
+
+    /* — Process variants — */
+    .fc-node.process        { background: #eff6ff; border-color: #4361ee; color: #1e40af; }
+    .fc-node.process-green  { background: #ecfdf5; border-color: #10b981; color: #065f46; }
+    .fc-node.process-orange { background: #fffbeb; border-color: #f59e0b; color: #92400e; }
+    .fc-node.process-purple { background: #f5f3ff; border-color: #8b5cf6; color: #5b21b6; }
+    .fc-node.error          { background: #fef2f2; border-color: #ef4444; color: #b91c1c; border-style: dashed; border-width: 2px; }
+
+    /* — Decision Diamond (proper CS rhombus — ISO 5807) — */
+    .fc-diamond {
+      position: relative; display: flex; align-items: center; justify-content: center;
+      width: 170px; height: 170px; z-index: 1; margin: 4px 0;
+    }
+    .fc-diamond-inner {
+      position: absolute;
+      width: 120px; height: 120px;
+      background: linear-gradient(135deg, #fef9c3, #fef3c7);
+      border: 2.5px solid #d97706;
+      transform: rotate(45deg);
+      border-radius: 6px;
+      box-shadow: 0 3px 10px rgba(217,119,6,0.18);
+    }
+    .fc-diamond-text {
+      position: relative; z-index: 2;
+      font-size: 0.74rem; font-weight: 700; color: #78350f;
+      text-align: center; line-height: 1.25; max-width: 120px;
+    }
+
+    /* — Connector Lines (vertical pipe with arrowhead) — */
+    .fc-connector {
+      width: 2.5px; height: 32px; background: #64748b; position: relative;
+      flex-shrink: 0;
+    }
+    .fc-connector::after {
+      content: ''; position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 6px solid transparent; border-right: 6px solid transparent;
+      border-top: 8px solid #64748b;
+    }
+
+    /* — Horizontal connector — */
+    .fc-connector-h {
+      height: 2.5px; width: 48px; background: #64748b; position: relative; flex-shrink: 0;
+    }
+    .fc-connector-h::after {
+      content: ''; position: absolute; right: -7px; top: 50%; transform: translateY(-50%);
+      width: 0; height: 0;
+      border-top: 6px solid transparent; border-bottom: 6px solid transparent;
+      border-left: 8px solid #64748b;
+    }
+
+    /* — Branching — */
+    .fc-branch {
+      display: flex; gap: 12px; align-items: stretch; justify-content: center;
+      width: 100%; position: relative; padding-top: 4px; padding-bottom: 14px;
+    }
+    /* Top horizontal bar connecting arms */
+    .fc-branch::before {
+      content: ''; position: absolute; top: 0;
+      height: 2.5px; background: #94a3b8;
+    }
+    /* Bottom center merge stub — matches connector color for seamless join */
+    .fc-branch::after {
+      content: ''; position: absolute; bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 2.5px; height: 14px; background: #64748b;
+    }
+    .fc-branch:has(> :nth-child(2):last-child)::before { left: 25%; right: 25%; }
+    .fc-branch:has(> :nth-child(3):last-child)::before { left: 16%; right: 16%; }
+    .fc-branch:has(> :nth-child(4):last-child)::before { left: 12%; right: 12%; }
+    .fc-branch-arm {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0; min-width: 160px; max-width: 260px; flex: 1;
+      position: relative; padding-top: 4px; padding-bottom: 4px;
+    }
+    /* Top stub: horizontal bar down into arm content */
+    .fc-branch-arm::before {
+      content: ''; position: absolute; top: -4px; left: 50%;
+      width: 2.5px; height: 8px; background: #94a3b8;
+      transform: translateX(-50%);
+    }
+    /* Bottom stub: arm content down to merge point */
+    .fc-branch-arm::after {
+      content: ''; display: block; margin-top: auto;
+      width: 2.5px; flex-shrink: 0; min-height: 8px; flex-grow: 1;
+      background: #94a3b8;
+    }
+
+    /* — Branch Labels (Yes / No / Alt) — */
+    .fc-branch-label {
+      font-size: 0.7rem; font-weight: 800; padding: 3px 12px; border-radius: 999px;
+      margin-bottom: 4px; letter-spacing: 0.03em;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .fc-branch-label.yes { background: #d1fae5; color: #047857; border: 1px solid #6ee7b7; }
+    .fc-branch-label.no  { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+    .fc-branch-label.alt { background: #e0e7ff; color: #3730a3; border: 1px solid #a5b4fc; }
+
+    /* — Merge / Note — */
+    .fc-note {
+      font-size: 0.72rem; color: #475569; font-style: italic; text-align: center;
+      max-width: 260px; margin: 2px auto; padding: 4px 12px;
+      background: #f8fafc; border-radius: 4px; border: 1px dashed #cbd5e1;
+    }
+
+    /* — Phase Section Divider — */
+    .fc-section-label {
+      font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em;
+      color: #fff; font-weight: 800; text-align: center;
+      padding: 8px 24px; margin: 8px 0; border-radius: 6px;
+      background: linear-gradient(90deg, #4361ee, #7c3aed);
+      box-shadow: 0 2px 8px rgba(67,97,238,0.25);
+      width: auto; display: inline-block;
+    }
+
+    /* — App Tags — */
+    .fc-app-tag {
+      display: inline-block; font-size: 0.62rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 999px; margin-top: 4px;
+      border: 1px solid;
+    }
+    .fc-app-tag.family     { background: #dbeafe; color: #1d4ed8; border-color: #93c5fd; }
+    .fc-app-tag.ops        { background: #e0e7ff; color: #4338ca; border-color: #a5b4fc; }
+    .fc-app-tag.system     { background: #d1fae5; color: #047857; border-color: #6ee7b7; }
+    .fc-app-tag.ct         { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+    .fc-app-tag.elderly    { background: #fce7f3; color: #be185d; border-color: #f9a8d4; }
+    .fc-app-tag.callcenter { background: #f3e8ff; color: #7c3aed; border-color: #c4b5fd; }
+
+    /* — Loop indicator — */
+    .fc-loop { border: 2px dashed #94a3b8; border-radius: 10px; padding: 8px; margin: 4px 0; }
+    .fc-loop-label { font-size: 0.65rem; color: #64748b; font-style: italic; text-align: center; }
+    @media print {
+      .sidebar { display: none !important; }
+      .main-wrap { margin-left: 0 !important; max-width: none !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="logo-area">
+    <strong>HELPEE</strong>
+    <small>Product Requirements Document v1.0</small>
+  </div>
+  <nav class="nav">
+    <div class="nav-group">Content</div>
+    <a href="#exec-summary">1. Executive Summary</a>
+    <a href="#personas">2. Personas</a>
+    <a href="#ecosystem">3. Ecosystem Flowcharts</a>
+    <a href="#supply-model">4. Supply Model</a>
+    <a href="#company-admin">5. Company Admin Portal</a>
+    <a href="#franchise-admin">6. Franchise Admin Portal</a>
+    <a href="#caregiver-app">7. Caregiver Mobile App</a>
+    <a href="#customer-app">8. Customer Mobile App</a>
+    <a href="#elderly-app">9. Elderly Mobile App</a>
+    <a href="#call-center">10. Call Center &amp; CRM</a>
+    <a href="#nfr">11. Non-Functional Reqs</a>
+    <a href="#scenarios">12. User Scenarios</a>
+  </nav>
+</aside>
+
+<main class="main-wrap">
+<div class="sticky-header" id="sticky-nav">Helpee PRD</div>
+
+<!-- ===================== 1. EXECUTIVE SUMMARY ===================== -->
+<section id="exec-summary">
+<h2>1. Executive Summary</h2>
+
+<p style="font-size: 1rem; color: var(--muted); margin-bottom: 1.5rem;">This document defines the product requirements for the Helpee elder care platform &mdash; covering all five applications, user flows, features, and priorities.</p>
+
+<!-- THE PROBLEM -->
+<div class="card" style="border-left: 4px solid var(--danger); margin-bottom: 1rem;">
+  <h3 style="margin-top:0; color:var(--danger);">The Problem</h3>
+  <table style="margin-bottom: 0;">
+    <thead><tr><th style="width:35%;">Pain Point</th><th>Current Reality</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Fragmented Communication</strong></td><td>Families receive scattered WhatsApp messages with no unified view &mdash; 60+ disconnected Wati templates, no central dashboard</td></tr>
+      <tr><td><strong>Broken Brand Identity</strong></td><td>Three different brand spellings in the market &mdash; zero visual cohesion, no trust signal</td></tr>
+      <tr><td><strong>Leaking Demand Funnel</strong></td><td>25&ndash;30% of high-intent leads drop off due to manual, slow follow-up</td></tr>
+      <tr><td><strong>No Real-time Visibility</strong></td><td>Families cannot see if the caregiver arrived, what tasks were completed, or what the elderly parent&rsquo;s vitals are</td></tr>
+      <tr><td><strong>Unstructured Supply Pipeline</strong></td><td>No standardised screening, training, or certification for caregivers across cities</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- V1 SOLUTION -->
+<div class="card" style="border-left: 4px solid var(--success); margin-bottom: 1rem;">
+  <h3 style="margin-top:0; color:var(--success);">V1 Solution</h3>
+  <table>
+    <thead><tr><th style="width:40%;">Deliverable</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><strong>&#10003; One Number, All Cities</strong></td><td>Single national call centre number for <strong>customers (families) only</strong>. No city-specific numbers, no confusion &mdash; dial one number from anywhere in India for bookings, support, and escalations. Caregivers are reached separately via outbound campaigns, not this number.</td></tr>
+      <tr><td><strong>&#10003; Unified Brand Identity</strong></td><td>Logo rework, colours, typography, voice, guidelines &mdash; one Helpee, everywhere</td></tr>
+      <tr><td><strong>&#10003; Seamless Registration Flow</strong></td><td>Sign up &rarr; Elderly profile &rarr; Service selection &rarr; Payment</td></tr>
+      <tr><td><strong>&#10003; Caregiver Matching</strong></td><td>Profile preview with photo, ratings, experience + KYC badge</td></tr>
+      <tr><td><strong>&#10003; Real-time Status Tracking</strong></td><td>matched &rarr; en route &rarr; arrived &rarr; active &rarr; complete</td></tr>
+      <tr><td><strong>&#10003; Daily Care Summaries</strong></td><td>Meals, walks, medication, vitals &mdash; visible to families in one place</td></tr>
+      <tr><td><strong>&#10003; Control Panel</strong></td><td>Escalate, pause, restart, contact care manager</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- WHAT CHANGES AFTER V1 -->
+<div class="card" style="border-left: 4px solid var(--primary); margin-bottom: 1rem;">
+  <h3 style="margin-top:0; color:var(--primary);">What Changes After V1</h3>
+  <table style="margin-bottom:0;">
+    <thead><tr><th style="width:35%;">Before V1</th><th>After V1</th></tr></thead>
+    <tbody>
+      <tr><td>3 different brand spellings</td><td><strong>One cohesive brand</strong> families recognise and trust</td></tr>
+      <tr><td>Scattered WhatsApp messages</td><td><strong>One app, one dashboard</strong> for everything</td></tr>
+      <tr><td>60+ disconnected Wati templates</td><td><strong>Coordinated notification system</strong> with real-time push</td></tr>
+      <tr><td>25&ndash;30% high-intent lead drop-off</td><td><strong>Automated funnel</strong> with call center + app capture</td></tr>
+      <tr><td>No caregiver visibility during shift</td><td><strong>GPS tracking + live task timeline</strong> for family</td></tr>
+      <tr><td>Manual matching over phone/WhatsApp</td><td><strong>Algorithm-driven 48h matching</strong> with top 3 profiles</td></tr>
+      <tr><td>No standardised caregiver quality</td><td><strong>3-gate screening + mandatory certification</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ECOSYSTEM AT A GLANCE -->
+<h3>Platform Ecosystem</h3>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+  <div class="card" style="border-top: 3px solid var(--primary); text-align: center;">
+    <strong style="color: var(--primary);">DEMAND SIDE</strong>
+    <p style="font-size: 0.85rem; color: var(--muted); margin: 0.5rem 0 0;">Family App + Elderly App + Call Center</p>
+    <p style="font-size: 0.85rem;">Request &rarr; Match &rarr; Interview &rarr; Agreement &rarr; Track &rarr; Pay</p>
+  </div>
+  <div class="card" style="border-top: 3px solid var(--success); text-align: center;">
+    <strong style="color: var(--success);">SUPPLY SIDE</strong>
+    <p style="font-size: 0.85rem; color: var(--muted); margin: 0.5rem 0 0;">CT App + 4 sourcing channels</p>
+    <p style="font-size: 0.85rem;">Lead &rarr; Screen (3 gates) &rarr; Train &rarr; Certify &rarr; Deploy &rarr; Retain</p>
+  </div>
+  <div class="card" style="border-top: 3px solid #7c3aed; text-align: center;">
+    <strong style="color: #7c3aed;">OPERATIONS</strong>
+    <p style="font-size: 0.85rem; color: var(--muted); margin: 0.5rem 0 0;">Company Admin + Franchise Admin portals</p>
+    <p style="font-size: 0.85rem;">Dashboard &rarr; Roster &rarr; Approve &rarr; Govern &rarr; Report</p>
+  </div>
+</div>
+
+<h3>Five Client Applications</h3>
+<table>
+  <thead><tr><th>App</th><th>Type</th><th>Primary Users</th><th>Priority</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Company Admin Web Portal</strong></td><td>Next.js</td><td>National Ops, Finance, Quality</td><td><span class="badge badge-p0">P0</span></td></tr>
+    <tr><td><strong>Franchise Admin Web Portal</strong></td><td>Next.js</td><td>City Franchise Owners, Local Ops</td><td><span class="badge badge-p1">P1</span></td></tr>
+    <tr><td><strong>Caregiver Mobile App</strong></td><td>React Native (Expo)</td><td>Caregivers, Nurses</td><td><span class="badge badge-p0">P0</span></td></tr>
+    <tr><td><strong>Customer (Family) Mobile App</strong></td><td>React Native (Expo)</td><td>Son/Daughter, Family Decision Maker</td><td><span class="badge badge-p0">P0</span></td></tr>
+    <tr><td><strong>Elderly Mobile App</strong></td><td>React Native (Expo)</td><td>Elderly Patient (simplified Lite Mode)</td><td><span class="badge badge-p1">P1</span></td></tr>
+  </tbody>
+</table>
+
+<p><strong>Priority definitions:</strong> <span class="badge badge-p0">P0</span> Must-have for MVP. Core business-enabling flows. &nbsp; <span class="badge badge-p1">P1</span> Important, can launch without. Phase 2 target.</p>
+</section>
+
+<!-- ===================== 2. PERSONAS ===================== -->
+<section id="personas">
+<h2>2. Personas</h2>
+<div class="card-grid">
+  <div class="card">
+    <div class="icon-circle icon-shield">&#128737;</div>
+    <strong>Company Admin</strong> <span class="badge badge-p0">P0</span>
+    <p style="font-size:0.85rem;color:var(--muted);">Sub-roles: National Ops Head, Finance Controller, Quality/Governance Manager</p>
+    <p>National oversight of all operations, payroll approval, governance (blacklist/suspend), financial reporting.</p>
+  </div>
+  <div class="card">
+    <div class="icon-circle icon-building">&#127970;</div>
+    <strong>Franchise Admin</strong> <span class="badge badge-p1">P1</span>
+    <p style="font-size:0.85rem;color:var(--muted);">Sub-roles: City Franchise Owner, Local Ops Manager</p>
+    <p>Manages local caregiver pool in their city. Handles rostering, attendance monitoring, training, commission tracking.</p>
+  </div>
+  <div class="card">
+    <div class="icon-circle icon-heart">&#10084;</div>
+    <strong>Caregiver / Nurse</strong> <span class="badge badge-p0">P0</span>
+    <p style="font-size:0.85rem;color:var(--muted);">Sub-roles: Caregiver (companion), Junior Nurse, Critical Care Nurse</p>
+    <p>Field workers providing daily care. Uses mobile app for shifts, check-in/out, task logging, earnings.</p>
+  </div>
+  <div class="card">
+    <div class="icon-circle icon-users">&#128101;</div>
+    <strong>Heir / Family Member</strong> <span class="badge badge-p0">P0</span>
+    <p style="font-size:0.85rem;color:var(--muted);">Sub-roles: Son/Daughter (remote), Local family decision maker</p>
+    <p>Books care for elderly parent, selects caregiver, tracks shifts live, manages payments, raises disputes.</p>
+  </div>
+  <div class="card" style="grid-column:1/-1;">
+    <div class="icon-circle icon-smile">&#128522;</div>
+    <strong>Elderly Patient</strong> <span class="badge badge-p1">P1</span>
+    <p>Low digital literacy, needs large UI. Simplified &ldquo;Lite Mode&rdquo; &mdash; SOS, today&rsquo;s caregiver, medicine confirmation, thumbs feedback.</p>
+  </div>
+</div>
+</section>
+
+<!-- ===================== 3. ECOSYSTEM FLOWCHARTS ===================== -->
+<section id="ecosystem">
+<h2>3. Ecosystem Flowcharts</h2>
+
+<!-- ============== FLOWCHART A: DEMAND SIDE ============== -->
+<h3>Flowchart A &mdash; Demand Side (Customer Journey)</h3>
+<p>End-to-end flow from care request through matching, selection, active shift, and billing with all decision points and exception paths.</p>
+
+<div class="fc">
+<div class="fc-col">
+
+  <!-- START -->
+  <div class="fc-node start">START &mdash; Family Needs Care</div>
+  <div class="fc-connector"></div>
+
+  <!-- Decision: Entry Channel -->
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">How does request arrive?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">Via App</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process">Family submits care request via Customer App<br><span class="fc-app-tag family">Family App</span></div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">Via Phone</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-purple">Family calls Helpee helpline (One Number, All Cities)<br><span class="fc-app-tag callcenter">Call Center</span></div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-purple">Call center agent creates request in CRM<br><span class="fc-app-tag callcenter">Call Center</span></div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+  <div class="fc-note">&mdash; both paths merge &mdash;</div>
+  <div class="fc-connector"></div>
+
+  <!-- Step 2: Ops Assessment -->
+  <div class="fc-section-label">Phase 1 &mdash; Requirement Assessment</div>
+  <div class="fc-connector"></div>
+  <div class="fc-node process">Helpee Ops reviews request &amp; patient needs<br><span class="fc-app-tag ops">Company/Franchise Admin</span></div>
+  <div class="fc-connector"></div>
+
+  <!-- Decision: Service Level -->
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Determine service level</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">Companion</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green" style="min-width:120px;">Tag as Companion<br><small>Daily assistance, mobility help</small></div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">Jr. Nurse</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green" style="min-width:120px;">Tag as Junior Nurse<br><small>Medication, wound care, IV</small></div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">Critical Care</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green" style="min-width:120px;">Tag as Critical Care Nurse<br><small>Post-surgery, ventilator</small></div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+  <div class="fc-note">&mdash; all 3 levels merge &mdash;</div>
+  <div class="fc-connector"></div>
+
+  <!-- Decision: Shift Type -->
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Shift type?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm"><div class="fc-branch-label alt">Visit (2&ndash;4h)</div></div>
+    <div class="fc-branch-arm"><div class="fc-branch-label alt">8h / 12h</div></div>
+    <div class="fc-branch-arm"><div class="fc-branch-label alt">24h / Live-in</div></div>
+    <div class="fc-branch-arm"><div class="fc-branch-label alt">Split (Day+Night)</div></div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- Decision: Split Shift? -->
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Is this a split shift?</div></div>
+  <div class="fc-connector"></div>
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-orange">Match TWO CTs &mdash; Day nurse &amp; Night nurse<br><small>Separate matching runs for each slot</small><br><span class="fc-app-tag system">Matching Engine</span></div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process">Match ONE CT<br><span class="fc-app-tag system">Matching Engine</span></div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+  <div class="fc-note">&mdash; both merge into matching phase &mdash;</div>
+  <div class="fc-connector"></div>
+
+  <!-- PHASE 2: MATCHING -->
+  <div class="fc-section-label">Phase 2 &mdash; Algorithmic Matching (48h SLA)</div>
+  <div class="fc-connector"></div>
+  <div class="fc-node process-green">Matching algorithm runs: ratings, cancellation %, acceptance speed, region preference, complaint history, proximity<br><span class="fc-app-tag system">Matching Engine</span></div>
+  <div class="fc-connector"></div>
+
+  <!-- Decision: Enough matches? -->
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">≥ 3 matching CTs found?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No &mdash; insufficient CTs</div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Expand search?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label yes">Yes</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node process-orange">Widen radius + relax region preference + contact aggregators<br><span class="fc-app-tag ops">Ops Manual Override</span></div>
+          <div class="fc-connector"></div>
+          <div class="fc-note">&#8634; Loop back to matching algorithm above</div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label no">No (all exhausted)</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node error">Notify family: &ldquo;Unable to match within SLA&rdquo; &mdash; offer to waitlist or cancel<br><span class="fc-app-tag family">Family App</span></div>
+          <div class="fc-connector"></div>
+          <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Family waitlists?</div></div>
+          <div class="fc-connector"></div>
+          <div class="fc-branch">
+            <div class="fc-branch-arm">
+              <div class="fc-branch-label yes">Yes</div>
+              <div class="fc-connector"></div>
+              <div class="fc-node process">Add to priority queue; retry matching daily</div>
+              <div class="fc-connector"></div>
+              <div class="fc-note">&#8634; Loop back to matching algorithm above</div>
+              <div class="fc-connector"></div>
+              <div class="fc-node end" style="background:#64748b;">WAIT &mdash; flow paused until match found</div>
+            </div>
+            <div class="fc-branch-arm">
+              <div class="fc-branch-label no">No</div>
+              <div class="fc-connector"></div>
+              <div class="fc-node end" style="background:#ef4444;">END &mdash; Request Cancelled</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-connector"></div>
+      <div class="fc-note" style="background:#fef2f2; border-color:#fca5a5; color:#b91c1c; font-style:normal; font-weight:700;">&#9724; This branch is a dead-end &mdash; does NOT continue to Phase 3</div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes (&ge;3 CTs found)</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green">Shortlist top 3 profiles; Ops reviews<br><span class="fc-app-tag ops">Admin Portal</span></div>
+      <div class="fc-connector"></div>
+      <div class="fc-note" style="background:#ecfdf5; border-color:#6ee7b7; color:#047857; font-style:normal; font-weight:700;">&#9660; Only this path continues to Phase 3 below</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- PHASE 3: SELECTION -->
+  <div class="fc-section-label">Phase 3 &mdash; Profile Sharing &amp; Selection</div>
+  <div class="fc-connector"></div>
+  <div class="fc-node process">Share 3 CT profiles with family (name, photo, rating, experience)<br><span class="fc-app-tag family">Family App</span></div>
+  <div class="fc-connector"></div>
+
+  <!-- Decision: Family responds? -->
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Family responds within 72h?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-orange">Auto-reminder at 24h &amp; 48h; Call center follow-up at 72h<br><span class="fc-app-tag callcenter">Call Center</span></div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Responds after follow-up?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label no">No</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node error">Request expired &mdash; status &rarr; &lsquo;expired&rsquo;</div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label yes">Yes</div>
+          <div class="fc-connector"></div>
+          <div class="fc-note">&#8628; Continue below</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes</div>
+      <div class="fc-connector"></div>
+      <div class="fc-note">&#8628; Continue below</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- Decision: Family accepts any profile? -->
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Family interested in any profile?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No &mdash; Reject all 3</div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Re-match attempt # &lt; 2?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label yes">Yes</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node process-orange">Re-run matching excluding rejected CTs</div>
+          <div class="fc-connector"></div>
+          <div class="fc-note">&#8634; Loop back to &ldquo;Shortlist top 3&rdquo;</div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label no">No (max retries)</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node error">Escalate to Ops for manual matching or cancel</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes &mdash; 1+ profiles selected</div>
+      <div class="fc-connector"></div>
+      <div class="fc-note">&#8628; Continue below</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- Decision: Video Interview? (OPTIONAL — P1) -->
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Family wants video interview?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes (optional &mdash; P1)</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-purple">Video interview conducted via Twilio<br><span class="fc-app-tag family">Family App</span> <span class="fc-app-tag ct">CT App</span></div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Family selects CT after video call?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label no">No</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node process-orange">Family requests new profiles &mdash; re-enter matching</div>
+          <div class="fc-connector"></div>
+          <div class="fc-note">&#8634; Loop back to Phase 2</div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label yes">Yes</div>
+          <div class="fc-connector"></div>
+          <div class="fc-note">&#8628; Proceed to agreement</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No &mdash; direct select</div>
+      <div class="fc-connector"></div>
+      <div class="fc-note">&#8628; Proceed to agreement</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+  <div class="fc-node process-green">CT selected &amp; locked; generate service agreement<br><span class="fc-app-tag ops">Admin Portal</span></div>
+  <div class="fc-connector"></div>
+
+  <!-- PHASE 4: AGREEMENT -->
+  <div class="fc-section-label">Phase 4 &mdash; Agreement &amp; Scheduling</div>
+  <div class="fc-connector"></div>
+  <div class="fc-node process">Service agreement sent to family (terms, pricing, schedule, weekly off, cancellation policy)<br><span class="fc-app-tag family">Family App</span></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Family signs agreement?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No</div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Wants to renegotiate?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label yes">Yes</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node process-orange">Ops discusses revised terms<br><span class="fc-app-tag ops">Admin Portal</span></div>
+          <div class="fc-connector"></div>
+          <div class="fc-note">&#8634; Re-send agreement</div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label no">No &mdash; Decline</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node error">Release CT back to pool; Request cancelled</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green">Agreement signed &rarr; Roster &amp; shift schedule created<br><span class="fc-app-tag system">System</span></div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-node process">CT receives job assignment notification + schedule<br><span class="fc-app-tag ct">CT App</span></div>
+  <div class="fc-connector"></div>
+
+  <!-- Decision: CT Accepts? -->
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">CT accepts assignment?</div></div>
+  <div class="fc-connector"></div>
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No / No response in 4h</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-orange">Assign to next-ranked CT from shortlist; notify family of change</div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">All shortlisted CTs exhausted?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label no">No</div>
+          <div class="fc-connector"></div>
+          <div class="fc-note">&#8634; Try next CT in shortlist</div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label yes">Yes (all declined)</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node error">Notify family; re-enter Phase 2 matching with expanded pool</div>
+          <div class="fc-connector"></div>
+          <div class="fc-note">&#8634; Loop back to Phase 2</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green">Assignment confirmed &mdash; both parties notified</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- PHASE 5: ACTIVE SHIFT -->
+  <div class="fc-section-label">Phase 5 &mdash; Active Shift Execution</div>
+  <div class="fc-connector"></div>
+  <div class="fc-node process">CT navigates to patient location (GPS tracked)<br><span class="fc-app-tag ct">CT App</span></div>
+  <div class="fc-connector"></div>
+  <div class="fc-node process-green">CT checks in via geofenced selfie<br><span class="fc-app-tag ct">CT App</span> <span class="fc-app-tag elderly">Elderly App &mdash; sees &ldquo;CT arrived&rdquo;</span></div>
+  <div class="fc-connector"></div>
+  <div class="fc-node process">CT performs tasks, logs vitals, administers meds<br><span class="fc-app-tag ct">CT App</span></div>
+  <div class="fc-connector"></div>
+
+  <!-- Decision: Vitals abnormal? -->
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Vitals reading abnormal?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes &mdash; Alert</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node error">Push notification to Family + Admin<br><span class="fc-app-tag family">Family App</span> <span class="fc-app-tag ops">Admin</span></div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Emergency SOS triggered?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label yes">Yes</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node error">Auto-call emergency contacts + ambulance info<br><span class="fc-app-tag elderly">Elderly SOS</span></div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label no">No</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node process-orange">Log observation; family acknowledges</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No &mdash; Normal</div>
+      <div class="fc-connector"></div>
+      <div class="fc-note">Continue shift</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- Decision: Is it weekly off day? -->
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">CT&rsquo;s weekly off today?</div></div>
+  <div class="fc-connector"></div>
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-orange">Backup CT auto-rostered for the day<br><span class="fc-app-tag system">Auto-Roster</span></div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No</div>
+      <div class="fc-connector"></div>
+      <div class="fc-note">Regular shift continues</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-node process">CT checks out; daily summary auto-generated<br><span class="fc-app-tag ct">CT App</span> <span class="fc-app-tag family">Family App</span></div>
+  <div class="fc-connector"></div>
+  <div class="fc-node process-green">Elderly gives feedback (smile rating)<br><span class="fc-app-tag elderly">Elderly App</span></div>
+  <div class="fc-connector"></div>
+
+  <!-- PHASE 6: EXCEPTIONS -->
+  <div class="fc-section-label">Phase 6 &mdash; Exception Handling (during active assignment)</div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Exception occurs?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">CT requests leave</div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Leave &le; 3 days?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label yes">Yes</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node process-orange">Backup CT covers<br><span class="fc-app-tag system">Auto-Roster</span></div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label no">No (&gt;3 days)</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node process-orange">Trigger replacement flow; find new primary CT</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">Family requests replacement</div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Reason valid?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label yes">Yes</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node process">Free replacement within 48h; re-enter matching</div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label no">Unjustified</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node process-orange">Ops mediates; apply charges if in terms</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">Incident / complaint</div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Severity?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label alt">Low</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node process-orange">Warning issued; reduce future job priority</div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label alt">High</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node error">CT suspended/blacklisted; immediate replacement triggered</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">No exception</div>
+      <div class="fc-connector"></div>
+      <div class="fc-note">&#8628; Continue to billing</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- PHASE 7: BILLING -->
+  <div class="fc-section-label">Phase 7 &mdash; Billing &amp; Closure</div>
+  <div class="fc-connector"></div>
+  <div class="fc-node process-green">System generates bi-weekly/monthly invoice<br><span class="fc-app-tag system">Billing Engine</span></div>
+  <div class="fc-connector"></div>
+  <div class="fc-node process">Family pays via Razorpay (UPI / Card / Net Banking)<br><span class="fc-app-tag family">Family App</span></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Payment successful?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node error">Auto-retry &rarr; reminder at D+3 &rarr; call center follow-up at D+7 &rarr; service pause at D+15</div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green">Commission deducted; CT payout scheduled<br><span class="fc-app-tag system">System</span></div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Family raises dispute?</div></div>
+  <div class="fc-connector"></div>
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-orange">Dispute ticket created &rarr; Ops investigates &rarr; refund / credit / reject within 5 days<br><span class="fc-app-tag ops">Admin Portal</span></div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green">Family rates CT &amp; service</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- END -->
+  <div class="fc-node end">END &mdash; Cycle Complete (repeats per billing period)</div>
+
+</div><!-- /fc-col -->
+</div><!-- /fc -->
+
+
+<!-- ============== FLOWCHART B: SUPPLY SIDE ============== -->
+<h3>Flowchart B &mdash; Supply Side (CT Onboarding &amp; Lifecycle)</h3>
+<p>Complete pipeline from lead acquisition through screening, certification, job deployment, and retention with all gates and failure paths.</p>
+
+<div class="fc">
+<div class="fc-col">
+
+  <!-- START -->
+  <div class="fc-node start">START &mdash; New CT Lead</div>
+  <div class="fc-connector"></div>
+
+  <!-- Decision: Source Channel -->
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Lead source channel?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">Digital</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process">Job portal / Facebook / WhatsApp / Local ad</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process">Missed call on CT Jobs Line<br><span class="fc-app-tag callcenter">Call Center</span></div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green">Auto-SMS with app registration link</div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">Aggregator / Agency</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-purple">Agency submits CT profile</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-purple">Finder fee agreement created<br><small>+ 6-month revenue share %</small></div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">Referral</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green">Existing CT refers friend via app<br><span class="fc-app-tag ct">CT App</span></div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green">Referral bonus record created<br><small>(paid after referee&rsquo;s 1st shift)</small></div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">Field Recruiter</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-orange">Helpee field team visits hospitals, nursing colleges, rehab centres</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-orange">In-person signup</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+  <div class="fc-note">&mdash; all 4 channels merge into registration &mdash;</div>
+  <div class="fc-connector"></div>
+
+  <!-- PHASE 1: REGISTRATION -->
+  <div class="fc-section-label">Phase 1 &mdash; App Registration</div>
+  <div class="fc-connector"></div>
+  <div class="fc-node process">CT downloads app &amp; begins registration (OTP verified)<br><span class="fc-app-tag ct">CT App</span></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Application completed &ge; 100%?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No &mdash; Incomplete</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-orange">Auto dialer call at D+1, D+3<br><span class="fc-app-tag callcenter">Call Center Auto</span></div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Completes after follow-up?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label no">No (after 3 attempts)</div>
+          <div class="fc-connector"></div>
+          <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Completion &ge; 60%?</div></div>
+          <div class="fc-connector"></div>
+          <div class="fc-branch">
+            <div class="fc-branch-arm">
+              <div class="fc-branch-label yes">Yes</div>
+              <div class="fc-connector"></div>
+              <div class="fc-node process-purple">Transfer to human agent for assisted completion<br><span class="fc-app-tag callcenter">Call Center Human</span></div>
+            </div>
+            <div class="fc-branch-arm">
+              <div class="fc-branch-label no">No (&lt;60%)</div>
+              <div class="fc-connector"></div>
+              <div class="fc-node error">Mark lead as &lsquo;irrelevant&rsquo; &mdash; archive in CRM</div>
+            </div>
+          </div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label yes">Yes</div>
+          <div class="fc-connector"></div>
+          <div class="fc-note">&#8628; Continue below</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes &mdash; Complete</div>
+      <div class="fc-connector"></div>
+      <div class="fc-note">&#8628; Continue below</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- PHASE 2: SCREENING -->
+  <div class="fc-section-label">Phase 2 &mdash; Screening &amp; Selection (3 Gates)</div>
+  <div class="fc-connector"></div>
+
+  <!-- Gate 1: Eligibility -->
+  <div class="fc-node process">GATE 1 &mdash; Basic Eligibility Check<br><small>Min. experience &bull; Local language &bull; Smartphone &bull; Willing to accept Helpee terms</small><br><span class="fc-app-tag ops">Admin Portal</span></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Passes eligibility?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node error">Rejected &mdash; reason logged; can reapply after 3 months</div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes</div>
+      <div class="fc-connector"></div>
+      <div class="fc-note">&#8628; Proceed to Gate 2</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- Gate 2: Background Check -->
+  <div class="fc-node process-purple">GATE 2 &mdash; Background Check (AuthBridge)<br><small>Criminal record &bull; ID verification &bull; Address verification</small><br><span class="fc-app-tag system">3rd Party API</span></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Background check passed?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No &mdash; Failed</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node error">Permanently rejected &mdash; blacklisted<br><small>Cannot reapply</small></div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">Pending / Needs Info</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-orange">Request additional documents<br><span class="fc-app-tag ct">CT App</span></div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Docs submitted within 7 days?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label no">No</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node error">Application expired</div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label yes">Yes</div>
+          <div class="fc-connector"></div>
+          <div class="fc-note">&#8634; Re-run background check</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes &mdash; Passed</div>
+      <div class="fc-connector"></div>
+      <div class="fc-note">&#8628; Proceed to Gate 3</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- Gate 3: Skill Assessment -->
+  <div class="fc-node process">GATE 3 &mdash; Practical Skill Assessment<br><small>Hands-on clinical test (not just interview) &mdash; scored by assessor</small><br><span class="fc-app-tag ops">Admin Portal</span></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Assessment score &ge; threshold?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No &mdash; Below threshold</div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">First attempt?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label yes">Yes</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node process-orange">Allow 1 re-assessment after 2 weeks of self-prep</div>
+          <div class="fc-connector"></div>
+          <div class="fc-note">&#8634; Re-take assessment</div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label no">No (2nd fail)</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node error">Rejected &mdash; can reapply after 6 months</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes &mdash; Passed</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green">Screening complete &mdash; eligible for training</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- PHASE 3: TRAINING -->
+  <div class="fc-section-label">Phase 3 &mdash; Training &amp; Certification</div>
+  <div class="fc-connector"></div>
+  <div class="fc-node process-purple">Enrolled in Helpee Training Module<br><small>App usage &bull; Customer etiquette &bull; Do&rsquo;s &amp; Don&rsquo;ts &bull; Safety protocols</small><br><small>Mix of classroom + digital &mdash; CT pays (adjusted against 1st job)</small><br><span class="fc-app-tag ct">CT App</span> <span class="fc-app-tag ops">Admin Portal</span></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Training assessment passed?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No</div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Retry allowed? (max 1)</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label yes">Yes</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node process-orange">Re-enroll in training module</div>
+          <div class="fc-connector"></div>
+          <div class="fc-note">&#8634; Re-take training</div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label no">No (2nd fail)</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node error">Rejected &mdash; no certification = no jobs</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green">Helpee Certification issued<br><span class="fc-app-tag system">System</span></div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- PHASE 4: ONBOARDING COMPLETION -->
+  <div class="fc-section-label">Phase 4 &mdash; Uniform &amp; Deployment</div>
+  <div class="fc-connector"></div>
+  <div class="fc-node process">CT purchases 2x Helpee T-shirts + branded disposables<br><small>Financing: salary advance / BNPL / payroll deduction</small><br><span class="fc-app-tag ct">CT App</span></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Direct pool or Franchise?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">Direct</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process">Assigned to Company Admin pool<br><span class="fc-app-tag ops">Company Admin</span></div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label alt">Franchise</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-purple">Assigned to Franchise pool<br><span class="fc-app-tag ops">Franchise Admin</span></div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-node process-green">CT status &rarr; &lsquo;active&rsquo; &mdash; enters available pool; receives job offers<br><span class="fc-app-tag ct">CT App</span></div>
+  <div class="fc-connector"></div>
+
+  <!-- PHASE 5: ACTIVE LIFECYCLE -->
+  <div class="fc-section-label">Phase 5 &mdash; Active Lifecycle &amp; Retention</div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-node process">CT receives job offer via push notification<br><span class="fc-app-tag ct">CT App</span></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">CT accepts or rejects?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Accepts</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green">CT deployed to patient &mdash; enters Demand Side flow</div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">Rejects / Ignores</div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Rejection rate &gt; 30%?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label yes">Yes</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node error">Deprioritized in matching; warning notification<br><span class="fc-app-tag ct">CT App</span></div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label no">No</div>
+          <div class="fc-connector"></div>
+          <div class="fc-note">No action; stays in pool</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- Super Star check -->
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Qualifies for Super Star?<br><small>High rating + low cancellation + 6+ months</small></div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process-green">Super Star perks activated:<br><small>Reduced commission &bull; Insurance &bull; Priority jobs &bull; Advance payouts</small><br><span class="fc-app-tag system">System</span></div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No (not yet)</div>
+      <div class="fc-connector"></div>
+      <div class="fc-node process">Standard retention: predictable payouts, upskilling, 1 paid holiday/month for long-term</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- Incident Path -->
+  <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Incident reported against CT?</div></div>
+  <div class="fc-connector"></div>
+
+  <div class="fc-branch">
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label yes">Yes</div>
+      <div class="fc-connector"></div>
+      <div class="fc-diamond"><div class="fc-diamond-inner"></div><div class="fc-diamond-text">Severity level?</div></div>
+      <div class="fc-connector"></div>
+      <div class="fc-branch">
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label alt">Minor</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node process-orange">Warning + reduced job priority for 30 days</div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label alt">Major</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node error">Temporary suspension (7&ndash;30 days)<br><small>Mandatory re-training before reactivation</small></div>
+        </div>
+        <div class="fc-branch-arm">
+          <div class="fc-branch-label alt">Critical</div>
+          <div class="fc-connector"></div>
+          <div class="fc-node error" style="border-width:3px;">Permanent blacklist &mdash; removed from platform<br><small>All active jobs reassigned immediately</small></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-branch-arm">
+      <div class="fc-branch-label no">No</div>
+      <div class="fc-connector"></div>
+      <div class="fc-note">Continue normal operations</div>
+    </div>
+  </div>
+  <div class="fc-connector"></div>
+
+  <!-- END -->
+  <div class="fc-node end">ACTIVE CT &mdash; Lifecycle continues (job offers &harr; shifts &harr; payouts)</div>
+
+</div><!-- /fc-col -->
+</div><!-- /fc -->
+</section>
+
+<!-- ===================== 4. SUPPLY MODEL ===================== -->
+<section id="supply-model">
+<h2>4. Supply Model</h2>
+<p>Helpee sources caregivers (CTs) through <strong>four supply channels</strong>, each with different cost, speed, and quality profiles. All channels feed into the same caregiver pool and matching engine.</p>
+
+<div class="card-grid">
+  <div class="card" style="border-left: 4px solid var(--primary);">
+    <h3>1. Local Aggregators &amp; Contractors</h3>
+    <p><strong>Scope:</strong> Ability to source from outside the city when local supply is insufficient.</p>
+    <ul>
+      <li><strong>Smaller agencies in localities</strong> &mdash; Helpee onboards <em>individuals</em> from these agencies, not the agency itself</li>
+      <li>Agency receives a <strong>finder fee</strong> for each CT onboarded, plus a <strong>percentage of every job</strong> the CT gets from Helpee for 6 months</li>
+      <li>This prevents the agency from feeling cheated or undercutting Helpee directly</li>
+      <li>After 6 months, the CT is fully Helpee&rsquo;s with no ongoing agency commission</li>
+    </ul>
+    <p><strong>Data model:</strong> <code>source_type = 'aggregator'</code>, <code>source_agency_id</code> FK, <code>finder_fee_paid</code>, <code>agency_commission_end_date</code></p>
+  </div>
+
+  <div class="card" style="border-left: 4px solid var(--success);">
+    <h3>2. Referrals <span class="badge badge-p0">Highest Quality</span></h3>
+    <p><strong>Why:</strong> Existing CTs refer friends and colleagues &mdash; these are the highest quality leads because they come pre-vetted by someone who understands the job.</p>
+    <ul>
+      <li>Referring CT receives a <strong>referral bonus</strong> when the referred CT completes onboarding and first shift</li>
+      <li><strong>Faster onboarding</strong> &mdash; referred CTs are typically more motivated and have realistic expectations</li>
+      <li>Tiered bonuses possible (e.g., higher bonus for critical care nurse referrals)</li>
+    </ul>
+    <p><strong>Data model:</strong> <code>source_type = 'referral'</code>, <code>referred_by_caregiver_id</code> FK, <code>referral_bonus_status</code>, <code>referral_bonus_amount</code></p>
+  </div>
+
+  <div class="card" style="border-left: 4px solid var(--accent);">
+    <h3>3. Field Recruiters <span class="badge badge-p1">Specific &amp; Quality Jobs</span></h3>
+    <p><strong>Strategy:</strong> Helpee employs <strong>city-wise supply teams</strong> who physically visit recruitment locations:</p>
+    <ul>
+      <li>Hospitals</li>
+      <li>Nursing colleges</li>
+      <li>Clinics</li>
+      <li>Rehabilitation centres</li>
+    </ul>
+    <p><strong>Trade-off:</strong> More expensive per recruit, but essential for sourcing specialized skills (critical care nurses, physiotherapists). These CTs are typically higher-skilled and command premium rates.</p>
+    <p><strong>Data model:</strong> <code>source_type = 'field_recruiter'</code>, <code>recruited_by_user_id</code> FK, <code>recruitment_location</code>, <code>recruitment_cost</code></p>
+  </div>
+
+  <div class="card" style="border-left: 4px solid var(--warning);">
+    <h3>4. Digital Channels <span class="badge" style="background:#f1f5f9;color:var(--muted);">Volume, Lower Quality</span></h3>
+    <p><strong>Channels:</strong> High volume but requires more screening and verification.</p>
+    <ul>
+      <li><strong>Job Portals</strong> &mdash; Naukri, Indeed, Apna (structured listings)</li>
+      <li><strong>Facebook</strong> &mdash; Targeted ads in caregiver/nursing groups</li>
+      <li><strong>WhatsApp</strong> &mdash; Viral sharing in local community groups</li>
+      <li><strong>Local Ads</strong> &mdash; Newspaper classifieds, flyers at nursing institutes</li>
+    </ul>
+    <p><strong>Trade-off:</strong> Cheapest per lead but highest drop-off in onboarding funnel. Requires stricter verification.</p>
+    <p><strong>Data model:</strong> <code>source_type = 'digital'</code>, <code>source_channel</code> (job_portal / facebook / whatsapp / local_ad), <code>campaign_id</code></p>
+  </div>
+</div>
+
+<h3>Supply Channel Comparison</h3>
+<table>
+  <thead><tr><th>Channel</th><th>Quality</th><th>Speed</th><th>Cost per CT</th><th>Volume</th><th>Best For</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Referrals</strong></td><td style="color:var(--success);font-weight:700;">Highest</td><td>Fast</td><td>Low (bonus only)</td><td>Medium</td><td>General caregivers, trusted pool growth</td></tr>
+    <tr><td><strong>Field Recruiters</strong></td><td style="color:var(--primary);font-weight:700;">High</td><td>Slow</td><td>High</td><td>Low</td><td>Specialized skills, critical care nurses</td></tr>
+    <tr><td><strong>Aggregators</strong></td><td style="color:var(--accent);font-weight:700;">Medium</td><td>Medium</td><td>Medium (fee + 6mo %)</td><td>Medium</td><td>City expansion, bulk onboarding</td></tr>
+    <tr><td><strong>Digital</strong></td><td style="color:var(--warning);font-weight:700;">Variable</td><td>Fast</td><td>Low</td><td>High</td><td>Filling volume gaps, new city launches</td></tr>
+  </tbody>
+</table>
+
+<h3>Contract Types</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Franchise Model</h4>
+    <p>CTs onboarded and managed via city franchises. Franchise recruits, trains (Helpee curriculum), manages local pool. Revenue share via commission per shift and per VAS.</p>
+    <p><code>contract_type = 'franchise'</code>, <code>franchise_id</code> links CT &rarr; franchise.</p>
+  </div>
+  <div class="card">
+    <h4>Direct Contract Model</h4>
+    <p>CTs contracted directly by Helpee (no franchise). Company admin handles onboarding, verification, contract. Used for specialized skills or cities without franchise partner.</p>
+    <p><code>contract_type = 'direct'</code>, <code>franchise_id = NULL</code>. Both pools feed into matching engine equally.</p>
+  </div>
+</div>
+
+<!-- ===================== SCREENING & SELECTION ===================== -->
+<h3>Screening &amp; Selection Process</h3>
+<p>All CTs must pass a <strong>3-step screening</strong> before entering the Helpee pool, regardless of supply channel.</p>
+
+<div class="card" style="border-left: 4px solid var(--primary); margin-bottom: 0.5rem;">
+  <h4 style="margin-top:0;">Step 1: Basic Eligibility</h4>
+  <table>
+    <thead><tr><th>Criterion</th><th>Requirement</th><th>Negotiable?</th></tr></thead>
+    <tbody>
+      <tr><td>Minimum Experience</td><td>Defined per skill level (companion: 6mo, nursing: 1yr, critical care: 2yr)</td><td>No</td></tr>
+      <tr><td>Language</td><td>Ability to converse in the local language of the service city</td><td>No</td></tr>
+      <tr><td>Tech Literacy</td><td>Smartphone ownership and basic app usage ability</td><td>No</td></tr>
+      <tr><td>Helpee Terms</td><td>Willingness to work on Helpee&rsquo;s terms &mdash; fixed pricing, SOPs, ratings system</td><td><strong style="color:var(--danger);">Non-negotiable</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card" style="border-left: 4px solid var(--accent); margin-bottom: 0.5rem;">
+  <h4 style="margin-top:0;">Step 2: Background Checks</h4>
+  <ul>
+    <li>Handled by <strong>AuthBridge</strong> or equivalent third-party verification service</li>
+    <li>Identity verification (Aadhaar, PAN)</li>
+    <li>Criminal background check</li>
+    <li>Address verification</li>
+    <li>Previous employment verification</li>
+  </ul>
+  <p><strong>Data model:</strong> <code>background_check_status</code> (pending/in_progress/passed/failed), <code>background_check_vendor</code>, <code>background_check_report_url</code></p>
+</div>
+
+<div class="card" style="border-left: 4px solid var(--success); margin-bottom: 0.5rem;">
+  <h4 style="margin-top:0;">Step 3: Skill Assessment</h4>
+  <ul>
+    <li><strong>Practical tests only</strong> &mdash; not just interviews. CTs must demonstrate hands-on competence</li>
+    <li>Assessment is <strong>stringent</strong> &mdash; designed to filter out underqualified candidates</li>
+    <li>Assessment criteria vary by skill level (companion vs nursing vs critical care)</li>
+    <li>Failed assessment = cannot re-apply for 3 months</li>
+  </ul>
+  <p><strong>Data model:</strong> <code>assessment_score</code>, <code>assessment_date</code>, <code>assessment_passed</code>, <code>assessor_id</code></p>
+</div>
+
+<!-- ===================== TRAINING & CERTIFICATION ===================== -->
+<h3>Training &amp; Certification</h3>
+<p><strong>Every CT must complete Helpee&rsquo;s training module. No certification = no jobs.</strong></p>
+
+<div class="card-grid">
+  <div class="card">
+    <h4>Training Curriculum</h4>
+    <ul>
+      <li><strong>CT App Usage</strong> &mdash; Payments, attendance, task logging, check-in/out</li>
+      <li><strong>Customer Interaction Etiquettes</strong> &mdash; Communication, professionalism, boundaries</li>
+      <li><strong>Do&rsquo;s and Don&rsquo;ts</strong> &mdash; Behavioral guidelines, privacy, confidentiality</li>
+      <li><strong>Safety Protocols</strong> &mdash; Emergency procedures, SOS usage, first aid basics</li>
+      <li><strong>Care-specific modules</strong> &mdash; Per skill level (companion, nursing, critical care)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Training Format &amp; Financing</h4>
+    <ul>
+      <li><strong>Mix of Classroom + Digital</strong> &mdash; In-person practicals + online modules</li>
+      <li><strong>CT pays for training</strong> &mdash; cost adjusted against their first job earnings</li>
+      <li>Successful completion &rarr; <strong>Helpee Certification</strong> issued</li>
+      <li>No certification &rarr; <strong>No job assignments</strong></li>
+      <li>Certification has expiry &mdash; periodic recertification required</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===================== UNIFORM & ACCESSORIES ===================== -->
+<h3>Uniform &amp; Accessories</h3>
+<p>Once approved, every CT must purchase Helpee-branded items to maintain professional appearance.</p>
+
+<table>
+  <thead><tr><th>Item</th><th>Quantity</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td>Helpee branded T-shirts</td><td>2</td><td>Professional uniform during shifts</td></tr>
+    <tr><td>Helpee branded disposables</td><td>Per assignment</td><td>Left at customer&rsquo;s house (gloves, shoe covers, sanitizer sachets)</td></tr>
+  </tbody>
+</table>
+
+<h4>Financing Options for CT Purchases</h4>
+<ul>
+  <li><strong>Salary advances</strong> &mdash; Deducted from first few payouts</li>
+  <li><strong>Buy Now Pay Later</strong> &mdash; Partnership with BNPL provider</li>
+  <li><strong>Payroll deductions</strong> &mdash; Spread across future payroll cycles</li>
+</ul>
+<p><strong>Data model:</strong> <code>uniform_purchase_status</code>, <code>uniform_amount_due</code>, <code>payroll_deduction_remaining</code></p>
+
+<!-- ===================== JOB ALLOCATION & CONTROL ===================== -->
+<h3>Job Allocation &amp; Quality Control</h3>
+<p>Job matching is <strong>automated and algorithmic</strong>, with quality signals directly controlling who gets jobs.</p>
+
+<div class="card" style="border-left: 4px solid var(--primary);">
+  <h4 style="margin-top:0;">Matching Algorithm Inputs</h4>
+  <table>
+    <thead><tr><th>Signal</th><th>Weight</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Ratings &amp; Reviews</strong></td><td>High</td><td>Family satisfaction scores directly influence ranking</td></tr>
+      <tr><td><strong>Cancellation Rate</strong></td><td>High</td><td>Low cancellation = higher priority in matching</td></tr>
+      <tr><td><strong>Acceptance Speed</strong></td><td>Medium</td><td>CTs who accept job offers quickly get ranked higher</td></tr>
+      <tr><td><strong>SOP Adherence</strong></td><td>High</td><td>On-time check-in %, task completion rate, geo compliance</td></tr>
+      <tr><td><strong>Complaint History</strong></td><td>High</td><td>Disputes and complaints reduce matching priority</td></tr>
+      <tr><td><strong>Skill Match</strong></td><td>Required</td><td>CT skill level must match care request requirements</td></tr>
+      <tr><td><strong>Proximity</strong></td><td>Medium</td><td>Distance from patient address (PostGIS calculation)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="card" style="border-left: 4px solid var(--danger);">
+  <h4 style="margin-top:0;">Incident Response &mdash; Escalation Ladder</h4>
+  <p>Every bad incident <strong>must</strong> result in one of the following outcomes:</p>
+  <table>
+    <thead><tr><th>Severity</th><th>Action</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge" style="background:#fef3c7;color:#92400e;">Minor</span></td><td>Warning + reduced job assignments for 2 weeks</td><td>Late arrival (15&ndash;30 min), missed task logging</td></tr>
+      <tr><td><span class="badge" style="background:#fed7aa;color:#9a3412;">Moderate</span></td><td>Temporary suspension (7&ndash;30 days) + mandatory retraining</td><td>Repeated tardiness, SOP violations, poor ratings</td></tr>
+      <tr><td><span class="badge badge-p0" style="background:#ef476f;">Severe</span></td><td>Permanent blacklist + audit log</td><td>Abuse, theft, negligence, safety violation, fraud</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===================== CT RETENTION ===================== -->
+<h3>Why Caregivers Stay with Helpee</h3>
+<p>Retention is built on <strong>predictable income, fast payments, growth opportunities, and brand trust</strong>.</p>
+
+<div class="card-grid">
+  <div class="card">
+    <h4>Financial Benefits</h4>
+    <ul>
+      <li><strong>Predictable cash flow</strong> &mdash; Consistent job assignments based on performance</li>
+      <li><strong>Faster payments</strong> &mdash; T+7 payout cycle (industry standard is T+15 to T+30)</li>
+      <li><strong>Incentives</strong> for higher customer satisfaction scores</li>
+      <li><strong>1 paid holiday per month</strong> for long-term assignments (30+ days)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Growth &amp; Trust</h4>
+    <ul>
+      <li><strong>Helpee Brand</strong> &mdash; Working under a trusted brand creates credibility</li>
+      <li><strong>Upskilling</strong> &mdash; Training modules to move from companion &rarr; nursing &rarr; critical care = higher earnings</li>
+      <li><strong>Transparent ratings</strong> &mdash; CTs can see their performance metrics and know what to improve</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card" style="border-left: 4px solid #f59e0b;">
+  <h4 style="margin-top:0;">Super Star Program</h4>
+  <p>Identify and reward high-performing CTs to drive retention and excellence.</p>
+  <table>
+    <thead><tr><th>Reward</th><th>Criteria</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Reduced commission</strong> on every job (higher take-home)</td><td>Top 10% by rating + completion rate over 3 months</td></tr>
+      <tr><td><strong>Insurance coverage</strong> (health + accident)</td><td>6+ months active, rating &ge; 4.5</td></tr>
+      <tr><td><strong>Priority job allocation</strong> (first access to premium jobs)</td><td>Super Star badge active</td></tr>
+      <tr><td><strong>Advance payouts</strong> for personal needs</td><td>Super Star badge + 3 months clean history</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Data model:</strong> <code>is_super_star</code> (boolean), <code>super_star_since</code> (date), <code>commission_override_pct</code>, <code>insurance_active</code></p>
+</div>
+
+<!-- ===================== CHALLENGES & RISKS ===================== -->
+<h3>CT Management &mdash; Challenges &amp; Mitigations</h3>
+<p>The core tension: <strong>balance CT happiness with margin with customer experience</strong>.</p>
+
+<table>
+  <thead><tr><th>Challenge</th><th>Risk</th><th>Mitigation</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>GST / Professional Tax at CT level</strong></td>
+      <td>Compliance burden on individual CTs</td>
+      <td>Helpee handles GST filing assistance; clear communication on tax obligations during onboarding</td>
+    </tr>
+    <tr>
+      <td><strong>Fixed price per job</strong></td>
+      <td>CTs may feel underpaid for harder assignments</td>
+      <td>Tiered pricing by care level + difficulty modifiers; performance bonuses offset flat pricing</td>
+    </tr>
+    <tr>
+      <td><strong>Mandatory SOPs</strong></td>
+      <td>CTs may resist process rigidity</td>
+      <td>Explain SOPs as quality guarantee that increases their ratings and job flow; gamify compliance</td>
+    </tr>
+    <tr>
+      <td><strong>Ratings directly control payouts</strong></td>
+      <td>CTs may feel vulnerable to unfair ratings</td>
+      <td>Dispute mechanism for unfair ratings; algorithm smooths out outlier reviews; minimum 5 ratings before impact</td>
+    </tr>
+    <tr>
+      <td><strong>Cost of uniforms / accessories</strong></td>
+      <td>Barrier to entry for lower-income CTs</td>
+      <td>Salary advance, BNPL, payroll deductions &mdash; zero upfront cost options</td>
+    </tr>
+    <tr>
+      <td><strong>Customers may lie for refunds or demand extra work</strong></td>
+      <td>CT gets penalized unfairly; margin erosion</td>
+      <td>GPS + task logs + proof-of-work photos provide objective evidence; dispute review before any penalty</td>
+    </tr>
+    <tr>
+      <td><strong>CTs building own clientele</strong></td>
+      <td>CTs bypass Helpee after introduction to customer</td>
+      <td>Non-compete clause in contract (6 months); ongoing value via insurance, upskilling, payment speed; monitor for direct-contact patterns</td>
+    </tr>
+  </tbody>
+</table>
+
+</section>
+
+<!-- ===================== 5. COMPANY ADMIN WEB PORTAL ===================== -->
+<section id="company-admin">
+<h2>5. Features &mdash; Company Admin Web Portal</h2>
+<p>National-level control panel. Company Admin sees data across all cities, franchises, and caregivers. Built with Next.js 14 (App Router) with RBAC enforcing <code>company_admin</code> role.</p>
+
+<p><strong>Lifecycle:</strong> Login &rarr; National Dashboard &rarr; Roster Oversight &rarr; Live Shift Map &rarr; Approvals &rarr; Payroll &rarr; Governance &rarr; Reports &amp; Analytics</p>
+
+<h3>Features (P0)</h3>
+
+<details open><summary><strong>6.1 National Dashboard (P0)</strong></summary>
+<ul>
+  <li>Active shifts count with city breakdown</li>
+  <li>No-show alerts (real-time, auto-refreshing)</li>
+  <li>City-wise supply gap indicators (demand vs available caregivers)</li>
+  <li>Quick actions: approve, reassign, escalate</li>
+  <li>Abnormal vitals alert feed</li>
+</ul>
+</details>
+
+<details><summary><strong>6.2 Rostering Oversight (P0)</strong></summary>
+<ul>
+  <li>Global calendar view (week/month toggle)</li>
+  <li>Skill-based filtering (companion, nursing, critical care)</li>
+  <li>Emergency reassignment (drag-drop or quick-assign)</li>
+  <li>Roster conflict detection (double-booking alerts)</li>
+  <li>Bulk roster creation</li>
+</ul>
+</details>
+
+<details><summary><strong>6.3 Approval Workflow (P0)</strong></summary>
+<ul>
+  <li>Caregiver activation approval (after document verification)</li>
+  <li>Payroll batch approval (per city, per period)</li>
+  <li>Refund approval (customer disputes)</li>
+  <li>Franchise commission approval</li>
+  <li>Multi-level approval chains</li>
+  <li>Approval history and audit trail</li>
+</ul>
+</details>
+
+<details><summary><strong>6.4 Governance (P0)</strong></summary>
+<ul>
+  <li>Blacklist caregiver (with mandatory reason, creates audit log)</li>
+  <li>Suspend franchise (with reason)</li>
+  <li>Incident tagging and tracking</li>
+  <li>Full audit log (all admin actions logged with actor, timestamp, IP)</li>
+</ul>
+</details>
+
+<details><summary><strong>6.5 Financial Ledger (P0)</strong></summary>
+<ul>
+  <li>Revenue by city (table + chart)</li>
+  <li>Margin analysis (revenue - payouts - commissions)</li>
+  <li>Payout exports (CSV/Excel)</li>
+  <li>Pending vs completed payouts</li>
+  <li>Invoice generation status</li>
+</ul>
+</details>
+
+<details><summary><strong>6.6 Direct Caregiver Onboarding (P0)</strong></summary>
+<ul>
+  <li>Add caregiver without franchise association</li>
+  <li>Document verification workflow (Aadhaar, PAN, certificates)</li>
+  <li>Direct contract creation</li>
+  <li>Assign to available roster immediately</li>
+</ul>
+</details>
+
+<details><summary><strong>6.7 Abnormal Vitals Alert Dashboard (P1)</strong></summary>
+<ul>
+  <li>Real-time vitals alerts from active shifts</li>
+  <li>Alert severity levels (warning, critical)</li>
+  <li>Escalation to family and/or emergency services</li>
+  <li>Alert acknowledgment tracking</li>
+</ul>
+</details>
+
+<details><summary><strong>6.8 VAS Configuration (P1)</strong></summary>
+<ul>
+  <li>Catalog management (physiotherapy, dietician, equipment rental, etc.)</li>
+  <li>Pricing per city</li>
+  <li>Commission split configuration (franchise %, caregiver %)</li>
+  <li>Enable/disable services</li>
+</ul>
+</details>
+
+<details><summary><strong>6.9 Reports &amp; Analytics (P1)</strong></summary>
+<ul>
+  <li>City-wise, franchise-wise reports</li>
+  <li>GST reports for finance</li>
+  <li>Caregiver utilization reports</li>
+  <li>Export to CSV/PDF</li>
+</ul>
+</details>
+
+<details><summary><strong>6.10 Remote Monitoring (P1)</strong></summary>
+<ul>
+  <li>Real-time shift event feed (timeline per shift)</li>
+  <li>Live caregiver location on map (Mapbox)</li>
+  <li>Vitals dashboard with abnormal highlights</li>
+  <li>Task completion rate per active shift</li>
+</ul>
+</details>
+
+<details><summary><strong>6.18 Live Shift Map (P1)</strong></summary>
+<ul>
+  <li>Real-time Mapbox map with caregiver locations</li>
+  <li>Shift status pins (scheduled, en route, arrived, active, completed)</li>
+  <li>City filter for multi-city view</li>
+</ul>
+</details>
+
+</section>
+
+<!-- ===================== 6. FRANCHISE ADMIN WEB PORTAL ===================== -->
+<section id="franchise-admin">
+<h2>6. Features &mdash; Franchise Admin Web Portal</h2>
+<p>City-level operations portal for franchise partners. Franchise Admins manage their own caregiver pool, local rostering, attendance, training, and financials. Built with Next.js 14 with RBAC enforcing <code>franchise_admin</code> role scoped to their franchise.</p>
+
+<p><strong>Lifecycle:</strong> Login &rarr; City Dashboard &rarr; Caregiver Pool &rarr; Assign Roster &rarr; Monitor Attendance &rarr; Manage Training &rarr; Track Ledger &rarr; Upsell VAS &rarr; Escalations</p>
+
+<h3>Features (P0)</h3>
+
+<details open><summary><strong>6.1 City Dashboard (P0)</strong></summary>
+<ul>
+  <li>Active shifts in franchise territory with real-time status</li>
+  <li>Today&rsquo;s roster overview (assigned / unassigned / no-show)</li>
+  <li>Supply gap indicator for franchise city (demand vs available CTs)</li>
+  <li>Pending actions: approvals, escalations, unassigned shifts</li>
+  <li>Key metrics: CT utilisation %, on-time check-in %, average rating</li>
+</ul>
+</details>
+
+<details><summary><strong>6.2 Caregiver Pool Management (P0)</strong></summary>
+<ul>
+  <li>View all franchise-linked CTs with status, availability, certification, ratings</li>
+  <li>Filter by skill level, availability, rating, certification expiry</li>
+  <li>Initiate onboarding for new CTs (document collection, training enrollment)</li>
+  <li>Availability calendar per CT (weekly view showing assigned / available / leave)</li>
+  <li>CT profile detail: full history, performance trends, incident log</li>
+</ul>
+</details>
+
+<details><summary><strong>6.3 Local Rostering (P0)</strong></summary>
+<ul>
+  <li>Assign CTs to care requests within franchise territory</li>
+  <li>Drag-and-drop shift assignment on calendar view</li>
+  <li>Bulk schedule creation for week/month</li>
+  <li>Quick-swap CT replacement (select replacement from available pool)</li>
+  <li>Conflict detection: double-booking, overtime, certification mismatch alerts</li>
+  <li>Auto-suggest best-fit CT based on matching algorithm</li>
+</ul>
+</details>
+
+<details><summary><strong>6.4 Attendance Monitoring (P0)</strong></summary>
+<ul>
+  <li>Real-time check-in/out log with geofence validation status</li>
+  <li>No-show alerts (CT didn&rsquo;t check in within 30 min of scheduled start)</li>
+  <li>Geo-violation alerts (CT left geofence during active shift)</li>
+  <li>Late arrival tracking with auto-deduction rules</li>
+  <li>Daily attendance summary report (exportable)</li>
+</ul>
+</details>
+
+<h3>Features (P1)</h3>
+
+<details><summary><strong>6.5 Training Management (P1)</strong></summary>
+<ul>
+  <li>Create training batches (date, location, module, assigned CTs)</li>
+  <li>Upload attendance and assessment scores</li>
+  <li>Track certification status: completed, pending, expired, due for renewal</li>
+  <li>Assign mandatory refresher courses to underperforming CTs</li>
+  <li>Training completion rate dashboard</li>
+</ul>
+</details>
+
+<details><summary><strong>6.6 Franchise Ledger &amp; Financials (P1)</strong></summary>
+<ul>
+  <li>Commission per shift (% of shift revenue)</li>
+  <li>Commission per VAS order (separate %)</li>
+  <li>CT earnings summary (base + incentives &minus; deductions)</li>
+  <li>Payout status per CT (pending / processed / paid)</li>
+  <li>Monthly P&amp;L summary for franchise</li>
+  <li>Export to CSV / Excel for accounting</li>
+</ul>
+</details>
+
+<details><summary><strong>6.7 VAS Upsell Tracking (P1)</strong></summary>
+<ul>
+  <li>View VAS orders originated by franchise CTs</li>
+  <li>Commission earned per VAS order (pending / paid)</li>
+  <li>Top-selling VAS categories in franchise territory</li>
+  <li>CT-wise VAS performance leaderboard</li>
+</ul>
+</details>
+
+<details><summary><strong>6.8 Escalation Management (P1)</strong></summary>
+<ul>
+  <li>Raise escalation to Company Admin (incident, supply gap, CT dispute)</li>
+  <li>Track escalation status and resolution timeline</li>
+  <li>Escalation history with audit trail</li>
+  <li>SLA tracking: time to acknowledge, time to resolve</li>
+</ul>
+</details>
+
+<details><summary><strong>6.9 Local Recruitment Pipeline (P1)</strong></summary>
+<ul>
+  <li>Track leads from local aggregators, field recruiters, referrals</li>
+  <li>Onboarding funnel: lead &rarr; eligible &rarr; bg_check &rarr; assessed &rarr; training &rarr; certified</li>
+  <li>Source-wise conversion rates</li>
+  <li>Finder fee and agency commission tracking</li>
+</ul>
+</details>
+
+<details><summary><strong>6.10 Performance &amp; Quality (P1)</strong></summary>
+<ul>
+  <li>CT-wise performance cards: rating, on-time %, cancellation rate, SOP adherence</li>
+  <li>Incident log with severity, action taken, and resolution</li>
+  <li>Family feedback trends for franchise territory</li>
+  <li>Benchmarking: franchise metrics vs national average</li>
+</ul>
+</details>
+</section>
+
+<!-- ===================== 7. CAREGIVER MOBILE APP ===================== -->
+<section id="caregiver-app">
+<h2>7. Features &mdash; Caregiver Mobile App</h2>
+<p><strong>Lifecycle:</strong> OTP Login &rarr; Profile Setup &rarr; Document Upload &rarr; Training &rarr; Certification &rarr; Receive Job &rarr; Accept &rarr; Navigate &rarr; Geo Check-in &rarr; Task Checklist &rarr; (Vitals P1) &rarr; (Proof of Work P1) &rarr; Geo Check-out &rarr; View Earnings</p>
+
+<details open><summary><strong>7.1 Onboarding (P0)</strong></summary>
+<ul>
+  <li>OTP login (phone), profile creation (name, phone, address, experience, skills)</li>
+  <li>Document upload (Aadhaar, PAN, certificates, photo to S3)</li>
+  <li>Contract type indication (direct/franchise)</li>
+  <li>Verification status tracking</li>
+</ul>
+</details>
+
+<details><summary><strong>7.2 Job Management (P0)</strong></summary>
+<ul>
+  <li>View matched job offers, accept or reject with reason</li>
+  <li>Upcoming shift schedule</li>
+  <li>Navigation to patient (Google Maps deeplink)</li>
+</ul>
+</details>
+
+<details><summary><strong>7.3 Geo-fenced Attendance (P0)</strong></summary>
+<ul>
+  <li>Check-in: validate within geofence radius of patient address</li>
+  <li>Check-out: same validation</li>
+  <li>GPS logging every 60s during active shift</li>
+  <li>Offline queue for check-in/out events</li>
+  <li>Deviation alert if leaves geofence</li>
+</ul>
+</details>
+
+<details><summary><strong>7.4 Task Logging (P0)</strong></summary>
+<ul>
+  <li>Shift-specific task checklist (admin-defined)</li>
+  <li>Mark complete with timestamp, add notes</li>
+  <li>Daily summary auto-generated for family</li>
+</ul>
+</details>
+
+<details><summary><strong>7.5 Earnings (P0)</strong></summary>
+<ul>
+  <li>Shift-wise earnings (base + incentives - deductions)</li>
+  <li>Weekly/monthly summary</li>
+  <li>Payout status, earnings history</li>
+</ul>
+</details>
+
+<details><summary><strong>7.6 SOS / Safety (P0)</strong></summary>
+<ul>
+  <li>One-tap SOS (always visible during active shift)</li>
+  <li>Triggers call to Helpee + push to admin + family</li>
+  <li>Report abuse form</li>
+</ul>
+</details>
+
+<details><summary><strong>7.7 Vitals Logging (P1)</strong></summary>
+<ul>
+  <li>Input BP, pulse, blood sugar, temperature with threshold indicators</li>
+  <li>Abnormal detection: BP systolic &gt;140/&lt;90, diastolic &gt;90/&lt;60, pulse &gt;100/&lt;60, sugar &gt;200/&lt;70, temp &gt;100.4/&lt;96.8</li>
+  <li>Photo proof of work</li>
+  <li>Immediate alert on abnormal</li>
+</ul>
+</details>
+
+<details><summary><strong>7.8 Proof of Work (P1)</strong></summary>
+<ul>
+  <li>Photo per completed task</li>
+  <li>S3 upload with metadata</li>
+  <li>Viewable by admin and family</li>
+</ul>
+</details>
+
+<details><summary><strong>7.9 VAS Suggestions (P1)</strong></summary>
+<ul>
+  <li>Suggest VAS during shift</li>
+  <li>Family gets notification with pricing</li>
+  <li>Commission tracking</li>
+</ul>
+</details>
+
+<details><summary><strong>7.10 Training Modules (P1)</strong></summary>
+<ul>
+  <li>Browse modules, video/PDF viewer</li>
+  <li>Take assessment</li>
+  <li>View certifications, renewal alerts</li>
+</ul>
+</details>
+
+<details><summary><strong>7.11 Performance Dashboard (P1)</strong></summary>
+<ul>
+  <li>Star rating, on-time %, task completion rate</li>
+  <li>Monthly trend</li>
+</ul>
+</details>
+
+<details><summary><strong>7.12 Offline Support (P1)</strong></summary>
+<ul>
+  <li>Local DB (WatermelonDB), sync queue with conflict resolution</li>
+  <li>Offline: tasks, vitals, check-in/out</li>
+  <li>Online-only: navigation, VAS, earnings</li>
+</ul>
+</details>
+</section>
+
+<!-- ===================== 8. CUSTOMER MOBILE APP ===================== -->
+<section id="customer-app">
+<h2>8. Features &mdash; Customer (Heir/Family) Mobile App</h2>
+
+<h3>End-to-End Customer Journey (9-Step Demand Workflow)</h3>
+<p>The entire demand-side process must complete within <strong>48 hours</strong> from initial request to profile sharing. This is Helpee&rsquo;s core SLA and key differentiator.</p>
+
+<div class="flow-row" style="flex-wrap:wrap;">
+  <span class="pill pill-blue">1. Request</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">2. Assess</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">3. Match</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">4. Shortlist</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">5. Share</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">6. Video Call</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">7. Select</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">8. Agreement</span><span class="flow-arrow">&rarr;</span>
+  <span class="pill pill-blue">9. Track</span>
+</div>
+
+<div class="card" style="border-left: 4px solid var(--primary); margin-bottom: 0.5rem;">
+  <h4 style="margin-top:0;">Step 1: Patient&rsquo;s Relative Submits Requirement</h4>
+  <p><strong>Actor:</strong> Family user (heir/relative) via Customer Mobile App or the <strong>single national Helpee helpline</strong> (same number regardless of city)</p>
+  <ul>
+    <li>Describes patient condition, care needs, preferred schedule, location</li>
+    <li>Specifies any special requirements (language, gender preference, regional preference, medical skills)</li>
+    <li>If via call: agent identifies city from patient address and routes internally &mdash; caller never needs a city-specific number</li>
+    <li>System creates a <code>care_request</code> with status <strong>received</strong></li>
+  </ul>
+  <p><strong>SLA:</strong> Acknowledgement within 15 minutes (auto-confirmed via app, or within 1 hour if via call center)</p>
+</div>
+
+<div class="card" style="border-left: 4px solid var(--accent); margin-bottom: 0.5rem;">
+  <h4 style="margin-top:0;">Step 2: Helpee Internal Assessment &mdash; Service Level Determination</h4>
+  <p><strong>Actor:</strong> Helpee operations team (Company/Franchise Admin)</p>
+  <ul>
+    <li>Review request details and patient condition</li>
+    <li>Determine required service level:
+      <table style="margin:0.5rem 0;">
+        <thead><tr><th>Service Level</th><th>When</th><th>Typical Scenarios</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Companion / Caregiver</strong></td><td>Non-medical care needed</td><td>Daily assistance, mobility help, companionship, meal prep</td></tr>
+          <tr><td><strong>Junior Nurse</strong></td><td>Basic medical care needed</td><td>Medication management, wound dressing, vitals monitoring</td></tr>
+          <tr><td><strong>Critical Care Nurse</strong></td><td>Post-surgery / complex medical</td><td>Post-op recovery, ventilator support, ICU step-down, catheter/IV management</td></tr>
+        </tbody>
+      </table>
+    </li>
+    <li>Assign care level tag, duration estimate, and special notes</li>
+    <li>Status moves to <strong>assessed</strong></li>
+  </ul>
+  <p><strong>SLA:</strong> Assessment completed within 2 hours of receiving the request</p>
+</div>
+
+<div class="card" style="border-left: 4px solid var(--success); margin-bottom: 0.5rem;">
+  <h4 style="margin-top:0;">Step 3: Algorithmic Job Matching</h4>
+  <p><strong>Actor:</strong> System (matching engine)</p>
+  <ul>
+    <li>Input parameters fed into matching algorithm:
+      <ul>
+        <li>Required skill level (companion / junior nurse / critical care)</li>
+        <li>Patient location (PostGIS proximity calculation)</li>
+        <li>Schedule requirements (shift type, start date, duration)</li>
+        <li>Language and gender preferences</li>
+        <li>Special medical skills needed</li>
+      </ul>
+    </li>
+    <li>Algorithm scores all eligible CTs using weighted signals: ratings, cancellation rate, acceptance speed, SOP adherence, complaint history, proximity</li>
+    <li>Status moves to <strong>matching</strong></li>
+  </ul>
+  <p><strong>SLA:</strong> Algorithm returns results within 5 minutes of assessment completion</p>
+</div>
+
+<div class="card" style="border-left: 4px solid #8b5cf6; margin-bottom: 0.5rem;">
+  <h4 style="margin-top:0;">Step 4: Top 3 Profiles Shortlisted</h4>
+  <p><strong>Actor:</strong> System + Helpee operations review</p>
+  <ul>
+    <li>Top 3 CTs by composite match score are shortlisted</li>
+    <li>Operations team reviews shortlist for any manual overrides (e.g., known patient preferences, CT availability conflicts)</li>
+    <li>Each shortlisted CT record stored in <code>match_result</code> table with <code>rank (1-3)</code> and <code>score</code></li>
+    <li>CTs are notified of the potential job opportunity</li>
+  </ul>
+</div>
+
+<div class="card" style="border-left: 4px solid var(--primary); margin-bottom: 0.5rem;">
+  <h4 style="margin-top:0;">Step 5: Profiles Shared with Patient&rsquo;s Relative</h4>
+  <p><strong>Actor:</strong> System &rarr; Family user</p>
+  <ul>
+    <li>Family user receives push notification: &ldquo;3 caregiver profiles ready for your review&rdquo;</li>
+    <li>Each profile shows: photo, name, experience, skill level, avg rating, specializations, languages, verified badges</li>
+    <li>Status moves to <strong>profiles_shared</strong></li>
+  </ul>
+  <p><strong>SLA:</strong> Profiles shared within <strong>48 hours</strong> of original request &mdash; this is the core Helpee guarantee</p>
+</div>
+
+<div class="card" style="border-left: 4px solid #06b6d4; margin-bottom: 0.5rem;">
+  <h4 style="margin-top:0;">Step 6: Video Call with Patient&rsquo;s Relative</h4>
+  <p><strong>Actor:</strong> Family user + shortlisted CT(s) via Twilio Video</p>
+  <ul>
+    <li>Family user can schedule video calls with one or more of the top 3 CTs</li>
+    <li>Video call facilitated through the app (Twilio Video integration)</li>
+    <li>Call allows family to assess personality, communication, and comfort level</li>
+    <li>Call duration and completion logged in <code>video_call</code> table</li>
+    <li>Optional: Helpee representative can join the call as moderator</li>
+  </ul>
+  <p><strong>Data model:</strong> <code>video_call.care_request_id</code>, <code>video_call.family_user_id</code>, <code>video_call.caregiver_id</code>, <code>video_call.scheduled_at</code>, <code>video_call.status</code></p>
+</div>
+
+<div class="card" style="border-left: 4px solid var(--success); margin-bottom: 0.5rem;">
+  <h4 style="margin-top:0;">Step 7: Profile Selection &amp; Allocation</h4>
+  <p><strong>Actor:</strong> Family user</p>
+  <ul>
+    <li>Family user selects their preferred CT from the shortlisted profiles</li>
+    <li>System allocates the selected CT to this care request</li>
+    <li><code>care_request.assigned_caregiver_id</code> is set</li>
+    <li>Status moves to <strong>selected</strong></li>
+    <li>Unselected CTs are released back to the available pool</li>
+    <li>If family rejects all 3 &rarr; Helpee provides a new batch of 3 profiles (re-enters Step 3)</li>
+  </ul>
+</div>
+
+<div class="card" style="border-left: 4px solid #f59e0b; margin-bottom: 0.5rem;">
+  <h4 style="margin-top:0;">Step 8: Service Agreement Signing</h4>
+  <p><strong>Actor:</strong> Family user + Helpee (digital signature)</p>
+  <ul>
+    <li>Digital service agreement generated with:
+      <ul>
+        <li>Service type, shift schedule, duration, start date</li>
+        <li>Pricing and payment terms</li>
+        <li>Cancellation and replacement policy</li>
+        <li>Do&rsquo;s and don&rsquo;s for both parties</li>
+        <li>Liability and dispute resolution terms</li>
+        <li>Non-solicitation clause (family cannot hire CT outside Helpee for 6 months)</li>
+      </ul>
+    </li>
+    <li>Family signs digitally via the app (e-sign with OTP verification)</li>
+    <li>Status moves to <strong>agreement_signed</strong></li>
+    <li>Registration fee collected at this point (if applicable)</li>
+    <li>Agreement stored in <code>service_agreement</code> table and PDF archived to S3</li>
+  </ul>
+</div>
+
+<div class="card" style="border-left: 4px solid var(--primary); margin-bottom: 0.5rem;">
+  <h4 style="margin-top:0;">Step 9: Ongoing Tracking by Patient&rsquo;s Relative</h4>
+  <p><strong>Actor:</strong> Family user via Customer Mobile App</p>
+  <ul>
+    <li><strong>Real-time CT status:</strong> en route, arrived, on shift, shift complete</li>
+    <li><strong>GPS live tracking</strong> during en-route and shift (geo-fenced)</li>
+    <li><strong>Daily summary reports:</strong> tasks completed, vitals recorded, medication administered, notes</li>
+    <li><strong>Shift timeline:</strong> Check-in/out times, task logs with timestamps</li>
+    <li><strong>Vitals dashboard:</strong> BP, temperature, SpO2 trends with abnormal alerts</li>
+    <li><strong>Invoice and payment tracking:</strong> Monthly invoices, payment history, upcoming dues</li>
+    <li><strong>Feedback:</strong> Rate each shift, raise disputes, request replacement</li>
+  </ul>
+  <p>Status moves through <strong>scheduled &rarr; active &rarr; completed</strong> as shifts execute.</p>
+</div>
+
+<h4>End-to-End Timeline</h4>
+<table>
+  <thead><tr><th>Step</th><th>Actor</th><th>Max Duration</th><th>Cumulative</th></tr></thead>
+  <tbody>
+    <tr><td>1. Request received</td><td>Family user</td><td>Instant</td><td>T+0</td></tr>
+    <tr><td>2. Internal assessment</td><td>Helpee ops</td><td>2 hours</td><td>T+2h</td></tr>
+    <tr><td>3. Algorithm matching</td><td>System</td><td>5 minutes</td><td>T+2h 5m</td></tr>
+    <tr><td>4. Shortlist review</td><td>Ops + System</td><td>2 hours</td><td>T+4h</td></tr>
+    <tr><td>5. Profiles shared</td><td>System &rarr; Family</td><td>&le; 48 hours total</td><td><strong>T+48h max</strong></td></tr>
+    <tr><td>6. Video call</td><td>Family + CT</td><td>24 hours (scheduling)</td><td>T+72h</td></tr>
+    <tr><td>7. Selection</td><td>Family</td><td>12 hours</td><td>T+84h</td></tr>
+    <tr><td>8. Agreement signed</td><td>Family + Helpee</td><td>24 hours</td><td>T+108h</td></tr>
+    <tr><td>9. First shift starts</td><td>CT</td><td>Per agreed schedule</td><td>Per agreement</td></tr>
+  </tbody>
+</table>
+<p style="font-size:0.85em;color:var(--muted);">
+  <strong>Key SLA:</strong> Steps 1&ndash;5 must complete within 48 hours. Total time from request to first shift is typically 3&ndash;5 days.
+  If family rejects all 3 profiles, the cycle re-enters Step 3 with fresh matches.
+</p>
+
+<h4>Edge Cases &amp; Fallbacks</h4>
+<table>
+  <thead><tr><th>Scenario</th><th>System Behavior</th></tr></thead>
+  <tbody>
+    <tr><td>No matching CTs in city</td><td>Alert ops team; expand search radius; option to source from aggregators in neighboring cities</td></tr>
+    <tr><td>Family rejects all 3 profiles</td><td>Re-run matching with exclusion list; offer different skill mix if available</td></tr>
+    <tr><td>CT becomes unavailable after shortlisting</td><td>Auto-replace with next-ranked CT; notify family of change</td></tr>
+    <tr><td>Family doesn&rsquo;t respond to profiles within 24h</td><td>Reminder notification; ops team follow-up call; auto-expire after 72h</td></tr>
+    <tr><td>Urgent / emergency request</td><td>Fast-track: skip video call step, assessment within 30 min, profiles within 4 hours</td></tr>
+    <tr><td>CT cancels after agreement signed</td><td>Immediate replacement from shortlisted pool (rank 2/3); no penalty to family</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Lifecycle &mdash; Heir/Family (P0):</strong> OTP Login &rarr; Add Elderly Profile &rarr; Create Care Request &rarr; View Top 3 Matches &rarr; (Video Interview P1) &rarr; Select Caregiver &rarr; Sign Agreement &rarr; Pay Registration &rarr; Track Shift Live &rarr; View Daily Summary &rarr; Pay Invoice &rarr; Raise Dispute &rarr; (Purchase VAS P1)</p>
+
+<p style="font-size:0.9em;color:var(--muted);"><em>Elderly patient features are in the dedicated <strong>Elderly Mobile App</strong> (Section 9).</em></p>
+
+<details open><summary><strong>8.1 Registration &amp; Profile (P0)</strong></summary>
+<ul>
+  <li>OTP login</li>
+  <li>Create elderly patient profile (name, age, gender, address, medical notes, care level)</li>
+  <li>Set relationship, primary contact</li>
+</ul>
+</details>
+
+<details><summary><strong>8.2 Booking / Care Request (P0)</strong></summary>
+<ul>
+  <li>Service type (companion/nursing/critical)</li>
+  <li>Shift type (8hr/12hr/24hr/live-in)</li>
+  <li>Start date, duration, price estimate, submit</li>
+</ul>
+</details>
+
+<details><summary><strong>8.3 Caregiver Selection (P0)</strong></summary>
+<ul>
+  <li>Top 3 matched profiles (photo, experience, rating, skills, certifications)</li>
+  <li>Shortlist/compare, select</li>
+</ul>
+</details>
+
+<details><summary><strong>8.4 Agreement &amp; Payment (P0)</strong></summary>
+<ul>
+  <li>View terms, e-sign</li>
+  <li>Registration fee via Razorpay</li>
+  <li>Monthly invoices, pay invoices</li>
+</ul>
+</details>
+
+<details><summary><strong>8.5 Live Tracking (P0)</strong></summary>
+<ul>
+  <li>Status timeline (scheduled&rarr;en_route&rarr;arrived&rarr;active&rarr;completed)</li>
+  <li>ETA, real-time map</li>
+</ul>
+</details>
+
+<details><summary><strong>8.6 Daily Summary (P0)</strong></summary>
+<ul>
+  <li>Tasks completed, vitals (P1), caregiver notes</li>
+  <li>Auto-generated at shift end</li>
+</ul>
+</details>
+
+<details><summary><strong>8.7 Dispute Management (P0)</strong></summary>
+<ul>
+  <li>Categorized (late arrival, quality, behavior, billing)</li>
+  <li>Evidence attachment, resolution tracking</li>
+</ul>
+</details>
+
+<details><summary><strong>8.8 Control Panel (P1)</strong></summary>
+<ul>
+  <li>Pause service, resume, extend duration, reduce service</li>
+  <li>Request replacement, view replacement profiles</li>
+  <li>Contact care manager</li>
+</ul>
+</details>
+
+<details><summary><strong>8.9 Video Interview (P1)</strong></summary>
+<ul>
+  <li>Schedule video call with shortlisted CTs</li>
+  <li>Twilio Video in-app, recording option, Helpee moderator can join</li>
+</ul>
+</details>
+
+<details><summary><strong>8.10 VAS Purchase (P1)</strong></summary>
+<ul>
+  <li>Browse catalog by category, pricing, Razorpay purchase</li>
+  <li>Delivery/scheduling tracking</li>
+</ul>
+</details>
+
+<details><summary><strong>8.15 Vitals Dashboard (P1)</strong></summary>
+<ul>
+  <li>View patient vitals history (BP, pulse, sugar, temperature)</li>
+  <li>Trend charts with date range filter</li>
+  <li>Abnormal vitals alerts with push notifications</li>
+  <li>Download vitals reports (PDF)</li>
+</ul>
+</details>
+
+</section>
+
+<!-- ===================== 9. ELDERLY MOBILE APP ===================== -->
+<section id="elderly-app">
+<h2>9. Features &mdash; Elderly Mobile App</h2>
+<p>A purpose-built, ultra-simplified mobile app designed for the elderly patient. This is <strong>not</strong> a &ldquo;lite mode&rdquo; inside the Customer App &mdash; it is a <strong>separate standalone application</strong> optimised for seniors with limited tech literacy. Built with React Native (Expo), accessibility-first design.</p>
+
+<p><strong>Lifecycle:</strong> Family sets up app for elderly &rarr; Elderly opens app &rarr; Sees today&rsquo;s caregiver &rarr; Confirms tasks (medicine etc.) &rarr; One-tap help if needed &rarr; Simple feedback</p>
+
+<h3>Design Principles</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>Accessibility First</h4>
+    <ul>
+      <li>Minimum font size: <strong>24px</strong> throughout the app</li>
+      <li>High contrast colours (WCAG AAA compliance)</li>
+      <li>Maximum <strong>3 actions per screen</strong></li>
+      <li>No scrolling on primary screens</li>
+      <li>Large touch targets (minimum 56&times;56dp)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Simplicity</h4>
+    <ul>
+      <li>No complex navigation &mdash; single-level menu</li>
+      <li>Icon + text labels on all buttons</li>
+      <li>Voice feedback for button presses (optional)</li>
+      <li>Auto-brightness and font scaling from device settings</li>
+      <li>No login required after initial family setup</li>
+    </ul>
+  </div>
+</div>
+
+<h3>Features (P0)</h3>
+
+<details open><summary><strong>9.1 Today&rsquo;s Caregiver (P0)</strong></summary>
+<ul>
+  <li>Full-screen card showing today&rsquo;s assigned caregiver</li>
+  <li>Large photo (200px+), name in bold (28px font), and status</li>
+  <li>Status displayed with colour + icon: <span style="color:var(--accent);">&#9679; Coming</span> | <span style="color:var(--success);">&#9679; Here</span> | <span style="color:var(--muted);">&#9679; Done for today</span></li>
+  <li>ETA countdown when CT is en route (&ldquo;Arriving in ~15 minutes&rdquo;)</li>
+  <li>If split shift: shows both day and night CT with shift times</li>
+  <li>If weekly off: shows backup CT with note &ldquo;Your regular nurse is on weekly off today&rdquo;</li>
+</ul>
+</details>
+
+<details><summary><strong>9.2 SOS &amp; Emergency Help (P0)</strong></summary>
+<ul>
+  <li><strong>Prominent SOS button</strong> &mdash; always visible, red, large (80&times;80dp minimum)</li>
+  <li>One tap triggers:
+    <ul>
+      <li>Push notification to assigned CT, family contacts, and Helpee admin</li>
+      <li>Auto-dial family primary contact (or Helpee helpline if no answer)</li>
+      <li>GPS location shared with all parties</li>
+    </ul>
+  </li>
+  <li>Confirmation vibration + audio feedback on SOS trigger</li>
+  <li>SOS history log (visible to family in their app)</li>
+</ul>
+</details>
+
+<details><summary><strong>9.3 Call Buttons (P0)</strong></summary>
+<ul>
+  <li><strong>Call Family</strong> &mdash; one-tap speed dial to primary family contact</li>
+  <li><strong>Call Helpee</strong> &mdash; one-tap dial to Helpee national helpline</li>
+  <li><strong>Call Caregiver</strong> &mdash; one-tap dial to today&rsquo;s assigned CT (if not on-site)</li>
+  <li>Each button shows name + photo of the contact (for recognition)</li>
+  <li>No dialer interaction needed &mdash; call initiates immediately</li>
+</ul>
+</details>
+
+<h3>Features (P1)</h3>
+
+<details><summary><strong>9.4 Task Confirmation (P1)</strong></summary>
+<ul>
+  <li>Simple prompts pushed at scheduled times: &ldquo;Did you take your medicine?&rdquo;</li>
+  <li>Response: large <strong>Yes</strong> / <strong>No</strong> buttons (green/red, full width)</li>
+  <li>Family and CT receive confirmation status in real-time</li>
+  <li>If &ldquo;No&rdquo; selected, CT receives alert to follow up</li>
+  <li>Task prompts configurable by family via their app</li>
+</ul>
+</details>
+
+<details><summary><strong>9.5 Daily Feedback (P1)</strong></summary>
+<ul>
+  <li>End-of-day prompt: &ldquo;How was your day with [CT name]?&rdquo;</li>
+  <li>Response: <strong>Thumbs Up</strong> &#128077; / <strong>Thumbs Down</strong> &#128078; (no text input required)</li>
+  <li>Optional: tap on a mood emoji row (happy, okay, sad) for more nuance</li>
+  <li>Feedback visible to family, CT, and admin</li>
+  <li>Pattern tracking: consecutive thumbs-down triggers ops review</li>
+</ul>
+</details>
+
+<details><summary><strong>9.6 Daily Schedule View (P1)</strong></summary>
+<ul>
+  <li>Simple timeline of today&rsquo;s activities (medication times, physiotherapy, meals)</li>
+  <li>Large time display with activity icon and text</li>
+  <li>Completed items shown with green checkmark</li>
+  <li>Next upcoming activity highlighted</li>
+</ul>
+</details>
+
+<details><summary><strong>9.7 Photo Gallery &mdash; My Caregiver (P1)</strong></summary>
+<ul>
+  <li>Shows photos of regular CT and backup CT for recognition</li>
+  <li>Helps elderly identify the correct person arriving at their home</li>
+  <li>Updated automatically when replacement or backup is assigned</li>
+</ul>
+</details>
+
+<details><summary><strong>9.8 Wellness Check-In (P1)</strong></summary>
+<ul>
+  <li>Morning check-in prompt: &ldquo;How are you feeling today?&rdquo;</li>
+  <li>3 options with large emoji: &#128522; Good | &#128528; Okay | &#128543; Not well</li>
+  <li>&ldquo;Not well&rdquo; triggers alert to CT + family</li>
+  <li>Trends visible to family for long-term monitoring</li>
+</ul>
+</details>
+
+<h3>Setup &amp; Security</h3>
+<ul>
+  <li><strong>Family-managed setup:</strong> Family member installs the app, logs in with their credentials, and configures the elderly profile. Once set up, elderly does not need to log in again.</li>
+  <li><strong>Persistent session:</strong> App stays logged in with biometric lock (optional) or no lock (family choice)</li>
+  <li><strong>Remote management:</strong> Family can update contacts, task prompts, and settings from their own Customer App</li>
+  <li><strong>Data sync:</strong> All interactions (SOS, feedback, task confirmations) sync to the central platform and are visible across all apps</li>
+</ul>
+</section>
+
+<!-- ===================== 10. CALL CENTER & CRM OPERATIONS ===================== -->
+<section id="call-center">
+<h2>10. Call Center &amp; CRM Operations</h2>
+<p>The Call Center &amp; CRM handles <strong>supply-side lead engagement</strong> (caregiver recruitment) and <strong>demand-side customer support</strong> (family helpline). Caregivers are reached via outbound campaigns; families use the single national helpline.</p>
+
+<h3>Supply-Side: CT Lead Management</h3>
+<div class="card" style="border-left: 4px solid var(--accent);">
+  <h4 style="margin-top:0;">Lead Flow</h4>
+  <p>Digital channels (Job Portals, Facebook, WhatsApp, Local Ads) generate leads. Missed calls on Jobs Line receive SMS registration link. Call center runs outbound campaigns to contact leads, follow up (automated + human), and transfer qualified leads to deployment team.</p>
+  <p><strong>Data model:</strong> <code>call_center_lead_status</code> (new, contacted, incomplete_app, automated_followup, human_followup, transferred, deployed, irrelevant), <code>last_call_at</code>, <code>next_scheduled_call</code>, <code>call_attempts</code>, <code>call_disposition</code>, <code>application_completion_pct</code></p>
+</div>
+
+<h3>Demand-Side: Family Helpline</h3>
+<div class="card" style="border-left: 4px solid var(--primary);">
+  <p>Single national number for families &mdash; bookings, support, escalations. Agent identifies city from patient address; routes internally. Caller never needs city-specific number. Acknowledgement SLA: within 1 hour if request via call center.</p>
+</div>
+</section>
+
+<!-- API Reference and Database Schema moved to Technical_Spec.html -->
+
+<!-- ===================== 11. NON-FUNCTIONAL REQUIREMENTS ===================== -->
+<section id="nfr">
+<h2>11. Non-Functional Requirements</h2>
+<div class="card-grid">
+  <div class="card">
+    <h4>Security</h4>
+    <p>AES-256 at rest, TLS 1.3 in transit, health data segregation, JWT with refresh token rotation</p>
+  </div>
+  <div class="card">
+    <h4>Compliance</h4>
+    <p>Personal Data Protection Bill (India), health data handling guidelines</p>
+  </div>
+  <div class="card">
+    <h4>Scalability</h4>
+    <p>10K concurrent caregivers, 50K active patients by Year 2</p>
+  </div>
+  <div class="card">
+    <h4>Availability</h4>
+    <p>99.9% uptime SLA for core services</p>
+  </div>
+  <div class="card">
+    <h4>Data Retention</h4>
+    <p>Shift logs 3 years, vitals 5 years, financial records 7 years</p>
+  </div>
+  <div class="card">
+    <h4>Performance</h4>
+    <p>API p95 &le; 300ms, dashboard &le; 2s, location propagation &le; 2s</p>
+  </div>
+</div>
+<p style="margin-top:1rem;font-size:0.9em;color:var(--muted);"><em>Detailed API Reference, Database Schema, Status Models, SLA Targets, and Architecture are documented in <strong>Technical_Spec.html</strong>.</em></p>
+</section>
+
+
+<!-- ===================== 12. USER SCENARIOS ===================== -->
+<section id="scenarios">
+<h2>12. User Scenarios &amp; Use Cases</h2>
+<p>Comprehensive scenarios the platform must handle. Each scenario describes the trigger, system behavior, and expected outcome.</p>
+
+<!-- ===== A. SHIFT TYPE VARIATIONS ===== -->
+<h3>A. Shift Type &amp; Scheduling Variations</h3>
+<table>
+  <thead><tr><th style="width:5%;">#</th><th style="width:30%;">Scenario</th><th style="width:35%;">System Behavior</th><th style="width:30%;">Key Data</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>A1</strong></td>
+      <td><strong>Short-duration visit</strong> &mdash; Patient needs daily IV infusion for 2 hours</td>
+      <td>Care request created with <code>shift_type = 'visit'</code>, <code>shift_duration_hours = 2.0</code>, <code>recurrence = 'daily'</code>. Matching prioritises CTs near patient who can fit 2-hour slots. Roster auto-generates daily 2-hour shifts.</td>
+      <td>Pricing: per-visit rate (not hourly). CT can take multiple visit jobs per day. Geofence check-in/out required for each visit.</td>
+    </tr>
+    <tr>
+      <td><strong>A2</strong></td>
+      <td><strong>12-hour shift</strong> &mdash; Patient needs daytime companion care</td>
+      <td>Standard <code>shift_type = '12hr'</code>. Single CT assigned. Roster generates 12-hour shifts with designated start/end times.</td>
+      <td>Mandatory break period logged. Task checklist adjusted for 12-hour scope.</td>
+    </tr>
+    <tr>
+      <td><strong>A3</strong></td>
+      <td><strong>24-hour shift</strong> &mdash; Patient needs round-the-clock care</td>
+      <td><code>shift_type = '24hr'</code>. Single CT per 24-hour period. System enforces mandatory rest period (6-hour sleep window logged).</td>
+      <td>Higher rate. System monitors for fatigue (alerts if CT has 7+ consecutive 24h shifts).</td>
+    </tr>
+    <tr>
+      <td><strong>A4</strong></td>
+      <td><strong>Day nurse + night nurse (split shift)</strong> &mdash; Patient needs separate CTs for day and night</td>
+      <td><code>is_split_shift = true</code>, <code>ct_count_required = 2</code>, <code>split_config = {"day":"06:00-18:00","night":"18:00-06:00"}</code>. Matching runs twice &mdash; one for day, one for night. Two separate CTs allocated; family sees both profiles.</td>
+      <td><code>assigned_caregiver_id</code> = day CT, <code>secondary_caregiver_id</code> = night CT. Handoff checklist auto-generated at shift transition.</td>
+    </tr>
+    <tr>
+      <td><strong>A5</strong></td>
+      <td><strong>Live-in caregiver</strong> &mdash; CT stays at patient&rsquo;s home full-time</td>
+      <td><code>shift_type = 'live_in'</code>. Monthly contract. Weekly off mandatory (see A6). Board and lodging terms in service agreement.</td>
+      <td>Different pricing model (monthly flat rate). Accommodation provided by family.</td>
+    </tr>
+    <tr>
+      <td><strong>A6</strong></td>
+      <td><strong>Weekly recurring visits</strong> &mdash; Patient needs physiotherapy 3 days/week</td>
+      <td><code>shift_type = 'visit'</code>, <code>recurrence = 'custom'</code>, <code>recurrence_schedule = {"days":["mon","wed","fri"],"time":"10:00"}</code>. Roster auto-generates for specified days only.</td>
+      <td>CT confirmed for recurring slot. Family can modify schedule via app with 24h notice.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ===== B. CT LEAVE & WEEKLY OFF ===== -->
+<h3>B. CT Leave, Weekly Off &amp; Availability</h3>
+<table>
+  <thead><tr><th style="width:5%;">#</th><th style="width:30%;">Scenario</th><th style="width:35%;">System Behavior</th><th style="width:30%;">Key Data</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>B1</strong></td>
+      <td><strong>CT takes 1 day weekly off</strong> &mdash; Long-term assignment, CT needs rest</td>
+      <td>Weekly off day set at assignment start (<code>ct_weekly_off</code> table). System auto-assigns backup CT for that day. Family notified: &ldquo;Your regular CT is on scheduled off; [Backup CT name] will cover.&rdquo;</td>
+      <td><code>backup_caregiver_id</code> on care_request. Backup CT sees it as a one-day assignment. Same geofence and task checklist applies.</td>
+    </tr>
+    <tr>
+      <td><strong>B2</strong></td>
+      <td><strong>CT goes on leave for 1 month</strong> &mdash; Personal/family reasons</td>
+      <td>CT submits leave request via app (<code>ct_leave</code> with <code>leave_type = 'long_leave'</code>). Ops reviews and approves. System triggers replacement flow &mdash; temporary replacement CT assigned for the full duration. Original CT&rsquo;s job is held; they return after leave.</td>
+      <td>Replacement is temporary (<code>replacement_request.is_permanent = false</code>). Original CT&rsquo;s rating/assignment preserved. Family notified with replacement CT profile.</td>
+    </tr>
+    <tr>
+      <td><strong>B3</strong></td>
+      <td><strong>CT falls sick mid-shift</strong> &mdash; Cannot continue the current shift</td>
+      <td>CT triggers &ldquo;sick&rdquo; status in app. Ops immediately notified. Emergency replacement pool activated &mdash; nearest available CT auto-assigned. Family notified of change within 30 minutes.</td>
+      <td><code>ct_leave.leave_type = 'sick'</code>. Shift split: original CT hours logged till exit, replacement CT starts fresh geofence check-in. No penalty to original CT for genuine sick leave.</td>
+    </tr>
+    <tr>
+      <td><strong>B4</strong></td>
+      <td><strong>CT no-show on shift day</strong> &mdash; CT doesn&rsquo;t arrive and doesn&rsquo;t inform</td>
+      <td>Geofence detects no check-in within 30 min of scheduled start. Auto-alert to ops + family. Emergency replacement triggered. Incident logged against CT (<code>ct_incident</code> with severity &lsquo;moderate&rsquo;).</td>
+      <td>No-show penalty applied. If repeated (3 times), escalation to suspension review. Family receives ETA of replacement CT.</td>
+    </tr>
+    <tr>
+      <td><strong>B5</strong></td>
+      <td><strong>CT requests transfer to a different patient</strong> &mdash; Personality mismatch, difficult family</td>
+      <td>CT raises replacement request via app (<code>requested_by_type = 'caregiver'</code>, <code>reason = 'personality_mismatch'</code>). Ops reviews without penalizing CT. New CT matched for patient; original CT returned to available pool.</td>
+      <td>No negative impact on CT rating for legitimate transfer requests (max 2 per quarter).</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ===== C. REPLACEMENT SCENARIOS ===== -->
+<h3>C. Replacement &amp; Reassignment</h3>
+<table>
+  <thead><tr><th style="width:5%;">#</th><th style="width:30%;">Scenario</th><th style="width:35%;">System Behavior</th><th style="width:30%;">Key Data</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>C1</strong></td>
+      <td><strong>Family requests replacement</strong> &mdash; Dissatisfied with current CT</td>
+      <td>Family taps &ldquo;Request Replacement&rdquo; in app, selects reason (dissatisfied, personality mismatch, skill gap). <code>replacement_request</code> created. Ops reviews complaint validity. New top-3 profiles generated (excluding current CT). Family picks replacement.</td>
+      <td><code>is_permanent = true</code>. Current CT released. If pattern emerges (CT replaced 3+ times), CT flagged for review. First replacement free; subsequent may incur fee.</td>
+    </tr>
+    <tr>
+      <td><strong>C2</strong></td>
+      <td><strong>CT requests replacement (wants off the assignment)</strong></td>
+      <td>CT raises request via app. Ops evaluates: if valid reason (unsafe environment, unreasonable demands), no penalty. Replacement CT matched. Handoff scheduled with 24h overlap if possible.</td>
+      <td>If CT cites safety concern, flagged for family review as well. Audit log preserved.</td>
+    </tr>
+    <tr>
+      <td><strong>C3</strong></td>
+      <td><strong>Emergency replacement</strong> &mdash; CT suddenly unavailable (accident, family emergency)</td>
+      <td>System activates emergency pool: backup CT from <code>backup_caregiver_id</code> if available, else nearest available CT with matching skills. SLA: replacement within 4 hours.</td>
+      <td>Family receives real-time status: &ldquo;Finding replacement &rarr; Matched &rarr; En route.&rdquo; No penalty to original CT for genuine emergencies.</td>
+    </tr>
+    <tr>
+      <td><strong>C4</strong></td>
+      <td><strong>Replacement during split shift</strong> &mdash; Night nurse needs replacement but day nurse stays</td>
+      <td>Replacement request targets only the specific shift slot (day or night). <code>secondary_caregiver_id</code> updated. Day CT unaffected. Family notified only about the changed slot.</td>
+      <td>Handoff protocol between day CT and new night CT auto-generated.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ===== D. PATIENT PREFERENCES & SPECIAL NEEDS ===== -->
+<h3>D. Patient Preferences &amp; Special Needs</h3>
+<table>
+  <thead><tr><th style="width:5%;">#</th><th style="width:30%;">Scenario</th><th style="width:35%;">System Behavior</th><th style="width:30%;">Key Data</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>D1</strong></td>
+      <td><strong>Regional/language preference</strong> &mdash; Family wants a nurse from Kerala for a Malayalam-speaking patient</td>
+      <td><code>region_preference = 'Kerala'</code>, <code>language_preference = 'Malayalam'</code> set on care request. Matching algorithm applies hard filter on language, soft filter on region. If no regional match, ops proposes alternatives with explanation.</td>
+      <td>CT profiles show language badges and home region. Regional preference may increase matching time beyond 48h SLA (family notified).</td>
+    </tr>
+    <tr>
+      <td><strong>D2</strong></td>
+      <td><strong>Gender preference</strong> &mdash; Female patient, family wants female CT only</td>
+      <td><code>gender_preference = 'female'</code>. Hard filter in matching. No male CTs shown in shortlist.</td>
+      <td>Common scenario. Supply pool tracked by gender per city to flag potential gaps.</td>
+    </tr>
+    <tr>
+      <td><strong>D3</strong></td>
+      <td><strong>Multi-location care</strong> &mdash; CT needs to travel to 2&ndash;3 places (patient splits time between home and relative&rsquo;s house)</td>
+      <td><code>is_multi_location = true</code>, <code>locations</code> stores array of addresses with schedule (e.g., Mon-Fri at home, Sat-Sun at daughter&rsquo;s house). Geofence updates dynamically based on day. CT gets location in roster for each day.</td>
+      <td>Travel allowance added to pricing. Multiple geofences configured. CT app shows &ldquo;Today&rsquo;s location&rdquo; on dashboard.</td>
+    </tr>
+    <tr>
+      <td><strong>D4</strong></td>
+      <td><strong>Elderly couple &mdash; 2 patients in same household</strong></td>
+      <td>Two separate care requests linked via household ID. May share the same CT if care level is companion. If either needs nursing-level care, separate CTs. Pricing: bundled discount for same-household.</td>
+      <td>Shared geofence. Combined daily summary for family. Single invoice with line items per patient.</td>
+    </tr>
+    <tr>
+      <td><strong>D5</strong></td>
+      <td><strong>Patient condition escalates</strong> &mdash; Companion care no longer sufficient, needs nursing</td>
+      <td>Family or CT flags escalation via app. Ops reassesses service level (<code>assessed_service_level</code> updated). If current CT doesn&rsquo;t have nursing skills, replacement triggered automatically. If CT has dual skills, they continue with updated task checklist.</td>
+      <td>Agreement amended with new pricing. Audit trail shows escalation reason and date.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ===== E. SERVICE LIFECYCLE EVENTS ===== -->
+<h3>E. Service Lifecycle Events</h3>
+<table>
+  <thead><tr><th style="width:5%;">#</th><th style="width:30%;">Scenario</th><th style="width:35%;">System Behavior</th><th style="width:30%;">Key Data</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>E1</strong></td>
+      <td><strong>Family wants to pause service</strong> &mdash; Patient hospitalized temporarily</td>
+      <td>Family taps &ldquo;Pause&rdquo; in control panel. Status moves to <strong>paused</strong>. CT returned to available pool (temporary). No charges during pause. Family can resume with same CT (if available) or request new match.</td>
+      <td>Max pause: 30 days. After 30 days, auto-cancel with option to re-initiate. CT notified and released.</td>
+    </tr>
+    <tr>
+      <td><strong>E2</strong></td>
+      <td><strong>Family extends service duration</strong> &mdash; Originally 15 days, now needs 3 months</td>
+      <td>Family extends via app. Agreement auto-amended. Same CT continues if available and willing. Pricing may change for long-term (discounted monthly rate).</td>
+      <td>New <code>end_date</code> and updated <code>duration_days</code>. Financial projection recalculated.</td>
+    </tr>
+    <tr>
+      <td><strong>E3</strong></td>
+      <td><strong>Family reduces service</strong> &mdash; From 24h to 12h after patient recovers</td>
+      <td>Downgrade request via app. <code>shift_type</code> updated. If split shift CT no longer needed, secondary CT released. Pricing adjusted from next billing cycle.</td>
+      <td>Agreement amended. CT notified of schedule change with 48h notice.</td>
+    </tr>
+    <tr>
+      <td><strong>E4</strong></td>
+      <td><strong>Patient passes away</strong> &mdash; Graceful service termination</td>
+      <td>Sensitive flow: ops/family marks termination. All active shifts cancelled. CT released with dignity (no abrupt disconnection). Final invoice settled. Condolence message (optional). Data retained per retention policy.</td>
+      <td>Care request status: <strong>completed</strong> with termination reason. No penalty to any party. CT rating for this assignment finalized.</td>
+    </tr>
+    <tr>
+      <td><strong>E5</strong></td>
+      <td><strong>Patient moves to different city</strong></td>
+      <td>Current care request closed. New care request auto-initiated for destination city. Family can request same CT only if CT is willing to relocate (rare). Otherwise, fresh matching in new city.</td>
+      <td>Transfer record links old and new care requests. Patient history and vitals carry over.</td>
+    </tr>
+    <tr>
+      <td><strong>E6</strong></td>
+      <td><strong>Festival / holiday coverage</strong> &mdash; CT wants time off during Diwali</td>
+      <td>CT requests leave for specific dates (well in advance). System pre-assigns backup CT. Family notified 1 week before. If no backup available, ops escalates.</td>
+      <td>Holiday premium pricing may apply for backup CT. System maintains holiday calendar per region.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ===== F. FINANCIAL & PAYMENT ===== -->
+<h3>F. Financial &amp; Payment Scenarios</h3>
+<table>
+  <thead><tr><th style="width:5%;">#</th><th style="width:30%;">Scenario</th><th style="width:35%;">System Behavior</th><th style="width:30%;">Key Data</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>F1</strong></td>
+      <td><strong>Family disputes invoice</strong> &mdash; Claims shift was shorter or tasks not completed</td>
+      <td>Dispute raised via app. System pulls GPS logs, check-in/out timestamps, task completion proof. Admin reviews evidence. Resolution: adjust invoice, uphold original, or partial credit.</td>
+      <td>SLA: 48h resolution. If CT has proof-of-work photos, weighted in their favour. Dispute outcome logged.</td>
+    </tr>
+    <tr>
+      <td><strong>F2</strong></td>
+      <td><strong>Family delays payment beyond due date</strong></td>
+      <td>Auto-reminders at due date, +3 days, +7 days. After 15 days: service pause warning. After 30 days: service suspended. CT payments not affected (Helpee absorbs risk).</td>
+      <td>Late fee may apply. Collection escalation path: auto &rarr; ops call &rarr; legal notice. CT payout guaranteed regardless.</td>
+    </tr>
+    <tr>
+      <td><strong>F3</strong></td>
+      <td><strong>Customer lies for refund / demands extra work</strong></td>
+      <td>GPS + task logs + proof-of-work photos provide objective evidence. Admin reviews dispute before any penalty on CT. Pattern detection: if family has 3+ disputes in 60 days, flagged as high-risk customer.</td>
+      <td>CT protected by evidence system. Family warned on abuse of dispute system. Repeat offenders may face service termination.</td>
+    </tr>
+    <tr>
+      <td><strong>F4</strong></td>
+      <td><strong>CT requests salary advance</strong></td>
+      <td>Available for Super Star CTs and those with 3+ months clean history. Advance amount deducted from next 2&ndash;3 payouts. Capped at 50% of average monthly earnings.</td>
+      <td>Logged in <code>payroll_deduction_remaining</code>. Auto-deducted from future payouts.</td>
+    </tr>
+    <tr>
+      <td><strong>F5</strong></td>
+      <td><strong>Visit-based pricing</strong> &mdash; 2-hour IV infusion at fixed per-visit rate</td>
+      <td>Pricing calculated per visit (not hourly). Invoice shows count of visits in billing period &times; per-visit rate. Family sees daily visit log with timestamps.</td>
+      <td>Different from shift-based pricing. Per-visit rate set during agreement. Travel allowance may be added if CT travels far.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ===== G. QUALITY & TRUST ===== -->
+<h3>G. Quality, Trust &amp; Safety Scenarios</h3>
+<table>
+  <thead><tr><th style="width:5%;">#</th><th style="width:30%;">Scenario</th><th style="width:35%;">System Behavior</th><th style="width:30%;">Key Data</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>G1</strong></td>
+      <td><strong>CT tries to bypass Helpee</strong> &mdash; Builds own clientele with introduced patients</td>
+      <td>Non-compete clause in contract (6 months post-assignment). System monitors: if family cancels service and CT goes inactive simultaneously, flagged. Ongoing value (insurance, upskilling, fast pay) incentivises staying.</td>
+      <td>Audit pattern detection. If confirmed, CT blacklisted. Family warned of liability.</td>
+    </tr>
+    <tr>
+      <td><strong>G2</strong></td>
+      <td><strong>Emergency medical event during shift</strong> &mdash; Patient falls, cardiac event, choking</td>
+      <td>CT hits SOS in app. Emergency contacts + ambulance notified. Real-time alert to family + admin. CT guided through emergency protocol checklist. Event fully logged with timestamps.</td>
+      <td>Critical care CTs have advanced emergency protocols. Companion-level CTs have basic first-aid protocol. Post-event review mandatory.</td>
+    </tr>
+    <tr>
+      <td><strong>G3</strong></td>
+      <td><strong>GPS spoofing detected</strong> &mdash; CT fakes location for check-in</td>
+      <td>System detects mock location via device API. Check-in rejected. Incident auto-logged as &lsquo;moderate&rsquo; severity. Admin alerted. CT receives warning on first offence, suspension on repeat.</td>
+      <td>Anti-spoofing checks: mock location flag, WiFi triangulation, movement patterns.</td>
+    </tr>
+    <tr>
+      <td><strong>G4</strong></td>
+      <td><strong>Multiple family members giving conflicting instructions</strong></td>
+      <td>Service agreement designates one primary contact. CT follows instructions only from primary contact. If conflict arises, CT escalates to ops. Ops mediates and updates task checklist.</td>
+      <td>Primary contact set during agreement. Changes require all parties&rsquo; consent via app.</td>
+    </tr>
+    <tr>
+      <td><strong>G5</strong></td>
+      <td><strong>CT overtime &mdash; shift extends beyond scheduled hours</strong></td>
+      <td>CT logs overtime in app with reason. Family notified. Overtime auto-approved if &le;1 hour. Beyond 1 hour requires admin approval. Overtime rate (1.5&times;) applied.</td>
+      <td>Overtime tracked separately in shift record. Invoiced as line item. CT earns overtime premium.</td>
+    </tr>
+    <tr>
+      <td><strong>G6</strong></td>
+      <td><strong>Elderly patient gives poor feedback but family is satisfied</strong></td>
+      <td>Elderly feedback (thumbs up/down) tracked separately from family rating. Algorithm weights family rating higher (70%) vs elderly feedback (30%). If consistently conflicting, ops investigates (possible dementia, confusion, or genuine issue).</td>
+      <td>Both data points preserved. CT not penalised for elderly-only negative if family is positive. Pattern triggers welfare check.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ===== H. OPERATIONAL EDGE CASES ===== -->
+<h3>H. Operational Edge Cases</h3>
+<table>
+  <thead><tr><th style="width:5%;">#</th><th style="width:30%;">Scenario</th><th style="width:35%;">System Behavior</th><th style="width:30%;">Key Data</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>H1</strong></td>
+      <td><strong>No CTs available in city</strong> for the required skill level</td>
+      <td>Matching returns zero results. Ops alerted. Options: (a) expand radius to neighboring cities, (b) source from aggregators, (c) fast-track onboarding of leads in pipeline, (d) inform family of delay with revised SLA.</td>
+      <td>City-wise supply gap dashboard shows demand vs supply by skill level. Triggers proactive recruitment campaigns.</td>
+    </tr>
+    <tr>
+      <td><strong>H2</strong></td>
+      <td><strong>CT has to travel to 2&ndash;3 locations in a day</strong> &mdash; Multiple visit-type assignments</td>
+      <td>System schedules visits with travel buffer (Google Maps API for estimated travel time). No overlapping bookings. CT sees daily itinerary: Location A (10:00) &rarr; Location B (13:00) &rarr; Location C (16:00). Each visit has separate geofence.</td>
+      <td>Travel time tracked but not billed to individual patients. CT gets travel allowance. Route optimization suggested.</td>
+    </tr>
+    <tr>
+      <td><strong>H3</strong></td>
+      <td><strong>Internet connectivity lost</strong> &mdash; CT in area with poor network</td>
+      <td>Offline-first architecture (WatermelonDB). All task logs, vitals, check-in timestamps stored locally. Auto-sync when connectivity resumes. Family sees &ldquo;Last synced: X min ago&rdquo; indicator.</td>
+      <td>Sync queue ensures no data loss. GPS coordinates cached with device timestamps. Geofence validation done post-sync.</td>
+    </tr>
+    <tr>
+      <td><strong>H4</strong></td>
+      <td><strong>CT certification expires during active assignment</strong></td>
+      <td>System alerts CT 30 days before expiry. If not renewed by expiry date: CT cannot take new assignments. For active assignments: 7-day grace period with mandatory recertification. If still not renewed, replacement triggered.</td>
+      <td>Auto-notifications at 30d, 15d, 7d, 1d. Training module link included in notification.</td>
+    </tr>
+    <tr>
+      <td><strong>H5</strong></td>
+      <td><strong>CT needs specialized equipment patient doesn&rsquo;t have</strong> &mdash; e.g., oxygen concentrator, hospital bed</td>
+      <td>Flagged during assessment (Step 2). Equipment requirements listed in care request. Options: (a) family arranges, (b) Helpee VAS equipment rental, (c) included in package. CT confirms equipment available before first shift.</td>
+      <td>Equipment checklist in service agreement. VAS order created if Helpee provides. CT daily log includes equipment status check.</td>
+    </tr>
+    <tr>
+      <td><strong>H6</strong></td>
+      <td><strong>Simultaneous requests from same family for different patients</strong></td>
+      <td>Two separate care requests, but system detects same <code>family_user_id</code>. Bundled pricing offered. If same city, matching can optimise for CTs in same area. Single invoice with line items per patient.</td>
+      <td>Family dashboard shows both patients. Consolidated daily summary available.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Scenario Coverage Matrix</h3>
+<table>
+  <thead><tr><th>Category</th><th>Count</th><th>Priority</th></tr></thead>
+  <tbody>
+    <tr><td>A. Shift Type &amp; Scheduling</td><td>6</td><td><span class="badge badge-p0">P0</span></td></tr>
+    <tr><td>B. CT Leave &amp; Availability</td><td>5</td><td><span class="badge badge-p0">P0</span></td></tr>
+    <tr><td>C. Replacement &amp; Reassignment</td><td>4</td><td><span class="badge badge-p0">P0</span></td></tr>
+    <tr><td>D. Patient Preferences</td><td>5</td><td><span class="badge badge-p0">P0</span> / <span class="badge badge-p1">P1</span></td></tr>
+    <tr><td>E. Service Lifecycle Events</td><td>6</td><td><span class="badge badge-p0">P0</span></td></tr>
+    <tr><td>F. Financial &amp; Payment</td><td>5</td><td><span class="badge badge-p0">P0</span></td></tr>
+    <tr><td>G. Quality, Trust &amp; Safety</td><td>6</td><td><span class="badge badge-p0">P0</span></td></tr>
+    <tr><td>H. Operational Edge Cases</td><td>6</td><td><span class="badge badge-p1">P1</span></td></tr>
+    <tr style="font-weight:700;"><td>Total</td><td>43</td><td></td></tr>
+  </tbody>
+</table>
+</section>
+
+</main>
+</div>
+
+<script>
+(function(){
+  var sections = document.querySelectorAll('section[id]');
+  var sticky = document.querySelector('.sticky-header');
+  function update() {
+    var top = window.scrollY || document.documentElement.scrollTop;
+    var found = null;
+    for (var i = sections.length - 1; i >= 0; i--) {
+      if (sections[i].offsetTop - 100 <= top) { found = sections[i]; break; }
+    }
+    if (found && sticky) {
+      var h = found.querySelector('h2');
+      if (h) sticky.textContent = h.textContent;
+    }
+  }
+  window.addEventListener('scroll', update);
+  window.addEventListener('load', update);
+})();
+</script>
+</body>
+</html>
