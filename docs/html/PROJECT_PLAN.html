@@ -114,19 +114,19 @@
         <a href="#tech-stack">4. Tech Stack</a>
         <a href="#er-diagram">5. Database ER Diagram</a>
         <a href="#infrastructure">6. Infrastructure & Deployment</a>
-        <a href="#realtime">8. Real-Time Architecture</a>
-        <a href="#scalability">9. Scalability Strategy</a>
-        <a href="#team">10. Team Structure</a>
-        <a href="#gantt">11. Phase & Gantt Chart</a>
-        <a href="#sprints">12. Sprint-by-Sprint</a>
-        <a href="#milestones">13. Milestones</a>
-        <a href="#risks">14. Risk Register</a>
-        <a href="#dependencies">15. Dependencies</a>
-        <a href="#velocity">16. Sprint Velocity</a>
-        <a href="#dod">17. Definition of Done</a>
-        <a href="#cost">18. Cost Estimation</a>
-        <a href="#comms">19. Communication Plan</a>
-        <a href="#commercial">20. Commercial Terms</a>
+        <a href="#realtime">7. Real-Time Architecture</a>
+        <a href="#scalability">8. Scalability Strategy</a>
+        <a href="#team">9. Team Structure</a>
+        <a href="#gantt">10. Phase & Gantt Chart</a>
+        <a href="#sprints">11. Sprint-by-Sprint</a>
+        <a href="#milestones">12. Milestones</a>
+        <a href="#risks">13. Risk Register</a>
+        <a href="#dependencies">14. Dependencies</a>
+        <a href="#velocity">15. Sprint Velocity</a>
+        <a href="#dod">16. Definition of Done</a>
+        <a href="#cost">17. Cost Estimation</a>
+        <a href="#comms">18. Communication Plan</a>
+        <a href="#commercial">19. Commercial Terms</a>
       </nav>
     </aside>
     <main class="content">
@@ -420,7 +420,7 @@
 
 
       <!-- 8. Real-Time Architecture -->
-      <h2 id="realtime">8. Real-Time Architecture</h2>
+      <h2 id="realtime">7. Real-Time Architecture</h2>
       <h3>Location Streaming</h3>
       <p>Caregiver app sends GPS every 60s → API → Redis pub/sub → Admin/Family clients poll or use WebSocket</p>
       <h3>Shift Status Updates</h3>
@@ -436,7 +436,7 @@
       </div>
 
       <!-- 9. Scalability Strategy -->
-      <h2 id="scalability">9. Scalability Strategy</h2>
+      <h2 id="scalability">8. Scalability Strategy</h2>
       <ul>
         <li><strong>Current:</strong> Modular monolith (single NestJS app) — fast development, simple deployment</li>
         <li><strong>Phase 1 extraction candidates:</strong> Location Tracking Service (high write volume), Notification Service (async, independent)</li>
@@ -448,7 +448,7 @@
       </ul>
 
       <!-- 10. Team Structure -->
-      <h2 id="team">10. Team Structure</h2>
+      <h2 id="team">9. Team Structure</h2>
       <div class="org-chart">
         <div class="org-box"><h4>Product & Design (2)</h4><ul><li>Product Manager (1): Requirements, backlog grooming, stakeholder communication, prioritization</li><li>UI/UX Designer (1): Design system, screen designs, user testing, accessibility (especially Elderly App)</li></ul></div>
         <div class="org-box"><h4>Engineering Lead (1)</h4><ul><li>Architecture decisions, code review, tech debt, sprint planning, cross-team coordination</li></ul></div>
@@ -486,7 +486,7 @@
       </table>
 
       <!-- 11. Phase Distribution & Gantt Chart -->
-      <h2 id="gantt">11. Phase Distribution & Gantt Chart</h2>
+      <h2 id="gantt">10. Phase Distribution & Gantt Chart</h2>
       <div class="phase-bar">
         <span class="p0" title="Phase 0: Foundation (W1-W4)"></span>
         <span class="p1" title="Phase 1: P0 MVP (W5-W30)"></span>
@@ -613,7 +613,7 @@
       <p style="font-size: 0.85rem; color: var(--text-muted);">Gantt chart: each bar spans the indicated week range. Phase 0 = Foundation (W1&ndash;W4), Phase 1 = P0 MVP (W5&ndash;W30), Phase 2 = P1 Features (W31&ndash;W48), Phase 3 = Scale &amp; Launch (W49&ndash;W58). All 5 apps shown as separate tracks.</p>
 
       <!-- 12. Sprint-by-Sprint Breakdown -->
-      <h2 id="sprints">12. Sprint-by-Sprint Breakdown</h2>
+      <h2 id="sprints">11. Sprint-by-Sprint Breakdown</h2>
 
       <!-- PHASE 0 — FOUNDATION -->
       <div class="sprint-card"><h4>Sprint 1 (Weeks 1&ndash;2): Foundation Setup</h4><div class="sprint-meta">Phase 0 &mdash; Foundation</div><p><strong>Goals:</strong> Monorepo scaffold, DB schema, all 5 app skeletons, CI/CD</p><ul><li><strong>Backend:</strong> Turborepo setup (apps/api, apps/company-admin, apps/franchise-admin, apps/caregiver, apps/customer, apps/elderly). PostgreSQL + PostGIS + Prisma schema (35+ tables). Base NestJS structure with modules, guards, interceptors, pagination.</li><li><strong>Mobile:</strong> React Native Expo project scaffold for 3 mobile apps (caregiver, customer, elderly). Navigation structure, design system tokens, shared component library.</li><li><strong>Admin:</strong> Next.js 14 project scaffold for both Company Admin and Franchise Admin portals. Shared layout system with sidebar, routing structure.</li><li><strong>DevOps:</strong> Docker configs, GitHub Actions pipeline (lint, test, build), AWS staging environment.</li></ul><p><strong>Deliverables:</strong> Working monorepo, all 5 apps running locally, CI green, DB schema deployed to staging.</p></div>
@@ -670,7 +670,7 @@
       <div class="sprint-card"><h4>Sprint 26 (Weeks 57&ndash;58): Production Launch</h4><div class="sprint-meta">Phase 3 &mdash; Scale, Polish &amp; Launch | <strong>MILESTONE: PRODUCTION LAUNCH</strong></div><p><strong>Goals:</strong> Go live, monitoring, runbooks</p><ul><li><strong>Week 51:</strong> App store review follow-up + fixes if needed. CloudWatch alarms + Grafana dashboards. Runbook documentation (incident response, rollback procedures, escalation matrix). DNS cutover. Production smoke testing.</li><li><strong>Week 58:</strong> Go-live checklist execution. Monitoring war room (first 48h). On-call rotation setup. Post-launch hotfix buffer. Stakeholder sign-off.</li></ul><p><strong>Deliverables:</strong> Production launch complete &mdash; all 5 apps live.</p></div>
 
       <!-- 13. Milestones -->
-      <h2 id="milestones">13. Milestones</h2>
+      <h2 id="milestones">12. Milestones</h2>
       <div class="milestone-timeline">
         <div class="milestone-track" style="width: 100%; max-width: 1000px;">
           <span class="milestone-dot" style="left: 3.4%;" title="W2: Foundation Setup"></span>
@@ -712,7 +712,7 @@
       </table>
 
       <!-- 14. Risk Register -->
-      <h2 id="risks">14. Risk Register</h2>
+      <h2 id="risks">13. Risk Register</h2>
       <table>
         <thead><tr><th>Risk</th><th>Probability</th><th>Impact</th><th>Mitigation</th><th>Owner</th></tr></thead>
         <tbody>
@@ -734,7 +734,7 @@
       </table>
 
       <!-- 15. Dependencies -->
-      <h2 id="dependencies">15. Dependencies</h2>
+      <h2 id="dependencies">14. Dependencies</h2>
       <table>
         <thead><tr><th>Dependency</th><th>Required By</th><th>Lead Time</th><th>Status</th><th>Action Required</th></tr></thead>
         <tbody>
@@ -752,7 +752,7 @@
       </table>
 
       <!-- 16. Sprint Velocity & Estimation -->
-      <h2 id="velocity">16. Sprint Velocity & Estimation</h2>
+      <h2 id="velocity">15. Sprint Velocity & Estimation</h2>
       <table>
         <thead><tr><th>Phase</th><th>Sprints</th><th>Weeks</th><th>Est. Story Points</th><th>Key Outputs</th></tr></thead>
         <tbody>
@@ -766,7 +766,7 @@
       <p><strong>Team velocity assumption:</strong> ~72 story points per sprint (18 people, 2-week sprint). Velocity assumes ramp-up in Sprints 1&ndash;2 (~60 SP) and steady state from Sprint 3 onwards (~75 SP). Sprints 4b, 6b, and 8b are dedicated complexity sprints for Matching Engine, Geo-Attendance/GPS, and Ledger/Payments respectively. Buffer of ~10% built into Phase 3 for unforeseen work.</p>
 
       <!-- 17. Definition of Done -->
-      <h2 id="dod">17. Definition of Done</h2>
+      <h2 id="dod">16. Definition of Done</h2>
       <ul class="dod-list">
         <li>Code peer-reviewed (≥1 reviewer)</li>
         <li>Unit tests (≥80% coverage for new code)</li>
@@ -783,7 +783,7 @@
       </ul>
 
       <!-- 18. Cost Estimation -->
-      <h2 id="cost">18. Cost Estimation</h2>
+      <h2 id="cost">17. Cost Estimation</h2>
       <p>Optimized for <strong>18-person team</strong> over <strong>58 weeks (14 months)</strong> with competitive resource rates.</p>
       <table>
         <thead><tr><th>Category</th><th>Monthly Cost</th><th>12-Month Total</th><th>Notes</th></tr></thead>
@@ -809,7 +809,7 @@
       <p><strong>Monthly burn rate:</strong> ~₹16.1L/month (team ₹13.8L + infra/SaaS/tools ₹1.5L + buffer ₹0.8L)</p>
 
       <!-- 19. Communication Plan -->
-      <h2 id="comms">19. Communication Plan</h2>
+      <h2 id="comms">18. Communication Plan</h2>
       <table>
         <thead><tr><th>Event</th><th>Duration</th><th>When</th><th>Attendees</th></tr></thead>
         <tbody>
@@ -825,10 +825,10 @@
 
       <!-- 20. Commercial Terms & Delivery Conditions -->
       <section id="commercial">
-      <h2>20. Commercial Terms &amp; Delivery Conditions</h2>
+      <h2>19. Commercial Terms &amp; Delivery Conditions</h2>
       <p>This section outlines the commercial structure for the Helpee Elder Care Platform project, including delivery costs, payment terms, scope boundaries, and post-delivery arrangements.</p>
 
-      <h3>20.1 Delivery Cost Summary</h3>
+      <h3>19.1 Delivery Cost Summary</h3>
       <div class="card" style="border-left: 4px solid var(--primary);">
         <table style="margin-bottom: 0;">
           <thead><tr><th>Cost Category</th><th>12-Month Total</th><th>Details</th></tr></thead>
@@ -844,7 +844,7 @@
         </table>
       </div>
 
-      <h3>20.2 Milestone-Based Payment Schedule</h3>
+      <h3>19.2 Milestone-Based Payment Schedule</h3>
       <p>Payments are tied to verified delivery milestones. Each milestone requires a formal demo and sign-off before payment is released.</p>
       <table>
         <thead><tr><th>Milestone</th><th>Week</th><th>%</th><th>Amount</th><th>Payment Trigger</th></tr></thead>
@@ -860,7 +860,7 @@
       </table>
       <p style="font-size: 0.85rem; color: var(--muted);">Payment is due within 15 business days of milestone sign-off. Late payments beyond 30 days may result in team ramp-down and schedule impact. Security testing is not a payment gate — it falls under Helpee's UAT responsibility (see Section 20.6).</p>
 
-      <h3>20.3 Post-Delivery SaaS License (Recurring)</h3>
+      <h3>19.3 Post-Delivery SaaS License (Recurring)</h3>
       <p>After production launch (Week 52), Helpee moves to a monthly SaaS license model for continued platform operations.</p>
       <div class="card" style="border-left: 4px solid var(--success);">
         <h4 style="margin-top: 0;">Monthly License Includes</h4>
@@ -880,7 +880,7 @@
       </div>
       <p style="font-size: 0.85rem; color: var(--muted);"><strong>Not included in SaaS license:</strong> New feature development, major version upgrades, third-party service subscription fees (billed directly by provider to Helpee), additional infrastructure scaling costs beyond agreed baseline.</p>
 
-      <h3>20.4 What Is Included</h3>
+      <h3>19.4 What Is Included</h3>
       <div class="card" style="border-left: 4px solid var(--success);">
         <table style="margin-bottom: 0;">
           <thead><tr><th style="width: 5%;">#</th><th>Deliverable</th><th>Details</th></tr></thead>
@@ -901,7 +901,7 @@
         </table>
       </div>
 
-      <h3>20.5 What Is Excluded</h3>
+      <h3>19.5 What Is Excluded</h3>
       <div class="card" style="border-left: 4px solid var(--danger);">
         <table style="margin-bottom: 0;">
           <thead><tr><th style="width: 5%;">#</th><th>Exclusion</th><th>Rationale</th></tr></thead>
@@ -920,7 +920,7 @@
         </table>
       </div>
 
-      <h3>20.6 UAT (User Acceptance Testing) &mdash; Helpee Responsibilities</h3>
+      <h3>19.6 UAT (User Acceptance Testing) &mdash; Helpee Responsibilities</h3>
       <p>Helpee is responsible for User Acceptance Testing at each payment milestone. The development team provides the staging environment and deployment; Helpee validates business correctness.
 </p>
       <div class="card" style="border-left: 4px solid var(--accent);">
@@ -953,7 +953,7 @@
         </tbody>
       </table>
 
-      <h3>20.7 Change Request (CR) Policy</h3>
+      <h3>19.7 Change Request (CR) Policy</h3>
       <div class="card" style="border-left: 4px solid var(--warning);">
         <table style="margin-bottom: 0;">
           <thead><tr><th>Parameter</th><th>Terms</th></tr></thead>
@@ -972,7 +972,7 @@
         </table>
       </div>
 
-      <h3>20.8 Warranty Period</h3>
+      <h3>19.8 Warranty Period</h3>
       <div class="card" style="border-left: 4px solid var(--success);">
         <h4 style="margin-top: 0;">30-Day Post-Launch Warranty</h4>
         <p>Effective from production launch date (Week 58). Covers defect fixes only &mdash; not new features or enhancements.</p>
