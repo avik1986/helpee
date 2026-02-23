@@ -315,90 +315,36 @@
 <section id="exec-summary">
 <h2>1. Executive Summary</h2>
 
-<p style="font-size: 1rem; color: var(--muted); margin-bottom: 1.5rem;">This document defines the product requirements for the Helpee elder care platform &mdash; covering all five applications, user flows, features, and priorities.</p>
+<!-- WHAT WE'RE BUILDING -->
+<h3>What We&rsquo;re Building</h3>
+<p style="font-size: 1rem; line-height: 1.7; margin-bottom: 1.25rem;"><strong>Helpee</strong> is a technology-enabled elder care platform that connects families with verified, trained caregivers. It replaces today&rsquo;s manual, WhatsApp-based operations with a unified digital ecosystem &mdash; covering demand capture, caregiver matching, real-time care tracking, payments, and franchise operations across multiple Indian cities through 5 purpose-built applications.</p>
 
-<!-- THE PROBLEM -->
-<div class="card" style="border-left: 4px solid var(--danger); margin-bottom: 1rem;">
-  <h3 style="margin-top:0; color:var(--danger);">The Problem</h3>
-  <table style="margin-bottom: 0;">
-    <thead><tr><th style="width:35%;">Pain Point</th><th>Current Reality</th></tr></thead>
-    <tbody>
-      <tr><td><strong>Fragmented Communication</strong></td><td>Families receive scattered WhatsApp messages with no unified view &mdash; 60+ disconnected Wati templates, no central dashboard</td></tr>
-      <tr><td><strong>Broken Brand Identity</strong></td><td>Three different brand spellings in the market &mdash; zero visual cohesion, no trust signal</td></tr>
-      <tr><td><strong>Leaking Demand Funnel</strong></td><td>25&ndash;30% of high-intent leads drop off due to manual, slow follow-up</td></tr>
-      <tr><td><strong>No Real-time Visibility</strong></td><td>Families cannot see if the caregiver arrived, what tasks were completed, or what the elderly parent&rsquo;s vitals are</td></tr>
-      <tr><td><strong>Unstructured Supply Pipeline</strong></td><td>No standardised screening, training, or certification for caregivers across cities</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<!-- V1 SOLUTION -->
-<div class="card" style="border-left: 4px solid var(--success); margin-bottom: 1rem;">
-  <h3 style="margin-top:0; color:var(--success);">V1 Solution</h3>
-  <table>
-    <thead><tr><th style="width:40%;">Deliverable</th><th>Description</th></tr></thead>
-    <tbody>
-      <tr><td><strong>&#10003; One Number, All Cities</strong></td><td>Single national call centre number for <strong>customers (families) only</strong>. No city-specific numbers, no confusion &mdash; dial one number from anywhere in India for bookings, support, and escalations. Caregivers are reached separately via outbound campaigns, not this number.</td></tr>
-      <tr><td><strong>&#10003; Unified Brand Identity</strong></td><td>Logo rework, colours, typography, voice, guidelines &mdash; one Helpee, everywhere</td></tr>
-      <tr><td><strong>&#10003; Seamless Registration Flow</strong></td><td>Sign up &rarr; Elderly profile &rarr; Service selection &rarr; Payment</td></tr>
-      <tr><td><strong>&#10003; Caregiver Matching</strong></td><td>Profile preview with photo, ratings, experience + KYC badge</td></tr>
-      <tr><td><strong>&#10003; Real-time Status Tracking</strong></td><td>matched &rarr; en route &rarr; arrived &rarr; active &rarr; complete</td></tr>
-      <tr><td><strong>&#10003; Daily Care Summaries</strong></td><td>Meals, walks, medication, vitals &mdash; visible to families in one place</td></tr>
-      <tr><td><strong>&#10003; Control Panel</strong></td><td>Escalate, pause, restart, contact care manager</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<!-- WHAT CHANGES AFTER V1 -->
-<div class="card" style="border-left: 4px solid var(--primary); margin-bottom: 1rem;">
-  <h3 style="margin-top:0; color:var(--primary);">What Changes After V1</h3>
-  <table style="margin-bottom:0;">
-    <thead><tr><th style="width:35%;">Before V1</th><th>After V1</th></tr></thead>
-    <tbody>
-      <tr><td>3 different brand spellings</td><td><strong>One cohesive brand</strong> families recognise and trust</td></tr>
-      <tr><td>Scattered WhatsApp messages</td><td><strong>One app, one dashboard</strong> for everything</td></tr>
-      <tr><td>60+ disconnected Wati templates</td><td><strong>Coordinated notification system</strong> with real-time push</td></tr>
-      <tr><td>25&ndash;30% high-intent lead drop-off</td><td><strong>Automated funnel</strong> with call center + app capture</td></tr>
-      <tr><td>No caregiver visibility during shift</td><td><strong>GPS tracking + live task timeline</strong> for family</td></tr>
-      <tr><td>Manual matching over phone/WhatsApp</td><td><strong>Algorithm-driven 48h matching</strong> with top 3 profiles</td></tr>
-      <tr><td>No standardised caregiver quality</td><td><strong>3-gate screening + mandatory certification</strong></td></tr>
-    </tbody>
-  </table>
-</div>
-
-<!-- ECOSYSTEM AT A GLANCE -->
-<h3>Platform Ecosystem</h3>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-  <div class="card" style="border-top: 3px solid var(--primary); text-align: center;">
-    <strong style="color: var(--primary);">DEMAND SIDE</strong>
-    <p style="font-size: 0.85rem; color: var(--muted); margin: 0.5rem 0 0;">Family App + Elderly App + Call Center</p>
-    <p style="font-size: 0.85rem;">Request &rarr; Match &rarr; Interview &rarr; Agreement &rarr; Track &rarr; Pay</p>
-  </div>
-  <div class="card" style="border-top: 3px solid var(--success); text-align: center;">
-    <strong style="color: var(--success);">SUPPLY SIDE</strong>
-    <p style="font-size: 0.85rem; color: var(--muted); margin: 0.5rem 0 0;">CT App + 4 sourcing channels</p>
-    <p style="font-size: 0.85rem;">Lead &rarr; Screen (3 gates) &rarr; Train &rarr; Certify &rarr; Deploy &rarr; Retain</p>
-  </div>
-  <div class="card" style="border-top: 3px solid #7c3aed; text-align: center;">
-    <strong style="color: #7c3aed;">OPERATIONS</strong>
-    <p style="font-size: 0.85rem; color: var(--muted); margin: 0.5rem 0 0;">Company Admin + Franchise Admin portals</p>
-    <p style="font-size: 0.85rem;">Dashboard &rarr; Roster &rarr; Approve &rarr; Govern &rarr; Report</p>
-  </div>
-</div>
-
-<h3>Five Client Applications</h3>
 <table>
-  <thead><tr><th>App</th><th>Type</th><th>Primary Users</th><th>Priority</th></tr></thead>
+  <thead><tr><th>Application</th><th>Users</th><th>Priority</th></tr></thead>
   <tbody>
-    <tr><td><strong>Company Admin Web Portal</strong></td><td>Next.js</td><td>National Ops, Finance, Quality</td><td><span class="badge badge-p0">P0</span></td></tr>
-    <tr><td><strong>Franchise Admin Web Portal</strong></td><td>Next.js</td><td>City Franchise Owners, Local Ops</td><td><span class="badge badge-p1">P1</span></td></tr>
-    <tr><td><strong>Caregiver Mobile App</strong></td><td>React Native (Expo)</td><td>Caregivers, Nurses</td><td><span class="badge badge-p0">P0</span></td></tr>
-    <tr><td><strong>Customer (Family) Mobile App</strong></td><td>React Native (Expo)</td><td>Son/Daughter, Family Decision Maker</td><td><span class="badge badge-p0">P0</span></td></tr>
-    <tr><td><strong>Elderly Mobile App</strong></td><td>React Native (Expo)</td><td>Elderly Patient (simplified Lite Mode)</td><td><span class="badge badge-p1">P1</span></td></tr>
+    <tr><td><strong>Caregiver Mobile App</strong></td><td>Nurses, caregivers</td><td><span class="badge badge-p0">P0</span></td></tr>
+    <tr><td><strong>Customer (Family) Mobile App</strong></td><td>Son/daughter, family decision maker</td><td><span class="badge badge-p0">P0</span></td></tr>
+    <tr><td><strong>Elderly Mobile App</strong></td><td>Elderly patient (simplified UI)</td><td><span class="badge badge-p1">P1</span></td></tr>
+    <tr><td><strong>Company Admin Web Portal</strong></td><td>National ops, finance, quality</td><td><span class="badge badge-p0">P0</span></td></tr>
+    <tr><td><strong>Franchise Admin Web Portal</strong></td><td>City franchise owners, local ops</td><td><span class="badge badge-p1">P1</span></td></tr>
   </tbody>
 </table>
 
-<p><strong>Priority definitions:</strong> <span class="badge badge-p0">P0</span> Must-have for MVP. Core business-enabling flows. &nbsp; <span class="badge badge-p1">P1</span> Important, can launch without. Phase 2 target.</p>
+<!-- WHAT WE SOLVE -->
+<h3 style="margin-top: 1.5rem;">What We Solve</h3>
+<table>
+  <thead><tr><th style="width:35%;">Problem</th><th>How Helpee Solves It</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Families have no real-time visibility into their parent&rsquo;s care</strong></td><td>GPS tracking, live task timeline, daily care summaries (meals, vitals, medication) visible in the Family App</td></tr>
+    <tr><td><strong>Caregiver matching is manual and slow</strong></td><td>Algorithm-driven matching within 48 hours &mdash; top 3 profiles shared with family automatically</td></tr>
+    <tr><td><strong>No standardized caregiver quality across cities</strong></td><td>3-gate screening (eligibility &rarr; background check &rarr; skill test) + mandatory Helpee certification</td></tr>
+    <tr><td><strong>Scattered communication across WhatsApp groups</strong></td><td>One app, one dashboard &mdash; coordinated notifications, real-time status tracking for all stakeholders</td></tr>
+    <tr><td><strong>High-intent leads drop off due to slow follow-up</strong></td><td>Single national call centre number + automated CRM funnel captures and converts demand</td></tr>
+    <tr><td><strong>No unified operations across franchise cities</strong></td><td>Company Admin for national oversight + Franchise Admin for city-level ops &mdash; one platform, all cities</td></tr>
+  </tbody>
+</table>
+
+<p style="margin-top: 1rem;"><strong>Priority definitions:</strong> <span class="badge badge-p0">P0</span> Must-have for MVP. Core business-enabling flows. &nbsp; <span class="badge badge-p1">P1</span> Important, can launch without. Phase 2 target.</p>
 </section>
 
 <!-- ===================== 2. PERSONAS ===================== -->
