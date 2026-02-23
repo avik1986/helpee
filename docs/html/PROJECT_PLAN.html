@@ -132,15 +132,15 @@
     </aside>
     <main class="content">
       <h1 style="font-size: 2rem; color: var(--secondary); margin-bottom: 0.5rem;">Helpee Elder Care Platform</h1>
-      <p style="color: var(--text-muted); margin-bottom: 2rem;">Technical Plan & Architecture — 52 Weeks, 26 Sprints</p>
+      <p style="color: var(--text-muted); margin-bottom: 2rem;">Technical Plan & Architecture — 58 Weeks, 29 Sprints</p>
 
       <!-- 1. Project Overview -->
       <h2 id="overview">1. Project Overview</h2>
       <div class="card">
         <h4>Summary</h4>
         <p><strong>Project:</strong> Helpee Elder Care Platform</p>
-        <p><strong>Total Duration:</strong> 52 weeks (~12 months)</p>
-        <p><strong>Sprint Cadence:</strong> 2 weeks per sprint, 26 sprints total</p>
+        <p><strong>Total Duration:</strong> 58 weeks (~14 months)</p>
+        <p><strong>Sprint Cadence:</strong> 2 weeks per sprint, 29 sprints total</p>
         <p><strong>Methodology:</strong> Agile Scrum</p>
         <p><strong>Ceremonies:</strong> Sprint Planning (Day 1), Daily Standups, Sprint Review + Retro (Day 10)</p>
         <p><strong>Team Size:</strong> 18 people</p>
@@ -154,9 +154,9 @@
         <span class="p3" title="Phase 3: Scale, Polish & Launch (W43-W52)"></span>
       </div>
       <p><strong>Phase 0 — Foundation:</strong> Sprints 1–2 (W1–W4)</p>
-      <p><strong>Phase 1 — P0 MVP:</strong> Sprints 3–12 (W5–W24) &mdash; 10 sprints for 26 P0 features across all 5 apps</p>
-      <p><strong>Phase 2 — P1 Features:</strong> Sprints 13–21 (W25–W42) &mdash; 9 sprints for 26 P1 features + Elderly App</p>
-      <p><strong>Phase 3 — Scale, Polish &amp; Launch:</strong> Sprints 22–26 (W43–W52) &mdash; 5 sprints for optimization, security, and production launch</p>
+      <p><strong>Phase 1 — P0 MVP:</strong> Sprints 3–15 (W5–W30) &mdash; 13 sprints for 26 P0 features across all 5 apps (3 extra sprints for Matching Engine, Geo-Attendance &amp; Payments)</p>
+      <p><strong>Phase 2 — P1 Features:</strong> Sprints 16–24 (W31–W48) &mdash; 9 sprints for 26 P1 features + Elderly App</p>
+      <p><strong>Phase 3 — Scale, Polish &amp; Launch:</strong> Sprints 25–29 (W49–W58) &mdash; 5 sprints for optimization, security, and production launch</p>
 
       <!-- 2. System Architecture -->
       <h2 id="architecture">2. System Architecture</h2>
@@ -668,7 +668,7 @@
 
       <div class="sprint-card"><h4>Sprint 11 (Weeks 21&ndash;22): Franchise Admin &mdash; Rostering + Attendance</h4><div class="sprint-meta">Phase 1 &mdash; P0 MVP</div><p><strong>Goals:</strong> Local rostering, attendance monitoring for franchise</p><ul><li><strong>Backend:</strong> Franchise-specific roster endpoints, local conflict detection, franchise attendance log endpoints.</li><li><strong>Franchise Admin:</strong> Local rostering (assign CTs to care requests, drag-drop calendar, bulk schedule, quick-swap replacement, conflict detection, auto-suggest best-fit CT), attendance monitoring (real-time check-in/out log with geofence validation, no-show alerts, geo-violation alerts, late arrival tracking).</li><li><strong>Company Admin:</strong> Rostering oversight enhancements (global view across franchises), emergency reassignment.</li></ul><p><strong>Deliverables:</strong> Franchise can independently manage local rostering and monitor attendance.</p></div>
 
-      <div class="sprint-card"><h4>Sprint 12 (Weeks 23&ndash;24): P0 Hardening + Integration Testing</h4><div class="sprint-meta">Phase 1 &mdash; P0 MVP | <strong>MILESTONE: P0 COMPLETE</strong></div><p><strong>Goals:</strong> All P0 features across all 5 apps complete, full E2E testing</p><ul><li><strong>All teams:</strong> Bug fixes from QA, UI polish, edge case handling, cross-app integration fixes.</li><li><strong>Backend:</strong> API hardening, error handling improvements, rate limiting tuning.</li><li><strong>QA:</strong> Full E2E regression for all P0 flows across Caregiver App (6 P0), Customer App (7 P0), Company Admin (6 P0), Franchise Admin (4 P0). Performance testing (k6: 500 concurrent users). Security review (OWASP top 10).</li><li><strong>DevOps:</strong> Staging deployment validation, monitoring setup (CloudWatch alarms, Sentry).</li></ul><p><strong>Deliverables:</strong> All 26 P0 features complete and tested across all apps.</p></div>
+      <div class="sprint-card"><h4>Sprint 15 (Weeks 29&ndash;30): P0 Hardening + Integration Testing</h4><div class="sprint-meta">Phase 1 &mdash; P0 MVP | <strong>MILESTONE: P0 COMPLETE</strong></div><p><strong>Goals:</strong> All P0 features across all 5 apps complete, full E2E testing</p><ul><li><strong>All teams:</strong> Bug fixes from QA, UI polish, edge case handling, cross-app integration fixes.</li><li><strong>Backend:</strong> API hardening, error handling improvements, rate limiting tuning.</li><li><strong>QA:</strong> Full E2E regression for all P0 flows across Caregiver App (6 P0), Customer App (7 P0), Company Admin (6 P0), Franchise Admin (4 P0). Performance testing (k6: 500 concurrent users). Security review (OWASP top 10).</li><li><strong>DevOps:</strong> Staging deployment validation, monitoring setup (CloudWatch alarms, Sentry).</li></ul><p><strong>Deliverables:</strong> All 26 P0 features complete and tested across all apps.</p></div>
 
       <!-- PHASE 2 — P1 FEATURES -->
       <div class="sprint-card"><h4>Sprint 13 (Weeks 25&ndash;26): Vitals + Proof of Work + Alerts</h4><div class="sprint-meta">Phase 2 &mdash; P1 Features</div><p><strong>Goals:</strong> Vitals logging, abnormal alerts pipeline, photo proof</p><ul><li><strong>Backend:</strong> Vitals log endpoint with threshold validation (BP sys &gt;140/&lt;90, dia &gt;90/&lt;60, pulse &gt;100/&lt;60, sugar &gt;200/&lt;70, temp &gt;100.4/&lt;96.8), abnormal alert pipeline (detect &rarr; BullMQ job &rarr; push notification &le;60s), proof of work photo upload to S3.</li><li><strong>Mobile (Caregiver):</strong> Vitals input form (per vital type), abnormal indicator, photo capture per task, upload progress.</li><li><strong>Company Admin:</strong> Abnormal vitals alert dashboard with severity levels, escalation actions, acknowledgment tracking.</li></ul><p><strong>Deliverables:</strong> Vitals flow complete, abnormal alerts working within 60s SLA.</p></div>
@@ -698,7 +698,7 @@
 
       <div class="sprint-card"><h4>Sprint 25 (Weeks 49&ndash;50): App Store Submission + Staging Freeze</h4><div class="sprint-meta">Phase 3 &mdash; Scale, Polish &amp; Launch</div><p><strong>Goals:</strong> Submit all 3 mobile apps, staging freeze</p><ul><li><strong>Mobile:</strong> App Store submission (Caregiver, Customer, Elderly &mdash; iOS + Google Play = 6 submissions). Follow Apple HIG and Material Design guidelines. Screenshot generation, app descriptions, privacy policy links.</li><li><strong>Admin:</strong> Final UI polish for both web portals, responsive design verification.</li><li><strong>DevOps:</strong> Production AWS deployment (multi-AZ RDS, ElastiCache cluster, ECS auto-scaling). Staging environment frozen for release candidate testing.</li><li><strong>QA:</strong> Release candidate testing, smoke test suite across all 5 apps.</li></ul><p><strong>Deliverables:</strong> All apps submitted for review, production infra deployed.</p></div>
 
-      <div class="sprint-card"><h4>Sprint 26 (Weeks 51&ndash;52): Production Launch</h4><div class="sprint-meta">Phase 3 &mdash; Scale, Polish &amp; Launch | <strong>MILESTONE: PRODUCTION LAUNCH</strong></div><p><strong>Goals:</strong> Go live, monitoring, runbooks</p><ul><li><strong>Week 51:</strong> App store review follow-up + fixes if needed. CloudWatch alarms + Grafana dashboards. Runbook documentation (incident response, rollback procedures, escalation matrix). DNS cutover. Production smoke testing.</li><li><strong>Week 52:</strong> Go-live checklist execution. Monitoring war room (first 48h). On-call rotation setup. Post-launch hotfix buffer. Stakeholder sign-off.</li></ul><p><strong>Deliverables:</strong> Production launch complete &mdash; all 5 apps live.</p></div>
+      <div class="sprint-card"><h4>Sprint 26 (Weeks 57&ndash;58): Production Launch</h4><div class="sprint-meta">Phase 3 &mdash; Scale, Polish &amp; Launch | <strong>MILESTONE: PRODUCTION LAUNCH</strong></div><p><strong>Goals:</strong> Go live, monitoring, runbooks</p><ul><li><strong>Week 51:</strong> App store review follow-up + fixes if needed. CloudWatch alarms + Grafana dashboards. Runbook documentation (incident response, rollback procedures, escalation matrix). DNS cutover. Production smoke testing.</li><li><strong>Week 58:</strong> Go-live checklist execution. Monitoring war room (first 48h). On-call rotation setup. Post-launch hotfix buffer. Stakeholder sign-off.</li></ul><p><strong>Deliverables:</strong> Production launch complete &mdash; all 5 apps live.</p></div>
 
       <!-- 13. Milestones -->
       <h2 id="milestones">13. Milestones</h2>
@@ -710,14 +710,14 @@
           <span class="milestone-dot" style="left: 15.4%;" title="W8: Matching Engine"></span>
           <span class="milestone-dot" style="left: 23.1%;" title="W12: Shift Lifecycle"></span>
           <span class="milestone-dot bold" style="left: 26.9%;" title="W14: P0 MVP Beta"></span>
-          <span class="milestone-dot" style="left: 34.6%;" title="W18: Disputes + Dashboard"></span>
-          <span class="milestone-dot" style="left: 42.3%;" title="W22: Franchise Admin P0"></span>
+          <span class="milestone-dot" style="left: 34.6%;" title="W22: Disputes + Dashboard"></span>
+          <span class="milestone-dot" style="left: 42.3%;" title="W26: Franchise Admin P0"></span>
           <span class="milestone-dot bold" style="left: 46.2%;" title="W24: P0 COMPLETE"></span>
-          <span class="milestone-dot" style="left: 53.8%;" title="W28: Training System"></span>
-          <span class="milestone-dot" style="left: 61.5%;" title="W32: VAS Ecosystem"></span>
-          <span class="milestone-dot" style="left: 65.4%;" title="W34: Elderly App Beta"></span>
+          <span class="milestone-dot" style="left: 53.8%;" title="W34: Training System"></span>
+          <span class="milestone-dot" style="left: 61.5%;" title="W38: VAS Ecosystem"></span>
+          <span class="milestone-dot" style="left: 65.4%;" title="W40: Elderly App Beta"></span>
           <span class="milestone-dot bold" style="left: 80.8%;" title="W42: P1 COMPLETE"></span>
-          <span class="milestone-dot" style="left: 88.5%;" title="W46: Performance OK"></span>
+          <span class="milestone-dot" style="left: 88.5%;" title="W52: Performance OK"></span>
           <span class="milestone-dot" style="left: 92.3%;" title="W48: Security Cleared"></span>
           <span class="milestone-dot bold" style="left: 100%;" title="W52: Production Launch"></span>
         </div>
@@ -730,17 +730,17 @@
           <tr><td>Caregiver Onboarding</td><td>Sprint 3</td><td>W6</td><td>CT registration, document upload, admin verification</td></tr>
           <tr><td>Matching Engine</td><td>Sprint 4</td><td>W8</td><td>Care request &rarr; algorithmic match &rarr; top 3 profiles</td></tr>
           <tr><td>Shift Lifecycle</td><td>Sprint 6</td><td>W12</td><td>Geo check-in &rarr; tasks &rarr; GPS tracking &rarr; check-out</td></tr>
-          <tr style="background: #e7f0ff;"><td><strong>P0 MVP Beta</strong></td><td><strong>Sprint 7</strong></td><td><strong>W14</strong></td><td><strong>Core Caregiver + Customer + Company Admin flows working</strong></td></tr>
-          <tr><td>Disputes + Dashboard</td><td>Sprint 9</td><td>W18</td><td>Dispute management, national dashboard live</td></tr>
-          <tr><td>Franchise Admin P0</td><td>Sprint 11</td><td>W22</td><td>Franchise portal: dashboard, CT pool, rostering, attendance</td></tr>
-          <tr style="background: #e7f0ff;"><td><strong>P0 Complete</strong></td><td><strong>Sprint 12</strong></td><td><strong>W24</strong></td><td><strong>All 26 P0 features complete across all apps</strong></td></tr>
-          <tr><td>Training System</td><td>Sprint 14</td><td>W28</td><td>Training modules, assessments, certification</td></tr>
-          <tr><td>VAS Ecosystem</td><td>Sprint 16</td><td>W32</td><td>Catalog, upselling, commission tracking</td></tr>
+          <tr style="background: #e7f0ff;"><td><strong>P0 MVP Beta</strong></td><td><strong>Sprint 8</strong></td><td><strong>W16</strong></td><td><strong>Core Caregiver + Customer + Company Admin flows working</strong></td></tr>
+          <tr><td>Disputes + Dashboard</td><td>Sprint 11</td><td>W22</td><td>Dispute management, national dashboard live</td></tr>
+          <tr><td>Franchise Admin P0</td><td>Sprint 13</td><td>W26</td><td>Franchise portal: dashboard, CT pool, rostering, attendance</td></tr>
+          <tr style="background: #e7f0ff;"><td><strong>P0 Complete</strong></td><td><strong>Sprint 15</strong></td><td><strong>W30</strong></td><td><strong>All 26 P0 features complete across all apps</strong></td></tr>
+          <tr><td>Training System</td><td>Sprint 17</td><td>W34</td><td>Training modules, assessments, certification</td></tr>
+          <tr><td>VAS Ecosystem</td><td>Sprint 19</td><td>W38</td><td>Catalog, upselling, commission tracking</td></tr>
           <tr style="background: #d4f4dd;"><td><strong>Elderly App Beta</strong></td><td><strong>Sprint 17</strong></td><td><strong>W34</strong></td><td><strong>Standalone elderly app with SOS, calls, CT view</strong></td></tr>
-          <tr style="background: #d4f4dd;"><td><strong>P1 Feature Complete</strong></td><td><strong>Sprint 21</strong></td><td><strong>W42</strong></td><td><strong>All 26 P1 features done + cross-app integration verified</strong></td></tr>
-          <tr><td>Performance OK</td><td>Sprint 23</td><td>W46</td><td>Load testing passed, auto-reassignment working</td></tr>
-          <tr><td>Security Cleared</td><td>Sprint 24</td><td>W48</td><td>Pen test passed, PDPA compliance verified</td></tr>
-          <tr style="background: #fff3cd;"><td><strong>Production Launch</strong></td><td><strong>Sprint 26</strong></td><td><strong>W52</strong></td><td><strong>All 5 apps live in production</strong></td></tr>
+          <tr style="background: #d4f4dd;"><td><strong>P1 Feature Complete</strong></td><td><strong>Sprint 24</strong></td><td><strong>W48</strong></td><td><strong>All 26 P1 features done + cross-app integration verified</strong></td></tr>
+          <tr><td>Performance OK</td><td>Sprint 26</td><td>W52</td><td>Load testing passed, auto-reassignment working</td></tr>
+          <tr><td>Security Cleared (Helpee UAT)</td><td>Sprint 27</td><td>W54</td><td>Pen test done by Rupantar; sign-off &amp; InfoSec approval by Helpee as part of UAT</td></tr>
+          <tr style="background: #fff3cd;"><td><strong>Production Launch</strong></td><td><strong>Sprint 29</strong></td><td><strong>W58</strong></td><td><strong>All 5 apps live in production</strong></td></tr>
         </tbody>
       </table>
 
@@ -790,13 +790,13 @@
         <thead><tr><th>Phase</th><th>Sprints</th><th>Weeks</th><th>Est. Story Points</th><th>Key Outputs</th></tr></thead>
         <tbody>
           <tr><td>Phase 0 &mdash; Foundation</td><td>2</td><td>4</td><td>140</td><td>Infra, auth (5 roles), DB (35+ tables), CI/CD, all 5 app scaffolds</td></tr>
-          <tr><td>Phase 1 &mdash; P0 MVP</td><td>10</td><td>20</td><td>720</td><td>26 P0 features across all 5 apps, full E2E testing</td></tr>
+          <tr><td>Phase 1 &mdash; P0 MVP</td><td>13</td><td>26</td><td>900</td><td>26 P0 features across all 5 apps, full E2E testing (3 extra sprints for Matching Engine, Geo-Attendance &amp; Payments)</td></tr>
           <tr><td>Phase 2 &mdash; P1 Features</td><td>9</td><td>18</td><td>650</td><td>26 P1 features, standalone Elderly App, cross-app integration</td></tr>
           <tr><td>Phase 3 &mdash; Scale &amp; Launch</td><td>5</td><td>10</td><td>360</td><td>Offline support, auto-reassignment, security audit, production launch</td></tr>
-          <tr><td><strong>Total</strong></td><td><strong>26</strong></td><td><strong>52</strong></td><td><strong>1,870</strong></td><td><strong>52 features across 5 apps</strong></td></tr>
+          <tr><td><strong>Total</strong></td><td><strong>29</strong></td><td><strong>58</strong></td><td><strong>2,050</strong></td><td><strong>52 features across 5 apps</strong></td></tr>
         </tbody>
       </table>
-      <p><strong>Team velocity assumption:</strong> ~72 story points per sprint (18 people, 2-week sprint). Velocity assumes ramp-up in Sprints 1&ndash;2 (~60 SP) and steady state from Sprint 3 onwards (~75 SP). Buffer of ~10% built into Phase 3 for unforeseen work.</p>
+      <p><strong>Team velocity assumption:</strong> ~72 story points per sprint (18 people, 2-week sprint). Velocity assumes ramp-up in Sprints 1&ndash;2 (~60 SP) and steady state from Sprint 3 onwards (~75 SP). Sprints 4b, 6b, and 8b are dedicated complexity sprints for Matching Engine, Geo-Attendance/GPS, and Ledger/Payments respectively. Buffer of ~10% built into Phase 3 for unforeseen work.</p>
 
       <!-- 17. Definition of Done -->
       <h2 id="dod">17. Definition of Done</h2>
@@ -884,15 +884,15 @@
         <thead><tr><th>Milestone</th><th>Week</th><th>%</th><th>Amount</th><th>Payment Trigger</th></tr></thead>
         <tbody>
           <tr style="background: rgba(72,149,239,0.1);"><td><strong>1. Project Kickoff</strong></td><td>W1</td><td>15%</td><td>~₹30L</td><td>Contract signed, team mobilised, AWS account provisioned</td></tr>
-          <tr><td><strong>2. P0 MVP Beta</strong></td><td>W14</td><td>20%</td><td>~₹40L</td><td>Core Caregiver + Customer + Company Admin flows demonstrated on staging</td></tr>
-          <tr><td><strong>3. P0 Complete</strong></td><td>W24</td><td>20%</td><td>~₹40L</td><td>All 26 P0 features across 5 apps tested and QA-signed off</td></tr>
-          <tr><td><strong>4. P1 Feature Complete</strong></td><td>W42</td><td>20%</td><td>~₹40L</td><td>All 52 features (26 P0 + 26 P1) complete, cross-app integration verified</td></tr>
-          <tr><td><strong>5. Security Cleared</strong></td><td>W48</td><td>15%</td><td>~₹30L</td><td>Penetration test passed, all critical/high findings resolved, PDPA compliance verified</td></tr>
-          <tr style="background: rgba(6,214,160,0.1);"><td><strong>6. Production Launch</strong></td><td>W52</td><td>10%</td><td>~₹20L</td><td>All 5 apps live in production, app stores approved, monitoring operational</td></tr>
+          <tr><td><strong>2. P0 MVP Beta</strong></td><td>W16</td><td>25%</td><td>~₹50L</td><td>Core Caregiver + Customer + Company Admin flows demonstrated on staging (reflects Matching Engine + GPS complexity delivered)</td></tr>
+          <tr><td><strong>3. P0 Complete</strong></td><td>W30</td><td>20%</td><td>~₹40L</td><td>All 26 P0 features across 5 apps tested and QA-signed off</td></tr>
+          <tr><td><strong>4. P1 Feature Complete</strong></td><td>W48</td><td>15%</td><td>~₹30L</td><td>All 52 features (26 P0 + 26 P1) complete, cross-app integration verified</td></tr>
+          <tr><td><strong>5. Security Testing</strong></td><td>W54</td><td colspan="2" style="color:#92400e;font-style:italic;font-size:0.85em;">Not a payment gate — pen test by Rupantar, fixes by Rupantar; InfoSec sign-off is Helpee's UAT responsibility</td><td style="color:#92400e;font-size:0.85em;">See UAT §20.6</td></tr>
+          <tr style="background: rgba(6,214,160,0.1);"><td><strong>6. Production Launch</strong></td><td>W58</td><td>25%</td><td>~₹50L</td><td>All 5 apps live in production, app stores approved, monitoring operational</td></tr>
           <tr style="background: #fff3cd;"><td><strong>Total</strong></td><td></td><td><strong>100%</strong></td><td><strong>~₹1.98 Cr</strong></td><td></td></tr>
         </tbody>
       </table>
-      <p style="font-size: 0.85rem; color: var(--muted);">Payment is due within 15 business days of milestone sign-off. Late payments beyond 30 days may result in team ramp-down and schedule impact.</p>
+      <p style="font-size: 0.85rem; color: var(--muted);">Payment is due within 15 business days of milestone sign-off. Late payments beyond 30 days may result in team ramp-down and schedule impact. Security testing is not a payment gate — it falls under Helpee's UAT responsibility (see Section 20.6).</p>
 
       <h3>20.3 Post-Delivery SaaS License (Recurring)</h3>
       <p>After production launch (Week 52), Helpee moves to a monthly SaaS license model for continued platform operations.</p>
@@ -956,7 +956,9 @@
       </div>
 
       <h3>20.6 UAT (User Acceptance Testing) &mdash; Helpee Responsibilities</h3>
-      <p>Helpee is responsible for User Acceptance Testing at each payment milestone. The development team provides the staging environment and deployment; Helpee validates business correctness.</p>
+      <p>Helpee is responsible for User Acceptance Testing at each payment milestone. The development team provides the staging environment and deployment; Helpee validates business correctness.
+
+<p style="background:#fef3c7;border-left:4px solid #f59e0b;padding:12px 16px;border-radius:4px;margin:12px 0;"><strong>Security Testing Policy:</strong> Security penetration testing is conducted by Rupantar at W54. Any critical or high findings are fixed by Rupantar at no additional cost. However, <strong>InfoSec sign-off and formal security approval is Helpee's responsibility</strong> — Helpee must provide written sign-off after reviewing the pen test report and fix verification. Security sign-off is treated as a UAT milestone and does <strong>not</strong> gate any payment.</p></p>
       <div class="card" style="border-left: 4px solid var(--accent);">
         <table style="margin-bottom: 0;">
           <thead><tr><th>Parameter</th><th>Terms</th></tr></thead>
@@ -980,11 +982,11 @@
       <table>
         <thead><tr><th>Milestone</th><th>UAT Start</th><th>UAT End</th><th>Scope</th></tr></thead>
         <tbody>
-          <tr><td>P0 MVP Beta</td><td>W14 Day 1</td><td>W14 Day 5</td><td>Core Caregiver + Customer + Company Admin flows</td></tr>
-          <tr><td>P0 Complete</td><td>W24 Day 1</td><td>W24 Day 5</td><td>All 26 P0 features across all 5 apps</td></tr>
-          <tr><td>P1 Feature Complete</td><td>W42 Day 1</td><td>W42 Day 5</td><td>All 52 features, cross-app integration, Elderly App</td></tr>
-          <tr><td>Security Cleared</td><td>W48 Day 1</td><td>W48 Day 5</td><td>Security fixes verification, compliance check</td></tr>
-          <tr><td>Production Launch</td><td>W52 Day 1</td><td>W52 Day 3</td><td>Production smoke test, go-live readiness</td></tr>
+          <tr><td>P0 MVP Beta</td><td>W16 Day 1</td><td>W16 Day 5</td><td>Core Caregiver + Customer + Company Admin flows</td></tr>
+          <tr><td>P0 Complete</td><td>W30 Day 1</td><td>W30 Day 5</td><td>All 26 P0 features across all 5 apps</td></tr>
+          <tr><td>P1 Feature Complete</td><td>W48 Day 1</td><td>W48 Day 5</td><td>All 52 features, cross-app integration, Elderly App</td></tr>
+          <tr><td>Security Sign-off (InfoSec UAT)</td><td>W54 Day 1</td><td>W54 Day 10</td><td>Helpee's InfoSec team reviews pen test report; Rupantar fixes any critical/high findings; Helpee provides written InfoSec sign-off. This is Helpee's UAT responsibility and does not gate payment.</td></tr>
+          <tr><td>Production Launch</td><td>W58 Day 1</td><td>W58 Day 3</td><td>Production smoke test, go-live readiness</td></tr>
         </tbody>
       </table>
 
@@ -1010,7 +1012,7 @@
       <h3>20.8 Warranty Period</h3>
       <div class="card" style="border-left: 4px solid var(--success);">
         <h4 style="margin-top: 0;">30-Day Post-Launch Warranty</h4>
-        <p>Effective from production launch date (Week 52). Covers defect fixes only &mdash; not new features or enhancements.</p>
+        <p>Effective from production launch date (Week 58). Covers defect fixes only &mdash; not new features or enhancements.</p>
         <table style="margin-bottom: 0;">
           <thead><tr><th>Severity</th><th>Response Time</th><th>Resolution Time</th><th>Examples</th></tr></thead>
           <tbody>
